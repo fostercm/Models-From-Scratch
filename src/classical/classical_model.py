@@ -23,7 +23,6 @@ class ClassicalModel(ABC):
         """Get the parameters of the model"""
         pass
     
-    @abstractmethod
-    def update_params(self) -> None:
-        """Update the parameters of the model"""
-        pass
+    def load_params(self, params: dict) -> None:
+        """Load the parameters of the model"""
+        self.params = params
