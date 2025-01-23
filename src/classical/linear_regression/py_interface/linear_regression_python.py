@@ -8,7 +8,7 @@ class LinearRegressionPython(LinearRegressionBase):
     
     def __init__(self) -> None:
         """Initialize the model parameters"""
-        self.params = {'beta': None}
+        super().__init__()
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
         """
