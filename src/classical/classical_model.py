@@ -18,10 +18,9 @@ class ClassicalModel(ABC):
         """Calculate the cost of the model"""
         pass
 
-    @abstractmethod
     def get_params(self) -> dict:
         """Get the parameters of the model"""
-        pass
+        return self.params
     
     def load_params(self, params: dict) -> None:
         """Load the parameters of the model"""
