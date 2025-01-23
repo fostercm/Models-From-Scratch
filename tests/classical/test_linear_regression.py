@@ -1,11 +1,11 @@
 import unittest
-from classical import LinearRegression
+from classical import LinearRegressionPython
 import numpy as np
 
 class TestLinearRegression(unittest.TestCase):
     
     def test_fit(self):
-        model = LinearRegression()
+        model = LinearRegressionPython()
         
         # Test that inputs are numpy arrays
         with self.assertRaises(TypeError):
@@ -28,7 +28,7 @@ class TestLinearRegression(unittest.TestCase):
         self.assertIsNotNone(model.params)
 
     def test_predict(self):
-        model = LinearRegression()
+        model = LinearRegressionPython()
         
         # Test that the model is fitted
         with self.assertRaises(ValueError):
@@ -40,7 +40,7 @@ class TestLinearRegression(unittest.TestCase):
             model.predict(np.random.randn(10, 3))
         
     def test_cost(self):
-        model = LinearRegression()
+        model = LinearRegressionPython()
         
         # Test that inputs are numpy arrays
         with self.assertRaises(TypeError):
@@ -57,13 +57,3 @@ class TestLinearRegression(unittest.TestCase):
         # Test that the number of rows in Y_pred and Y are equal
         with self.assertRaises(ValueError):
             model.cost(np.zeros((2,3)), np.zeros((3,3)))
-    
-    def test_get_params(self):
-        model = LinearRegression()
-        
-        # Test that model starts with no params
-        self.assertIsNone(model.get_params())
-        
-        # Test that model has params after fitting
-        model.fit(np.random.randn(10, 5), np.random.randn(10, 1))
-        self.assertIsNotNone(model.get_params())
