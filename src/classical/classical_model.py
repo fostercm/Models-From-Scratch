@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 class ClassicalModel(ABC):
+    
     @abstractmethod
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
         """Fit the model to the data"""
