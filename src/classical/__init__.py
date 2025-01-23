@@ -1,2 +1,2 @@
-from .linear_regression.python.linear_regression_python import LinearRegressionPython
+from .linear_regression.py_interface.linear_regression_python import LinearRegressionPython
 from .classical_model import ClassicalModel
