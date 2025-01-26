@@ -37,7 +37,7 @@ class LinearRegressionBase(ClassicalModel):
             if array1.shape[0] != array2.shape[0]:
                 raise ValueError("The number of rows in X and Y must be equal")
 
-    def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
+    def fit(self, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
         """
         Fit the Linear Regression model to the training data
 
@@ -50,6 +50,10 @@ class LinearRegressionBase(ClassicalModel):
         
         # Pad the feature matrix with ones for the bias term
         X = np.hstack((np.ones((X.shape[0], 1)), X))
+        
+        if X.dtype != np.float64:
+            X.astype(np.float64)
+        
         return X
         
         # To be implemented in derived classes
@@ -62,7 +66,7 @@ class LinearRegressionBase(ClassicalModel):
             X (np.ndarray): Feature matrix of shape (n_samples, n_features)
         """
         # Check if the model is fitted
-        if not self.params['beta']:
+        if self.params['beta'] is None:
             raise ValueError("Model is not fitted")
         
         # Pad the feature matrix with ones for the bias term
@@ -71,6 +75,12 @@ class LinearRegressionBase(ClassicalModel):
         # Check if the input dimensions match the model parameters
         if X.shape[1] != self.params['beta'].shape[0]:
             raise ValueError("The number of columns in X must be equal to the number of features in the model")
+        
+        # Make sure the data type is float64
+        if X.dtype != np.float64:
+            X.astype(np.float64)
+        
+        return X
         
         # To be implemented in derived classes
     
