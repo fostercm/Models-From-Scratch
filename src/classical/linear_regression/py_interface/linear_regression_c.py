@@ -9,8 +9,7 @@ class LinearRegressionC(LinearRegressionBase):
         super().__init__()
         
         # Load the C library
-        # lib_path = Path(__file__).resolve().parents[4] / 'build' / 'lib' / 'liblinear_regression_c.so'
-        lib_path = Path(__file__).resolve().parents[4] / 'linear_regression.so'
+        lib_path = Path(__file__).resolve().parents[4] / 'build' / 'lib' / 'liblinear_regression_c.so'
         self.lib = ctypes.CDLL(str(lib_path))
         
         # Define the types of the arguments
@@ -88,6 +87,3 @@ class LinearRegressionC(LinearRegressionBase):
         
         # Return the cost
         return self.lib.cost(Y_pred, Y, num_samples, num_output_features)
-        
-        
-# gcc -shared -o linear_regression.so src/classical/linear_regression/c_backend/linear_regression.c -I./src/utils/c_utils ./build/src/utils/c_utils/libc_utils.a -fPIC -lm -lgsl -lgslcblas -llapacke
