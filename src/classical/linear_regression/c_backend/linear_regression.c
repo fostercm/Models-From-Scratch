@@ -5,13 +5,13 @@
 #include "pseudoinverse.h"
 #include <gsl/gsl_matrix.h>
 
-
+// Function to fit the model
 void fit(double *X, double *Y, double *Beta, int num_samples, int num_input_features, int num_output_features) {
 
     // Allocate memory for intermediates
-    double *inner_product = (double *) malloc(num_input_features * num_input_features * sizeof(double));
-    double *inner_product_inv = (double *) malloc(num_input_features * num_samples * sizeof(double));
-    double *inner_product_inv_mult = (double *) malloc(num_input_features * num_samples * sizeof(double));
+    double *XTX = (double *) malloc(num_input_features * num_input_features * sizeof(double));
+    double *XTX_inverse = (double *) malloc(num_input_features * num_samples * sizeof(double));
+    double *XTX_inverse_XT = (double *) malloc(num_input_features * num_samples * sizeof(double));
     
     cblas_dgemm(
         CblasRowMajor, CblasTrans, CblasNoTrans,
@@ -20,45 +20,48 @@ void fit(double *X, double *Y, double *Beta, int num_samples, int num_input_feat
         X, num_input_features,
         X, num_input_features,
         0,
-        inner_product,num_input_features
+        XTX,num_input_features
         );
     
     // Take the pseudoinverse of the inner product
-    compute_pseudoinverse(inner_product, inner_product_inv, num_input_features, num_input_features);
+    computePseudoinverse(XTX, XTX_inverse, num_input_features, num_input_features);
 
     // Free intermediate
-    free(inner_product);
+    free(XTX);
 
     // Multiply the pseudoinverse and the input matrix
     cblas_dgemm(
         CblasRowMajor, CblasNoTrans, CblasTrans,
         num_input_features, num_samples, num_input_features,
         1,
-        inner_product_inv, num_input_features,
+        XTX_inverse, num_input_features,
         X, num_input_features,
         0,
-        inner_product_inv_mult, num_samples
+        XTX_inverse_XT, num_samples
         );
     
     // Free intermediate
-    free(inner_product_inv);
+    free(XTX_inverse);
 
     // Multiply the running product with Y
     cblas_dgemm(
         CblasRowMajor, CblasNoTrans, CblasNoTrans,
         num_input_features, num_output_features, num_samples,
         1,
-        inner_product_inv_mult, num_samples,
+        XTX_inverse_XT, num_samples,
         Y, num_output_features,
         0,
         Beta, num_output_features
         );
     
     // Free intermediate
-    free(inner_product_inv_mult);
+    free(XTX_inverse_XT);
 }
 
+// Function to predict the output using weights
 void predict(double *X, double *Beta, double *Prediction, int num_samples, int num_input_features, int num_output_features) {
+    
+    // Multiply the input matrix and weights
     cblas_dgemm(
         CblasRowMajor, CblasNoTrans, CblasNoTrans,
         num_samples, num_output_features, num_input_features,
@@ -70,6 +73,7 @@ void predict(double *X, double *Beta, double *Prediction, int num_samples, int n
         );
 }
 
+// Function to calculate the cost
 double cost(double *Y_pred, double *Y, int num_samples, int num_output_features) {
 
     // Calculate scale factor
