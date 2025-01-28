@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "linear_regression.h"
+#include "linear_regression_c.h"
 #include "pseudoinverse.h"
 #include <gsl/gsl_matrix.h>
 
