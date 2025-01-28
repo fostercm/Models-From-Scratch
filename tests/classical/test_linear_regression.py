@@ -1,5 +1,5 @@
 import unittest
-from classical import LinearRegressionPython, LinearRegressionC
+from classical import LinearRegressionPython, LinearRegressionC, LinearRegressionCUDA
 import numpy as np
 
 class TestLinearRegression(unittest.TestCase):
