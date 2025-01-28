@@ -9,7 +9,7 @@ extern "C" {
 
 void fit();
 void predict();
-float cost(float *Y_pred, float *Y, int num_samples, int num_output_features);
+float cost();
 
 #ifdef __CUDACC__
 
