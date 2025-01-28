@@ -14,33 +14,34 @@ class LinearRegressionC(LinearRegressionBase):
         
         # Define the types of the arguments
         self.lib.fit.argtypes = [
-            np.ctypeslib.ndpointer(dtype=np.float64),
-            np.ctypeslib.ndpointer(dtype=np.float64),
-            np.ctypeslib.ndpointer(dtype=np.float64),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
             ctypes.c_int, 
             ctypes.c_int,
             ctypes.c_int
         ]
         
         self.lib.predict.argtypes = [
-            np.ctypeslib.ndpointer(dtype=np.float64),
-            np.ctypeslib.ndpointer(dtype=np.float64),
-            np.ctypeslib.ndpointer(dtype=np.float64),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
             ctypes.c_int, 
             ctypes.c_int,
             ctypes.c_int
         ]
         
         self.lib.cost.argtypes = [
-            np.ctypeslib.ndpointer(dtype=np.float64),
-            np.ctypeslib.ndpointer(dtype=np.float64),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
             ctypes.c_int,
             ctypes.c_int
         ]
-        self.lib.cost.restype = ctypes.c_double
+        self.lib.cost.restype = ctypes.c_float
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
-        X = super().fit(X, Y)
+        
+        X, Y = super().fit(X, Y)
         
         # Get the dimensions of the input and output
         num_samples, num_input_features = X.shape
@@ -49,7 +50,7 @@ class LinearRegressionC(LinearRegressionBase):
         # Flatten arrays
         X = X.flatten()
         Y = Y.flatten()
-        Beta = np.zeros((num_input_features * num_output_features), dtype=np.float64).flatten()
+        Beta = np.zeros((num_input_features * num_output_features), dtype=np.float32).flatten()
         
         # Fit the model
         self.lib.fit(X, Y, Beta, num_samples, num_input_features, num_output_features)
@@ -65,7 +66,7 @@ class LinearRegressionC(LinearRegressionBase):
         num_output_features = self.params['beta'].shape[1]
         
         # Allocate memory for the prediction and flatten
-        prediction = np.zeros((num_samples, num_output_features), dtype=np.float64).flatten()
+        prediction = np.zeros((num_samples, num_output_features), dtype=np.float32).flatten()
         X = X.flatten()
         Beta = self.params['beta'].flatten()
         
@@ -76,7 +77,7 @@ class LinearRegressionC(LinearRegressionBase):
         return prediction.reshape((num_samples, num_output_features))
     
     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
-        super().cost(Y_pred, Y)
+        Y_pred, Y = super().cost(Y_pred, Y)
         
         # Get array dimensions
         num_samples, num_output_features = Y_pred.shape

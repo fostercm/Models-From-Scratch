@@ -19,7 +19,7 @@ class LinearRegressionPython(LinearRegressionBase):
             Y (np.ndarray): Target matrix of shape (n_samples, n_targets)
         """
         # Validate the input arrays and pad X with ones
-        X = super().fit(X, Y)
+        X, Y = super().fit(X, Y)
         
         # Evaluate the model parameters using OLS
         self.params['beta'] = np.linalg.pinv(X.T @ X) @ X.T @ Y
@@ -51,6 +51,6 @@ class LinearRegressionPython(LinearRegressionBase):
         Returns:
             float: Mean Squared Error
         """
-        super().cost(Y_pred, Y)
+        Y_pred, Y = super().cost(Y_pred, Y)
         SCALE_FACTOR = 0.5 / Y.shape[0]
         return SCALE_FACTOR * np.linalg.norm(Y_pred - Y)**2

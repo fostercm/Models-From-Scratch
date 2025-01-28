@@ -69,17 +69,17 @@ class TestLinearRegression(unittest.TestCase):
             X = np.array([[1, 1],
                           [1, 2],
                           [2, 2],
-                          [2, 3]], dtype=np.float64)
+                          [2, 3]], dtype=np.float32)
             Y = np.array([[6],
                           [8],
                           [9],
-                          [11]], dtype=np.float64)
+                          [11]], dtype=np.float32)
             
             # Fit the model
             model.fit(X, Y)
             
             # Check beta
-            correct_beta = np.array([[3],[1],[2]],dtype=np.float64)
+            correct_beta = np.array([[3],[1],[2]],dtype=np.float32)
             self.assertTupleEqual(model.params['beta'].shape, (3, 1))
             for i in range(3):
                 self.assertAlmostEqual(model.params['beta'][i][0], correct_beta[i][0], places=2)

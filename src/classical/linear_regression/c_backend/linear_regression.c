@@ -6,14 +6,14 @@
 #include <gsl/gsl_matrix.h>
 
 // Function to fit the model
-void fit(double *X, double *Y, double *Beta, int num_samples, int num_input_features, int num_output_features) {
+void fit(float *X, float *Y, float *Beta, int num_samples, int num_input_features, int num_output_features) {
 
     // Allocate memory for intermediates
-    double *XTX = (double *) malloc(num_input_features * num_input_features * sizeof(double));
-    double *XTX_inverse = (double *) malloc(num_input_features * num_samples * sizeof(double));
-    double *XTX_inverse_XT = (double *) malloc(num_input_features * num_samples * sizeof(double));
+    float *XTX = (float *) malloc(num_input_features * num_input_features * sizeof(float));
+    float *XTX_inverse = (float *) malloc(num_input_features * num_samples * sizeof(float));
+    float *XTX_inverse_XT = (float *) malloc(num_input_features * num_samples * sizeof(float));
     
-    cblas_dgemm(
+    cblas_sgemm(
         CblasRowMajor, CblasTrans, CblasNoTrans,
         num_input_features, num_input_features, num_samples,
         1,
@@ -30,7 +30,7 @@ void fit(double *X, double *Y, double *Beta, int num_samples, int num_input_feat
     free(XTX);
 
     // Multiply the pseudoinverse and the input matrix
-    cblas_dgemm(
+    cblas_sgemm(
         CblasRowMajor, CblasNoTrans, CblasTrans,
         num_input_features, num_samples, num_input_features,
         1,
@@ -44,7 +44,7 @@ void fit(double *X, double *Y, double *Beta, int num_samples, int num_input_feat
     free(XTX_inverse);
 
     // Multiply the running product with Y
-    cblas_dgemm(
+    cblas_sgemm(
         CblasRowMajor, CblasNoTrans, CblasNoTrans,
         num_input_features, num_output_features, num_samples,
         1,
@@ -59,10 +59,10 @@ void fit(double *X, double *Y, double *Beta, int num_samples, int num_input_feat
 }
 
 // Function to predict the output using weights
-void predict(double *X, double *Beta, double *Prediction, int num_samples, int num_input_features, int num_output_features) {
+void predict(float *X, float *Beta, float *Prediction, int num_samples, int num_input_features, int num_output_features) {
     
     // Multiply the input matrix and weights
-    cblas_dgemm(
+    cblas_sgemm(
         CblasRowMajor, CblasNoTrans, CblasNoTrans,
         num_samples, num_output_features, num_input_features,
         1,
@@ -74,13 +74,13 @@ void predict(double *X, double *Beta, double *Prediction, int num_samples, int n
 }
 
 // Function to calculate the cost
-double cost(double *Y_pred, double *Y, int num_samples, int num_output_features) {
+float cost(float *Y_pred, float *Y, int num_samples, int num_output_features) {
 
     // Calculate scale factor
-    double SCALE_FACTOR = 1.0 / (2 * num_samples);
+    float SCALE_FACTOR = 1.0 / (2 * num_samples);
 
     // Calculate squared matrix norm
-    double cost = 0;
+    float cost = 0;
     for (int i=0 ; i<num_samples ; i++) {
         for (int j=0 ; j<num_output_features ; j++) {
             cost += pow(Y_pred[i*num_output_features + j] - Y[i*num_output_features + j], 2);

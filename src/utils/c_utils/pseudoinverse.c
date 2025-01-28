@@ -6,17 +6,17 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 // Function to compute the pseudoinverse of a matrix
-void computePseudoinverse(double *A, double *A_inv, int m, int n) {
+void computePseudoinverse(float *A, float *A_inv, int m, int n) {
 
     // Allocate memory for the SVD results
-    double *U = (double *) malloc(m * m * sizeof(double));
-    double *S = (double *) malloc(MIN(m, n) * sizeof(double));
-    double *V_transpose = (double *) malloc(n * n * sizeof(double));
-    double *superb = (double *) malloc(MIN(m, n) * sizeof(double));
+    float *U = (float *) malloc(m * m * sizeof(float));
+    float *S = (float *) malloc(MIN(m, n) * sizeof(float));
+    float *V_transpose = (float *) malloc(n * n * sizeof(float));
+    float *superb = (float *) malloc(MIN(m, n) * sizeof(float));
 
     // Allocate memory for matrix multiplication intermediates
-    double *S_inverse = (double *) calloc(m * n, sizeof(double));
-    double *VS_inverse = (double *) malloc(n * m * sizeof(double));
+    float *S_inverse = (float *) calloc(m * n, sizeof(float));
+    float *VS_inverse = (float *) malloc(n * m * sizeof(float));
     
     // Check if memory allocation failed
     if (U == NULL || S == NULL || V_transpose == NULL || superb == NULL || S_inverse == NULL || VS_inverse == NULL) {
@@ -25,7 +25,7 @@ void computePseudoinverse(double *A, double *A_inv, int m, int n) {
     }
 
     // Compute the SVD and free superb
-    int info = LAPACKE_dgesvd(LAPACK_ROW_MAJOR, 'A', 'A', m, n, A, n, S, U, m, V_transpose, n, superb);
+    int info = LAPACKE_sgesvd(LAPACK_ROW_MAJOR, 'A', 'A', m, n, A, n, S, U, m, V_transpose, n, superb);
     free(superb);
 
     // Check if the SVD was successful
@@ -45,14 +45,14 @@ void computePseudoinverse(double *A, double *A_inv, int m, int n) {
     free(S);
 
     // Multiply V (V_transpose_transpose) and S+ to get VS_inverse
-    cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans, n, m, n, 1, V_transpose, n, S_inverse, m, 0, VS_inverse, m);
+    cblas_sgemm(CblasRowMajor, CblasTrans, CblasNoTrans, n, m, n, 1, V_transpose, n, S_inverse, m, 0, VS_inverse, m);
 
     // Free VT and S_Inverse
     free(V_transpose);
     free(S_inverse);
 
     // Multiply VS_inverse and U_transpose to get the pseudoinverse
-    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans, n, m, m, 1, VS_inverse, m, U, m, 0, A_inv, m);
+    cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans, n, m, m, 1, VS_inverse, m, U, m, 0, A_inv, m);
 
     // Free U and VSI
     free(U);
