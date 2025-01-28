@@ -1,3 +1,4 @@
 from .linear_regression.py_interface.linear_regression_python import LinearRegressionPython
 from .linear_regression.py_interface.linear_regression_c import LinearRegressionC
+from .linear_regression.py_interface.linear_regression_cuda import LinearRegressionCUDA
 from .classical_model import ClassicalModel
