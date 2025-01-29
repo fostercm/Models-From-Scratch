@@ -8,7 +8,7 @@ project(cuda_utils LANGUAGES CXX CUDA)
 find_package(CUDAToolkit REQUIRED)
 
 # Source files for the library
-set(SOURCES pseudoinverse.cpp cuda_utils.cu)
+set(SOURCES pseudoinverse.cpp cuda_utils.cu loss_functions.cu loss_functions.cpp)
 
 # Set architecture for the GPU
 set(CMAKE_CUDA_ARCHITECTURES 86)
