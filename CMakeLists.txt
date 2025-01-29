@@ -8,6 +8,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # Add the utils directory
 add_subdirectory(src/utils/c_utils)
+add_subdirectory(src/utils/cuda_utils)
 
 # Add subdirectories to the build process
 add_subdirectory(src/classical/linear_regression/c_backend)
