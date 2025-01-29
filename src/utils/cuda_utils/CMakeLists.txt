@@ -7,8 +7,20 @@ project(cuda_utils LANGUAGES CXX CUDA)
 # Find the CUDA Toolkit
 find_package(CUDAToolkit REQUIRED)
 
+# Set the include directories
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/mathematical_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/memory_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/loss_functions
+)
+
 # Source files for the library
-set(SOURCES pseudoinverse.cpp memory_functions.cu loss_functions.cu loss_functions.cpp)
+file(GLOB_RECURSE SOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/mathematical_functions/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/memory_functions/*.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/loss_functions/*.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/loss_functions/*.cpp
+)
 
 # Set architecture for the GPU
 set(CMAKE_CUDA_ARCHITECTURES 86)
@@ -25,3 +37,5 @@ target_link_libraries(cuda_utils PRIVATE
     CUDA::cublas
     CUDA::cusolver
 )
+
+message("CMAKE DIR: ${CMAKE_CURRENT_SOURCE_DIR}")

@@ -1,5 +1,5 @@
 #include "loss_functions_cuda.h"
-#include "memory_functions.h"
+#include "../memory_functions/memory_functions.h"
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 

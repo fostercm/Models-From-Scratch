@@ -1,4 +1,5 @@
 #include <cuda_runtime.h>
+#include <memory_functions.h>
 #include <iostream>
 
 #define MIN(a, b) (a < b ? a : b)

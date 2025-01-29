@@ -1,5 +1,5 @@
 #include "linear_regression_cuda.h"
-#include "loss_functions_cuda.h"
+#include "loss_functions/loss_functions_cuda.h"
 #include <math.h>
 
 void fit(const float *X, const float *Y, float *Beta, const int num_samples, const int num_input_features, const int num_output_features) {
