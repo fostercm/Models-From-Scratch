@@ -6,13 +6,13 @@
 #include <gsl/gsl_matrix.h>
 
 // Function to fit the model
-void fit(float *X, float *Y, float *Beta, int num_samples, int num_input_features, int num_output_features) {
-
+void fit(const float *X, const float *Y, float *Beta, const int num_samples, const int num_input_features, const int num_output_features) {
     // Allocate memory for intermediates
     float *XTX = (float *) malloc(num_input_features * num_input_features * sizeof(float));
     float *XTX_inverse = (float *) malloc(num_input_features * num_samples * sizeof(float));
     float *XTX_inverse_XT = (float *) malloc(num_input_features * num_samples * sizeof(float));
     
+    // Take the inner product of the input matrix
     cblas_sgemm(
         CblasRowMajor, CblasTrans, CblasNoTrans,
         num_input_features, num_input_features, num_samples,
@@ -59,8 +59,7 @@ void fit(float *X, float *Y, float *Beta, int num_samples, int num_input_feature
 }
 
 // Function to predict the output using weights
-void predict(float *X, float *Beta, float *Prediction, int num_samples, int num_input_features, int num_output_features) {
-    
+void predict(const float *X, const float *Beta, float *Prediction, const int num_samples, const int num_input_features, const int num_output_features) {
     // Multiply the input matrix and weights
     cblas_sgemm(
         CblasRowMajor, CblasNoTrans, CblasNoTrans,
@@ -74,10 +73,9 @@ void predict(float *X, float *Beta, float *Prediction, int num_samples, int num_
 }
 
 // Function to calculate the cost
-float cost(float *Y_pred, float *Y, int num_samples, int num_output_features) {
-
+float cost(const float *Y_pred, const float *Y, const int num_samples, const int num_output_features) {
     // Calculate scale factor
-    float SCALE_FACTOR = 1.0 / (2 * num_samples);
+    const float SCALE_FACTOR = 1.0 / (2 * num_samples);
 
     // Calculate squared matrix norm
     float cost = 0;
