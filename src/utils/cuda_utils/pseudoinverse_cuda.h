@@ -1,6 +1,9 @@
 #ifndef PSEUDOINVERSE_CUDA_H
 #define PSEUDOINVERSE_CUDA_H
 
-void computePseudoinverse(float *A, float *A_inv, const int m, const int n);
+#include <cuda_runtime.h>
+#include <cublas_v2.h>
+
+void computePseudoinverse(float *A, float *A_inv, const int m, const int n, cublasHandle_t handle);
 
 #endif /* PSEUDOINVERSE_CUDA_H */

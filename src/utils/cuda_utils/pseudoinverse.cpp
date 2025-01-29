@@ -8,7 +8,7 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 // Function to compute the pseudoinverse of a matrix
-void computePseudoinverse(float *A, float *A_inv, const int m, const int n) {
+void computePseudoinverse(float *A, float *A_inv, const int m, const int n, cublasHandle_t handle) {
     // Establish constants
     const float alpha = 1.0f;
     const float beta = 0.0f;
@@ -62,10 +62,6 @@ void computePseudoinverse(float *A, float *A_inv, const int m, const int n) {
 
     // Free S
     cudaFree(S);
-
-    // Initialize cublas
-    cublasHandle_t handle;
-    cublasCreate(&handle);
 
     // Multiply V and S+ to get VS_inverse
     cublasSgemm(
