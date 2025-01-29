@@ -7,12 +7,8 @@
 
 // Function to fit the model
 void fit(const float *X, const float *Y, float *Beta, const int num_samples, const int num_input_features, const int num_output_features) {
-    // Allocate memory for intermediates
+    // Calculate the inner product of the input matrix and allocate memory for the result
     float *XTX = (float *) malloc(num_input_features * num_input_features * sizeof(float));
-    float *XTX_inverse = (float *) malloc(num_input_features * num_samples * sizeof(float));
-    float *XTX_inverse_XT = (float *) malloc(num_input_features * num_samples * sizeof(float));
-    
-    // Take the inner product of the input matrix
     cblas_sgemm(
         CblasRowMajor, CblasTrans, CblasNoTrans,
         num_input_features, num_input_features, num_samples,
@@ -23,13 +19,15 @@ void fit(const float *X, const float *Y, float *Beta, const int num_samples, con
         XTX,num_input_features
         );
     
-    // Take the pseudoinverse of the inner product
+    // Take the pseudoinverse of the inner product and allocate memory for the result
+    float *XTX_inverse = (float *) malloc(num_input_features * num_samples * sizeof(float));
     computePseudoinverse(XTX, XTX_inverse, num_input_features, num_input_features);
 
     // Free intermediate
     free(XTX);
 
-    // Multiply the pseudoinverse and the input matrix
+    // Multiply the pseudoinverse and the input matrix and allocate memory for the result
+    float *XTX_inverse_XT = (float *) malloc(num_input_features * num_samples * sizeof(float));
     cblas_sgemm(
         CblasRowMajor, CblasNoTrans, CblasTrans,
         num_input_features, num_samples, num_input_features,
