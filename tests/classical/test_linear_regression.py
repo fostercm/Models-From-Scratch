@@ -5,7 +5,7 @@ import numpy as np
 class TestLinearRegression(unittest.TestCase):
     
     def test_fit(self):
-        for model in [LinearRegressionPython(), LinearRegressionC()]:
+        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
@@ -26,6 +26,24 @@ class TestLinearRegression(unittest.TestCase):
             # Test that model parameters are evaluated
             model.fit(np.random.randn(10, 5), np.random.randn(10, 1))
             self.assertIsNotNone(model.params['beta'])
+            
+            # Test that the model is fitted correctly
+            # Test that the computation is correct
+            X = np.array([[1, 1],
+                          [1, 2],
+                          [2, 2],
+                          [2, 3]], dtype=np.float32)
+            Y = np.array([[6],
+                          [8],
+                          [9],
+                          [11]], dtype=np.float32)
+            
+            # Check beta
+            model.fit(X, Y)
+            correct_beta = np.array([[3],[1],[2]],dtype=np.float32)
+            self.assertTupleEqual(model.params['beta'].shape, (3, 1))
+            for i in range(3):
+                self.assertAlmostEqual(model.params['beta'][i][0], correct_beta[i][0], places=2)
 
     def test_predict(self):
         for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
@@ -81,34 +99,36 @@ class TestLinearRegression(unittest.TestCase):
             self.assertAlmostEqual(model.cost(Y_pred, Y), np.sum((Y_pred - Y) ** 2) / 20, places=3)
     
     def test_end_to_end(self):
-        for model in [LinearRegressionPython(), LinearRegressionC()]:
+        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
             
             # Define the input and output arrays
             X = np.array([[1, 1],
                           [1, 2],
                           [2, 2],
                           [2, 3]], dtype=np.float32)
-            Y = np.array([[6],
-                          [8],
-                          [9],
-                          [11]], dtype=np.float32)
+            Y = np.array([[6,6],
+                          [8,9],
+                          [9,11],
+                          [11,14]], dtype=np.float32)
             
             # Fit the model
             model.fit(X, Y)
             
             # Check beta
-            correct_beta = np.array([[3],[1],[2]],dtype=np.float32)
-            self.assertTupleEqual(model.params['beta'].shape, (3, 1))
+            correct_beta = np.array([[3,1],[1,2],[2,3]],dtype=np.float32)
+            self.assertTupleEqual(model.params['beta'].shape, (3, 2))
             for i in range(3):
-                self.assertAlmostEqual(model.params['beta'][i][0], correct_beta[i][0], places=2)
+                for j in range(2):
+                    self.assertAlmostEqual(model.params['beta'][i][j], correct_beta[i][j], places=2)
             
             # Predict
             Y_pred = model.predict(X)
             
             # Check prediction
-            self.assertTupleEqual(Y_pred.shape, (4, 1))
+            self.assertTupleEqual(Y_pred.shape, (4, 2))
             for i in range(4):
-                self.assertAlmostEqual(Y_pred[i][0], Y[i][0], places=2)
+                for j in range(2):
+                    self.assertAlmostEqual(Y_pred[i][j], Y[i][j], places=2)
             
             # Cost
             cost = model.cost(Y_pred, Y)
