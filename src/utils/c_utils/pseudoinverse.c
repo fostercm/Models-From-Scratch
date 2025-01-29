@@ -1,4 +1,4 @@
-#include "pseudoinverse.h"
+#include "pseudoinverse_c.h"
 #include <lapacke.h>
 #include <cblas.h>
 #include <stdio.h>
@@ -6,7 +6,7 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 // Function to compute the pseudoinverse of a matrix
-void computePseudoinverse(float *A, float *A_inv, int m, int n) {
+void computePseudoinverse(float *A, float *A_inv, const int m, const int n) {
 
     // Allocate memory for the SVD results
     float *U = (float *) malloc(m * m * sizeof(float));

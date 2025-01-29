@@ -8,7 +8,7 @@ project(c_utils)
 find_package(LAPACK REQUIRED)
 
 # Source files for the library
-set(SOURCES pseudoinverse.c utils.c)
+set(SOURCES pseudoinverse.c c_utils.c)
 
 # Set the flags for the static library
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")

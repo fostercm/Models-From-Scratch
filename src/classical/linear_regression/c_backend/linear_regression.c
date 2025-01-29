@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "linear_regression_c.h"
-#include "pseudoinverse.h"
+#include "pseudoinverse_c.h"
 #include <gsl/gsl_matrix.h>
 
 // Function to fit the model
