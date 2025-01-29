@@ -28,7 +28,7 @@ class TestLinearRegression(unittest.TestCase):
             self.assertIsNotNone(model.params['beta'])
 
     def test_predict(self):
-        for model in [LinearRegressionPython(), LinearRegressionC()]:
+        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
         
             # Test that the model is fitted
             with self.assertRaises(ValueError):
@@ -36,11 +36,28 @@ class TestLinearRegression(unittest.TestCase):
             
             # Test that the input dimensions match the model parameters
             with self.assertRaises(ValueError):
-                model.fit(np.random.randn(10, 5), np.random.randn(10, 1))
+                model.params['beta'] = np.random.randn(5, 1).astype(np.float32)
                 model.predict(np.random.randn(10, 3))
+            
+            # Test that the computation is correct
+            X = np.array([[1, 1],
+                          [1, 2],
+                          [2, 2],
+                          [2, 3]], dtype=np.float32)
+            Y = np.array([[6],
+                          [8],
+                          [9],
+                          [11]], dtype=np.float32)
+            model.params['beta'] = np.array([[3],[1],[2]],dtype=np.float32)
+            Y_pred = model.predict(X)
+            
+            # Check prediction
+            self.assertTupleEqual(Y_pred.shape, (4, 1))
+            for i in range(4):
+                self.assertAlmostEqual(Y_pred[i][0], Y[i][0], places=2)
         
     def test_cost(self):
-        for model in [LinearRegressionPython(), LinearRegressionC()]:
+        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
@@ -59,8 +76,9 @@ class TestLinearRegression(unittest.TestCase):
                 model.cost(np.zeros((2,3)), np.zeros((3,3)))
             
             # Test that the cost is evaluated correctly
-            model.fit(np.random.randn(10, 5), np.random.randn(10, 1))
-            self.assertIsNotNone(model.cost(np.random.randn(10, 1), np.random.randn(10, 1)))
+            Y_pred = np.random.randn(10, 1)
+            Y = np.random.randn(10, 1)
+            self.assertAlmostEqual(model.cost(Y_pred, Y), np.sum((Y_pred - Y) ** 2) / 20, places=3)
     
     def test_end_to_end(self):
         for model in [LinearRegressionPython(), LinearRegressionC()]:
