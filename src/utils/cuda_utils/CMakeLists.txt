@@ -16,14 +16,8 @@ include_directories(
 
 # Source files for the library
 file(GLOB_RECURSE SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/mathematical_functions/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mathematical_functions/*.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/memory_functions/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/memory_functions/*.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/loss_functions/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/loss_functions/*.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/matrix_functions/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/matrix_functions/*.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cu
 )
 
 # Set architecture for the GPU
