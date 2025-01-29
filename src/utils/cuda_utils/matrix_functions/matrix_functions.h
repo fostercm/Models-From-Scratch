@@ -1,0 +1,7 @@
+#ifndef MATRIX_FUNCTIONS_H
+#define MATRIX_FUNCTIONS_H
+
+__global__ void populateDiagonalKernel(float *matrix, const float *diagonal, const int m, const int n);
+void launchPopulateDiagonalKernel(float *matrix, const float *diagonal, const int m, const int n);
+
+#endif /* MATRIX_FUNCTIONS_H */
