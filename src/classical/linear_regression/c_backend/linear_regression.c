@@ -3,6 +3,7 @@
 #include <math.h>
 #include "linear_regression.h"
 #include "c_mathematical_functions/pseudoinverse.h"
+#include "c_loss_functions/loss_functions.h"
 #include <gsl/gsl_matrix.h>
 
 // Function to fit the model
@@ -72,17 +73,6 @@ void predict(const float *X, const float *Beta, float *Prediction, const int num
 
 // Function to calculate the cost
 float cost(const float *Y_pred, const float *Y, const int num_samples, const int num_output_features) {
-    // Calculate scale factor
-    const float SCALE_FACTOR = 1.0 / (2 * num_samples);
-
-    // Calculate squared matrix norm
-    float cost = 0;
-    for (int i=0 ; i<num_samples ; i++) {
-        for (int j=0 ; j<num_output_features ; j++) {
-            cost += pow(Y_pred[i*num_output_features + j] - Y[i*num_output_features + j], 2);
-        }
-    }
-
-    // Return scaled cost
-    return SCALE_FACTOR * cost;
+    // Return the mean squared error
+    return meanSquaredError(Y_pred, Y, num_samples, num_output_features);
 }
