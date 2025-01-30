@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "linear_regression_c.h"
-#include "pseudoinverse_c.h"
+#include "linear_regression.h"
+#include "c_mathematical_functions/pseudoinverse.h"
 #include <gsl/gsl_matrix.h>
 
 // Function to fit the model

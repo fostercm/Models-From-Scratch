@@ -1,4 +1,4 @@
-#include "linear_regression_cuda.h"
+#include "linear_regression.h"
 #include "cuda_loss_functions/loss_functions.h"
 #include <math.h>
 

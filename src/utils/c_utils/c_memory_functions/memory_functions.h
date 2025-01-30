@@ -1,6 +1,8 @@
 #ifndef MEMORY_FUNCTIONS_H
 #define MEMORY_FUNCTIONS_H
 
+#include <stdlib.h>
+
 void* safeMalloc(size_t size);
 void safeFree(void* d_ptr);
 

@@ -7,6 +7,14 @@ project(c_utils)
 # Find LAPACK if it's needed for utils
 find_package(LAPACK REQUIRED)
 
+# Include directories for the library
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/c_mathematical_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/c_memory_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/c_loss_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/c_matrix_functions
+)
+
 # Source files for the library
 file(GLOB_RECURSE SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.c

@@ -1,4 +1,4 @@
-#include "linear_regression_cuda.h"
+#include "linear_regression.h"
 #include "cuda_mathematical_functions/pseudoinverse.h"
 #include "cuda_memory_functions/memory_functions.h"
 #include <cublas_v2.h>

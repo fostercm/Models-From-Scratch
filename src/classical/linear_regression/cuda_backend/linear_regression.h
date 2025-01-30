@@ -1,5 +1,5 @@
-#ifndef LINEAR_REGRESSION_CUDA_H
-#define LINEAR_REGRESSION_CUDA_H
+#ifndef LINEAR_REGRESSION_H
+#define LINEAR_REGRESSION_H
 
 #include <cuda_runtime.h>
 

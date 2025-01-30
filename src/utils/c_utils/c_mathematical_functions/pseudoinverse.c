@@ -1,4 +1,4 @@
-#include "pseudoinverse_c.h"
+#include "pseudoinverse.h"
 #include <lapacke.h>
 #include <cblas.h>
 #include <stdio.h>
