@@ -1,7 +1,7 @@
 # Linear Regression  
 
 ## Overview  
-- Linear regression is a <ins>**supervised**</ins> statistical model that attempts to map a set of input variables to a set of output variables.
+- Linear regression is a <ins>**supervised**</ins> statistical model that attempts to map a set of input variables to a set of output variables
 - It is one of the most basic statistical models, so much so that it is disputed whether it counts as "machine learning"
 - As a fully linear method, it is unable to model many real-world relationships
 - However, its simplicity, interpretability, and efficiency more than make up for this drawback as long as key assumptions are met
