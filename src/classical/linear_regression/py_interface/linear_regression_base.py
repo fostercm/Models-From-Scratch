@@ -2,18 +2,46 @@ from classical.classical_model import ClassicalModel
 import numpy as np
 
 class LinearRegressionBase(ClassicalModel):
+    """
+    A base class for Linear Regression model.
+
+    This class provides methods for fitting the linear regression model,
+    predicting target values, and calculating the cost (Mean Squared Error).
+
+    Attributes:
+        params (dict): A dictionary storing the model parameters, including 'beta'.
+    """
     
     def __init__(self) -> None:
-        """Initialize the model parameters"""
+        """
+        Initialize the Linear Regression model parameters.
+
+        Initializes the 'beta' parameter to None. This will be populated
+        when the model is fitted to the training data.
+        """
         self.params = {'beta': None}
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
         """
-        Fit the Linear Regression model to the training data
+        Fit the Linear Regression model to the training data.
+
+        This method fits a linear regression model to the provided training data
+        (X and Y) using the normal equation approach. It pads the feature matrix
+        with a bias term (a column of ones) and validates the input data.
 
         Args:
-            X (np.ndarray): Feature matrix of shape (n_samples, n_features)
-            Y (np.ndarray): Target matrix of shape (n_samples, n_targets)
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features), where
+                            n_samples is the number of training samples and 
+                            n_features is the number of features per sample.
+            Y (np.ndarray): Target matrix of shape (n_samples, n_targets), where
+                            n_samples is the number of training samples and 
+                            n_targets is the number of targets per sample.
+
+        Returns:
+            np.ndarray: The modified feature matrix (with the bias term added) and the target values (Y).
+
+        Raises:
+            ValueError: If the number of samples in X does not match the number of samples in Y.
         """
         # Validate the input arrays
         X, Y = super()._validate_input(X,Y)
@@ -27,10 +55,23 @@ class LinearRegressionBase(ClassicalModel):
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
-        Predict target values using the learned model
+        Predict target values using the learned model.
+
+        This method predicts the target values based on the input features X using
+        the learned model parameters. It ensures the model is fitted and that the
+        dimensions of X match the model parameters.
 
         Args:
-            X (np.ndarray): Feature matrix of shape (n_samples, n_features)
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features), where
+                            n_samples is the number of test samples and 
+                            n_features is the number of features per sample.
+
+        Returns:
+            np.ndarray: Predicted target values of shape (n_samples, n_targets).
+
+        Raises:
+            ValueError: If the model is not fitted or if the dimensions of X do not match
+                        the expected shape.
         """
         # Validate the input array
         X, _ = super()._validate_input(X)
@@ -52,14 +93,21 @@ class LinearRegressionBase(ClassicalModel):
     
     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
         """
-        Compute the Mean Squared Error cost
+        Compute the Mean Squared Error (MSE) cost.
+
+        This method calculates the Mean Squared Error between the predicted values
+        (Y_pred) and the true target values (Y). This is a common cost function
+        used in regression tasks.
 
         Args:
-            Y_pred (np.ndarray): Predicted target values
-            Y (np.ndarray): True target values
+            Y_pred (np.ndarray): Predicted target values of shape (n_samples, n_targets).
+            Y (np.ndarray): True target values of shape (n_samples, n_targets).
 
         Returns:
-            float: Mean Squared Error
+            float: The Mean Squared Error between Y_pred and Y.
+
+        Raises:
+            ValueError: If the dimensions of Y_pred and Y do not match.
         """
         Y_pred, Y = super()._validate_input(Y_pred, Y)
         

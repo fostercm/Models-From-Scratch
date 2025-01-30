@@ -4,8 +4,24 @@ import numpy as np
 from pathlib import Path
 
 class LinearRegressionC(LinearRegressionBase):
+    """
+    Linear Regression model using a C implementation for performance optimization.
+
+    This class extends the LinearRegressionBase class and utilizes a C-based
+    library for model fitting, prediction, and cost computation to improve
+    performance over pure Python implementations.
+
+    Attributes:
+        lib (ctypes.CDLL): The C shared library for linear regression operations.
+    """
     
     def __init__(self):
+        """
+        Initialize the LinearRegressionC model.
+
+        This method loads the C shared library and sets up the argument types
+        for the C functions used for fitting, predicting, and calculating cost.
+        """
         super().__init__()
         
         # Load the C library
@@ -40,7 +56,20 @@ class LinearRegressionC(LinearRegressionBase):
         self.lib.cost.restype = ctypes.c_float
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
-        
+        """
+        Fit the Linear Regression model to the training data using the C implementation.
+
+        This method validates the input data, flattens the arrays, and calls the
+        C function to fit the model. The learned parameters (beta) are then
+        reshaped and stored in the model's parameters.
+
+        Args:
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            Y (np.ndarray): Target matrix of shape (n_samples, n_targets).
+
+        Raises:
+            ValueError: If the dimensions of X and Y do not match.
+        """
         X, Y = super().fit(X, Y)
         
         # Get the dimensions of the input and output
@@ -59,6 +88,22 @@ class LinearRegressionC(LinearRegressionBase):
         self.params['beta'] = Beta.reshape((num_input_features, num_output_features))
 
     def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Predict target values using the fitted model and the C implementation.
+
+        This method validates the input data, flattens the arrays, and calls the
+        C function to make predictions. The predictions are then reshaped to
+        the appropriate dimensions.
+
+        Args:
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+
+        Returns:
+            np.ndarray: The predicted target values of shape (n_samples, n_targets).
+
+        Raises:
+            ValueError: If the model is not fitted or the dimensions of X do not match.
+        """
         X = super().predict(X)
         
         # Get the dimensions of the input and output
@@ -77,6 +122,22 @@ class LinearRegressionC(LinearRegressionBase):
         return prediction.reshape((num_samples, num_output_features))
     
     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
+        """
+        Compute the Mean Squared Error (MSE) cost using the C implementation.
+
+        This method validates the input data, flattens the arrays, and calls the
+        C function to compute the cost between predicted and true values.
+
+        Args:
+            Y_pred (np.ndarray): Predicted target values of shape (n_samples, n_targets).
+            Y (np.ndarray): True target values of shape (n_samples, n_targets).
+
+        Returns:
+            float: The Mean Squared Error between Y_pred and Y.
+
+        Raises:
+            ValueError: If the dimensions of Y_pred and Y do not match.
+        """
         Y_pred, Y = super().cost(Y_pred, Y)
         
         # Get array dimensions
