@@ -4,18 +4,15 @@ cmake_minimum_required(VERSION 3.10)
 # Define the project name
 project(c_utils)
 
-# Find LAPACK if it's needed for utils
+# Find packages
 find_package(LAPACK REQUIRED)
 
-# Include directories for the library
+# Include directories
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/c_mathematical_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/c_memory_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/c_loss_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/c_matrix_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# Source files for the library
+# Source files
 file(GLOB_RECURSE SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.c
 )
@@ -26,10 +23,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 # Create the static library
 add_library(c_utils STATIC ${SOURCES})
 
-# Set the output directory for the static library
-set_target_properties(c_utils PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-)
-
-# Link LAPACK to the utils library (use LAPACK_LIBRARIES)
-target_link_libraries(c_utils ${LAPACK_LIBRARIES})
+# Link libraries
+target_link_libraries(
+    c_utils 
+    ${LAPACK_LIBRARIES})

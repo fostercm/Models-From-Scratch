@@ -4,33 +4,32 @@ cmake_minimum_required(VERSION 3.10)
 # Define the project name
 project(cuda_utils LANGUAGES CXX CUDA)
 
-# Find the CUDA Toolkit
+# Set architecture for the GPU
+set(CMAKE_CUDA_ARCHITECTURES 86)
+
+# Find packages
 find_package(CUDAToolkit REQUIRED)
 
-# Set the include directories
+# Include directories
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_mathematical_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_memory_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_loss_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_matrix_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# Source files for the library
+message("${CMAKE_CURRENT_SOURCE_DIR}")
+
+# Source files
 file(GLOB_RECURSE SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cu
 )
 
-# Set architecture for the GPU
-set(CMAKE_CUDA_ARCHITECTURES 86)
+# Set the flags for the static library
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler -fPIC")
 
 # Create the static library
 add_library(cuda_utils STATIC ${SOURCES})
 
-# -fPIC is needed for the shared library
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler -fPIC")
-
-# Link the shared library with the required libraries
+# Link libraries
 target_link_libraries(cuda_utils PRIVATE
     CUDA::cudart
     CUDA::cublas
