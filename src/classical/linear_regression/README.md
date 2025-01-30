@@ -1,7 +1,8 @@
 # Linear Regression  
 
 ## Overview  
-- Linear regression is a <ins>**supervised**</ins> statistical model that attempts to map a set of input variables to a set of output variables
+
+- Linear regression is a **_supervised_** statistical model that attempts to map a set of input variables to a set of output variables
 - It is one of the most basic statistical models, so much so that it is disputed whether it counts as "machine learning"
 - As a fully linear method, it is unable to model many real-world relationships
 - However, its simplicity, interpretability, and efficiency more than make up for this drawback as long as key assumptions are met
@@ -11,6 +12,7 @@
 ## Mathematical Derivation
 
 ### Definition
+
 A linear regression model assumes a linear relationship between the dependent variables $\Huge Y$ and the independent variables $\Huge X$:
 
 $$
@@ -18,11 +20,13 @@ $$
 $$
 
 where:
+
 - $\Huge Y \in \mathbb{R}^{n \times m}$ is the vector of observed values (with n samples and m dependent variables)
 - $\Huge X \in \mathbb{R}^{n \times d}$ is the matrix of input features (with n samples and d-1 independent variables with a column of 1s to represent a bias)
 - $\Huge \beta \in \mathbb{R}^{d \times m}$ is the vector of regression coefficients (d independent variables/bias and m dependent variables)
 
 ### Loss function
+
 To estimate $\Huge \beta$, we minimize the sum of squared errors:
 
 $$
@@ -38,6 +42,7 @@ $$
 This is referred to as mean squared error, or MSE.
 
 ### Closed-Form Solution
+
 Miraculously, since linear regression is an entirely linear model, there exists a closed-form solution for $$\Huge \beta$$ which I will derive below:  
 
 $$
@@ -75,6 +80,7 @@ $$
 It is worth noting that if $\Huge X^TX$ is not invertible, then the Moore-Penrose pseudoinverse should be used.
 
 ### Pseudoinverse
+
 For matrices that aren't invertible (correlated columns being the most likely reason here), the Moore-Penrose pseudoinverse is applicable, defined as:
 
 $$
@@ -90,6 +96,7 @@ $$
 To get $\Huge \Sigma^+$ simply tranpose $\Huge \Sigma$ and invert the singular values.
 
 ### Predictions
+
 Once we have $\Huge \hat{\beta}$, predictions for new data $\Huge X_{\text{new}}$ can be made as:
 
 $$
@@ -97,7 +104,9 @@ $$
 $$
 
 ## Assumptions  
+
 Linear regression has a few notable assumptions that should be checked before use:
+
 - **Linearity of relationships:** A linear relationship should exist (Lack-of-Fit Test)
 - **Normally Distributed Variables:** Inputs should be multivariate normal (Q-Q plot)
 - **Independence of errors:** Model errors should not correlate (Durbin-Watson statistic)
@@ -105,18 +114,23 @@ Linear regression has a few notable assumptions that should be checked before us
 - **No multicollinearity:** Input variables should not correlate (r statistic)
 
 ## Strengths and Weaknesses  
+
 ### Strengths  
+
 - Simple and interpretable  
 - Computationally efficient  
 - Works well with small datasets
 
 ### Weaknesses  
+
 - Sensitive to outliers  
 - Assumes a linear relationship  
 - Can suffer from overfitting with high-dimensional data  
 
 ## Implementation Details  
+
 Some specifics to keep in mind for this implementation:
+
 - Floats were used as the data type for a balance between speed and precision (float in C/C++/CUDA, np.float32 in Python)
 - I only stepped one layer of abstraction below linear regression, I used C libraries like CBLAS and LAPACKE and CUDA libraries like cuBLAS and cuSOLVER
 - For modularity, host-side data is handled in C++ and device-side data is handled in CUDA alongisde kernels I write
@@ -124,9 +138,11 @@ Some specifics to keep in mind for this implementation:
 - Type and value checking is handled in the base classes
 
 ## Benchmarking & Performance  
+
 Speed and memory benchmarking will be added soon
 
 ## Thoughts & Ideas  
+
 I found it fascinating that linear regression has a closed-form solution and I'm happy I was able to derive it.
 Coding this up has been a good exercise in created shared C/C++/CUDA libraries, which is likely what I spent the most time on.
 I will code up logistic regression next, it should work well as a child class of this.
