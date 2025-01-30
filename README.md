@@ -37,7 +37,119 @@ This repository contains (or will contain) implementations of the following mode
 
 (*Future additions may include generative models.*)  
 
-Each model has its own folder, containing implementations in **Python, C, and CUDA**, along with a dedicated README explaining the approach and optimizations.  
+Each model has its own folder, containing implementations in **Python, C, and CUDA**, along with a dedicated README explaining the approach and optimizations.
+
+## Repository Structure  
+
+The repository is organized as follows:  
+
+```bash
+models-from-scratch/
+├── CMakeLists.txt
+├── LICENSE
+├── README.md
+├── api
+│   └── main.py
+├── requirements.txt
+├── setup.py
+├── src
+│   ├── classical
+│   │   ├── classical_model.py
+│   │   ├── decision_tree
+│   │   │   ├── README.md
+│   │   │   └── decision_tree.py
+│   │   ├── k_means
+│   │   │   ├── README.md
+│   │   │   └── k_means.py
+│   │   ├── k_nearest_neighbors
+│   │   │   ├── README.md
+│   │   │   └── k_nearest_neighbors.py
+│   │   ├── linear_regression
+│   │   │   ├── README.md
+│   │   │   ├── c_backend
+│   │   │   │   ├── CMakeLists.txt
+│   │   │   │   ├── linear_regression.c
+│   │   │   │   └── linear_regression.h
+│   │   │   ├── cuda_backend
+│   │   │   │   ├── CMakeLists.txt
+│   │   │   │   ├── linear_regression.cpp
+│   │   │   │   ├── linear_regression.cu
+│   │   │   │   └── linear_regression.h
+│   │   │   └── py_interface
+│   │   │       ├── linear_regression_base.py
+│   │   │       ├── linear_regression_c.py
+│   │   │       ├── linear_regression_cuda.py
+│   │   │       └── linear_regression_python.py
+│   │   ├── logistic_regression
+│   │   │   ├── README.md
+│   │   │   └── logistic_regression.py
+│   │   ├── naive_bayes
+│   │   │   ├── README.md
+│   │   │   └── naive_bayes.py
+│   │   ├── principal_component_analysis
+│   │   │   ├── README.md
+│   │   │   └── principal_component_analysis.py
+│   │   ├── random_forest
+│   │   │   ├── README.md
+│   │   │   └── random_forest.py
+│   │   └── support_vector_machine
+│   │       ├── README.md
+│   │       └── support_vector_machine.py
+│   ├── neural
+│   │   ├── convolutional
+│   │   │   ├── README.md
+│   │   │   └── convolutional.py
+│   │   ├── feed_forward
+│   │   │   ├── README.md
+│   │   │   └── feed_forward.py
+│   │   ├── graph
+│   │   │   ├── README.md
+│   │   │   └── graph.py
+│   │   ├── lstm
+│   │   │   ├── README.md
+│   │   │   └── lstm.py
+│   │   ├── recurrent
+│   │   │   ├── README.md
+│   │   │   └── recurrent.py
+│   │   └── transformer
+│   │       ├── README.md
+│   │       └── transformer.py
+│   └── utils
+│       ├── c_utils
+│       │   ├── CMakeLists.txt
+│       │   ├── c_loss_functions
+│       │   │   ├── loss_functions.c
+│       │   │   └── loss_functions.h
+│       │   ├── c_mathematical_functions
+│       │   │   ├── pseudoinverse.c
+│       │   │   └── pseudoinverse.h
+│       │   ├── c_matrix_functions
+│       │   │   ├── matrix_functions.c
+│       │   │   └── matrix_functions.h
+│       │   └── c_memory_functions
+│       │       ├── memory_functions.c
+│       │       └── memory_functions.h
+│       ├── cuda_utils
+│       │   ├── CMakeLists.txt
+│       │   ├── cuda_loss_functions
+│       │   │   ├── loss_functions.cpp
+│       │   │   ├── loss_functions.cu
+│       │   │   └── loss_functions.h
+│       │   ├── cuda_mathematical_functions
+│       │   │   ├── pseudoinverse.cu
+│       │   │   └── pseudoinverse.h
+│       │   ├── cuda_matrix_functions
+│       │   │   ├── matrix_functions.cu
+│       │   │   └── matrix_functions.h
+│       │   └── cuda_memory_functions
+│       │       ├── memory_functions.cu
+│       │       └── memory_functions.h
+│       └── py_utils
+└── tests
+    ├── classical
+    │   └── test_linear_regression.py
+    └── neural
+```
 
 ## Installation  
 This project is designed to be packaged as a Python module with C/CUDA extensions. A full API will be available via **FastAPI** with containerized deployment using **Docker and Kubernetes**.  
