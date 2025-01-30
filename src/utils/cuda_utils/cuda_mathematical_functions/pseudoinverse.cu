@@ -61,7 +61,7 @@ void computePseudoinverse(float *d_A, float *d_A_inv, const int m, const int n, 
     cudaMemset(d_S_inv, 0, m * n * sizeof(float));
 
     // Populate the diagonal of S_inv
-    launchPopulateDiagonalKernel(d_S_inv, d_S, m, MIN(m, n));
+    launchPopulateDiagonalKernel(d_S_inv, d_S, m, n);
 
     // Free S
     safeCudaFree(d_S);
