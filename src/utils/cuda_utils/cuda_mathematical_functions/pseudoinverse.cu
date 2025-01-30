@@ -1,3 +1,13 @@
+/**
+ * @file pseudoinverse.cu
+ * @brief CUDA implementation of pseudoinverse computation using SVD.
+ *
+ * This file provides a CUDA implementation of the pseudoinverse of a matrix using Singular Value Decomposition (SVD). 
+ * It leverages cuBLAS and cuSolver libraries to perform matrix operations efficiently on the GPU. 
+ * The matrix is transposed, SVD is computed, and the inverse of the singular value matrix is calculated.
+ * Intermediate results are stored and managed on the GPU, and memory is freed after each step to avoid memory leaks.
+ */
+
 #include "pseudoinverse.h"
 #include "../cuda_memory_functions/memory_functions.h"
 #include "../cuda_matrix_functions/matrix_functions.h"
@@ -8,7 +18,23 @@
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-// Function to compute the pseudoinverse of a matrix
+/**
+ * @brief Computes the pseudoinverse of a matrix using CUDA.
+ *
+ * This function computes the pseudoinverse of a matrix `A` using Singular Value Decomposition (SVD) 
+ * and the CUDA cuBLAS and cuSolver libraries. The matrix is transposed to ensure the operations are performed 
+ * in a column-major format. The SVD is computed to find the singular values and vectors, and the pseudoinverse 
+ * is obtained by inverting the non-zero singular values. The result is stored in `d_A_inv`.
+ *
+ * @param[in] d_A Pointer to the input matrix `A` stored on the GPU with size `m * n`.
+ * @param[out] d_A_inv Pointer to the resulting pseudoinverse matrix, also stored on the GPU with size `n * m`.
+ * @param[in] m The number of rows in matrix `A`.
+ * @param[in] n The number of columns in matrix `A`.
+ * @param[in] cublasH Handle to the cuBLAS library used for matrix operations.
+ *
+ * @note This function uses cuBLAS for matrix operations and cuSolver for computing the SVD of the matrix.
+ *       Memory is allocated and freed for intermediate results throughout the process.
+ */
 void computePseudoinverse(float *d_A, float *d_A_inv, const int m, const int n, cublasHandle_t cublasH) {
     // Initialize Cusolver
     cusolverDnHandle_t cusolverH;

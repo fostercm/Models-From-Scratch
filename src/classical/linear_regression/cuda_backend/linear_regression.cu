@@ -1,9 +1,32 @@
+/**
+ * @file linear_regression.cu
+ * @brief Linear regression model functions using CUDA for fitting, prediction, and cost calculation.
+ *
+ * This file contains the CUDA-accelerated implementation of linear regression model fitting, prediction, and
+ * cost computation. The matrix operations are offloaded to the GPU using cuBLAS and custom CUDA functions.
+ * The core functions involve fitting the model (training), making predictions, and calculating the cost (mean squared error).
+ */
+
 #include "linear_regression.h"
 #include "cuda_mathematical_functions/pseudoinverse.h"
 #include "cuda_memory_functions/memory_functions.h"
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 
+/**
+ * @brief Fit the linear regression model using CUDA.
+ *
+ * This function performs the model fitting (training) on the GPU. It computes the Beta coefficients using the
+ * normal equation Beta = (X^T * X)^(-1) * X^T * Y, with CUDA-accelerated matrix multiplication via cuBLAS,
+ * and the pseudoinverse computed on the GPU.
+ *
+ * @param[in] X The input matrix (num_samples x num_input_features).
+ * @param[in] Y The target/output matrix (num_samples x num_output_features).
+ * @param[out] Beta The computed model parameters (weights), (num_input_features x num_output_features).
+ * @param[in] num_samples The number of samples in the dataset.
+ * @param[in] num_input_features The number of features in the input data (X).
+ * @param[in] num_output_features The number of output features (Y).
+ */
 void fitCUDA(const float *X, const float *Y, float *Beta, const int num_samples, const int num_input_features, const int num_output_features) {
     // Initialize Cublas
     cublasHandle_t handle;
@@ -100,6 +123,19 @@ void fitCUDA(const float *X, const float *Y, float *Beta, const int num_samples,
     cublasDestroy(handle);
 }
 
+/**
+ * @brief Predict the output using the trained linear regression model with CUDA.
+ *
+ * This function computes the predicted output by multiplying the input matrix X with the learned model parameters Beta,
+ * using cuBLAS for efficient matrix multiplication on the GPU.
+ *
+ * @param[in] X The input matrix (num_samples x num_input_features).
+ * @param[in] Beta The trained model parameters (weights), (num_input_features x num_output_features).
+ * @param[out] Prediction The predicted output matrix, (num_samples x num_output_features).
+ * @param[in] num_samples The number of samples in the dataset.
+ * @param[in] num_input_features The number of input features in the dataset.
+ * @param[in] num_output_features The number of output features.
+ */
 void predictCUDA(const float *X, const float *Beta, float *Prediction, const int num_samples, const int num_input_features, const int num_output_features) {
     // Initialize cublas
     cublasHandle_t handle;
@@ -160,6 +196,18 @@ void predictCUDA(const float *X, const float *Beta, float *Prediction, const int
     cublasDestroy(handle);
 }
 
+/**
+ * @brief Calculate the cost (mean squared error) between predictions and actual values using CUDA.
+ *
+ * This function computes the mean squared error (MSE) between the predicted values and the actual target values,
+ * using CUDA-accelerated operations for efficient computation.
+ *
+ * @param[in] Y_pred The predicted output matrix, (num_samples x num_output_features).
+ * @param[in] Y The actual target/output matrix, (num_samples x num_output_features).
+ * @param[out] cost The computed cost (MSE).
+ * @param[in] num_samples The number of samples in the dataset.
+ * @param[in] num_output_features The number of output features.
+ */
 void costCUDA(const float *Y_pred, const float *Y, float *cost, const int num_samples, const int num_output_features) {
     // Initialize cublas
     cublasHandle_t handle;

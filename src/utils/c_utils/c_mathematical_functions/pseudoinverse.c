@@ -1,3 +1,17 @@
+/**
+ * @file pseudoinverse.c
+ * @brief Computes the Moore-Penrose pseudoinverse of a matrix using SVD.
+ *
+ * This implementation utilizes LAPACK and CBLAS for efficient singular 
+ * value decomposition (SVD) to compute the pseudoinverse. The function 
+ * follows the standard approach: 
+ * A+ = V S+ U^T
+ * where S+ is the diagonal matrix of inverted nonzero singular values.
+ *
+ * @author  Cole Foster
+ * @date    2025-01-29
+ */
+
 #include "pseudoinverse.h"
 #include "../c_memory_functions/memory_functions.h"
 #include <lapacke.h>
@@ -7,7 +21,24 @@
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-// Function to compute the pseudoinverse of a matrix
+/**
+ * @brief Computes the Moore-Penrose pseudoinverse of a matrix.
+ *
+ * This function performs singular value decomposition (SVD) on the input 
+ * matrix A and calculates its pseudoinverse A+ as:
+ * A+ = V S+ U^T
+ * 
+ * where:
+ *  - U is an m x m orthogonal matrix,
+ *  - S is an m x n diagonal matrix of singular values,
+ *  - V is an n x n orthogonal matrix,
+ *  - S+ is the inverse of nonzero singular values in S
+ *
+ * @param[in]  A   Pointer to the input matrix of size m x n.
+ * @param[out] A_inv Pointer to the output pseudoinverse matrix of size n x m.
+ * @param[in]  m   Number of rows in the input matrix.
+ * @param[in]  n   Number of columns in the input matrix.
+ */
 void computePseudoinverse(float *A, float *A_inv, const int m, const int n) {
 
     // Allocate memory for the SVD results
