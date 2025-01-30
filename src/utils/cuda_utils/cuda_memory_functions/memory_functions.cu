@@ -6,8 +6,8 @@
  * These functions ensure error handling and appropriate cleanup during the memory operations in CUDA-based applications.
  */
 
+#include <cuda_memory_functions/memory_functions.h>
 #include <cuda_runtime.h>
-#include <memory_functions.h>
 #include <iostream>
 
 /**
