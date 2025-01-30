@@ -3,8 +3,23 @@ from classical import LinearRegressionPython, LinearRegressionC, LinearRegressio
 import numpy as np
 
 class TestLinearRegression(unittest.TestCase):
+    """
+    Tests for the LinearRegression class implementations in Python, C, and CUDA.
+    Ensures correctness for fitting, predicting, and calculating costs.
+    """
     
     def test_fit(self):
+        """
+        Test the fit method for all LinearRegression implementations.
+        
+        Verifies the following:
+        - Ensures proper handling of input types (inputs must be numpy arrays).
+        - Ensures that the inputs are not empty arrays.
+        - Verifies that inputs are 2D arrays (to match the expected model structure).
+        - Checks that the number of rows in X and Y are equal.
+        - Ensures that the model parameters (beta) are computed and not None after fitting.
+        - Verifies that the computed parameters (beta) match expected values for a simple dataset.
+        """
         for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
         
             # Test that inputs are numpy arrays
@@ -46,6 +61,15 @@ class TestLinearRegression(unittest.TestCase):
                 self.assertAlmostEqual(model.params['beta'][i][0], correct_beta[i][0], places=2)
 
     def test_predict(self):
+        """
+        Test the predict method for all LinearRegression implementations.
+        
+        Verifies the following:
+        - Ensures the model is fitted before making predictions.
+        - Verifies that the input dimensions match the model's parameters.
+        - Checks that the predictions are made correctly based on a fitted model.
+        - Ensures that the predictions match expected values for a given input.
+        """
         for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
         
             # Test that the model is fitted
@@ -75,6 +99,17 @@ class TestLinearRegression(unittest.TestCase):
                 self.assertAlmostEqual(Y_pred[i][0], Y[i][0], places=2)
         
     def test_cost(self):
+        """
+        Test the cost method for all LinearRegression implementations.
+        
+        Verifies the following:
+        - Ensures proper handling of input types (inputs must be numpy arrays).
+        - Ensures that inputs are not empty arrays.
+        - Ensures that inputs are 2D arrays.
+        - Verifies that the number of rows in Y_pred and Y are equal.
+        - Validates that the cost computation correctly reflects the difference between predicted and actual values.
+        - Compares the computed cost to a manually computed value for accuracy.
+        """
         for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
         
             # Test that inputs are numpy arrays
@@ -99,6 +134,17 @@ class TestLinearRegression(unittest.TestCase):
             self.assertAlmostEqual(model.cost(Y_pred, Y), np.sum((Y_pred - Y) ** 2) / 20, places=3)
     
     def test_end_to_end(self):
+        """
+        End-to-end test for the LinearRegression models.
+
+        Verifies the full workflow from fitting the model to making predictions and evaluating the cost. 
+        Specifically, this test ensures:
+        - The model correctly fits the data and computes parameters (beta).
+        - The predicted values align with the expected output.
+        - The cost computation reflects the difference between predictions and actual values.
+
+        This test uses a small synthetic dataset to validate the entire process of training and evaluating the model.
+        """
         for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
             
             # Define the input and output arrays
