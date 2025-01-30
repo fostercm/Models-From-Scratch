@@ -24,7 +24,7 @@ file(GLOB_RECURSE SOURCES
 # Set architecture for the GPU
 set(CMAKE_CUDA_ARCHITECTURES 86)
 
-# Create the shared library
+# Create the static library
 add_library(cuda_utils STATIC ${SOURCES})
 
 # -fPIC is needed for the shared library
