@@ -1,5 +1,5 @@
-#ifndef LOSS_FUNCTIONS_CUDA_H
-#define LOSS_FUNCTIONS_CUDA_H
+#ifndef LOSS_FUNCTIONS_H
+#define LOSS_FUNCTIONS_H
 
 #include <cuda_runtime.h>
 

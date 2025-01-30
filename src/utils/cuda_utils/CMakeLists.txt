@@ -9,9 +9,10 @@ find_package(CUDAToolkit REQUIRED)
 
 # Set the include directories
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/mathematical_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/memory_functions
-    ${CMAKE_CURRENT_SOURCE_DIR}/loss_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_mathematical_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_memory_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_loss_functions
+    ${CMAKE_CURRENT_SOURCE_DIR}/cuda_matrix_functions
 )
 
 # Source files for the library

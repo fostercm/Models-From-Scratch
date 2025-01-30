@@ -1,4 +1,4 @@
-#include "loss_functions_cuda.h"
+#include "loss_functions.h"
 #include <math.h>
 
 float meanSquaredError(const float *Y_pred, const float *Y, const int num_samples, const int num_output_features) {

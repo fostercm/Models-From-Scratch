@@ -1,6 +1,6 @@
-#include "pseudoinverse_cuda.h"
-#include "../memory_functions/memory_functions.h"
-#include "../matrix_functions/matrix_functions.h"
+#include "pseudoinverse.h"
+#include "../cuda_memory_functions/memory_functions.h"
+#include "../cuda_matrix_functions/matrix_functions.h"
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 #include <cusolverDn.h>

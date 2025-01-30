@@ -1,4 +1,5 @@
 #include <cuda_runtime.h>
+#include <matrix_functions.h>
 #include <iostream>
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))

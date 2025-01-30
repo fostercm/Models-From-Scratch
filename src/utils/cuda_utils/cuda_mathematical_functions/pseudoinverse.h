@@ -1,5 +1,5 @@
-#ifndef PSEUDOINVERSE_CUDA_H
-#define PSEUDOINVERSE_CUDA_H
+#ifndef PSEUDOINVERSE_H
+#define PSEUDOINVERSE_H
 
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
