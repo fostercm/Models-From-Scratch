@@ -191,8 +191,8 @@ class TestBenchmarks(unittest.TestCase):
     """Benchmark different implementations and generate plots."""
 
     # Benchmark settings
-    n_runs = 5
-    plot_dir = "benchmarks/linear_regression"
+    n_runs = 3
+    plot_dir = "../benchmarks/linear_regression"
 
     # Model classes to benchmark
     model_classes = {
