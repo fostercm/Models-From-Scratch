@@ -224,14 +224,11 @@ class TestBenchmarks(unittest.TestCase):
         for _ in range(self.n_runs):
             model = model_class()
 
-            # Measure execution time
+            # Measure execution time and memory usage
+            tracemalloc.start()
             start_time = time.perf_counter()
             model.fit(X, Y)
             execution_times.append(time.perf_counter() - start_time)
-
-            # Measure memory usage
-            tracemalloc.start()
-            model.fit(X, Y)
             _, peak_mem = tracemalloc.get_traced_memory()
             tracemalloc.stop()
 
