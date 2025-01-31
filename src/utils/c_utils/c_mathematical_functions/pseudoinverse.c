@@ -18,6 +18,7 @@
 #include <cblas.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -46,11 +47,9 @@ void computePseudoinverse(float *A, float *A_inv, const int m, const int n) {
     U = (float*) safeMalloc(m * m * sizeof(float));
     S = (float*) safeMalloc(MIN(m, n) * sizeof(float));
     V_T = (float*) safeMalloc(n * n * sizeof(float));
-    superb = (float*) safeMalloc(MIN(m, n) * sizeof(float));
 
-    // Compute the SVD and free superb
-    LAPACKE_sgesvd(LAPACK_ROW_MAJOR, 'A', 'A', m, n, A, n, S, U, m, V_T, n, superb);
-    safeFree(superb);
+    // Compute the SVD
+    LAPACKE_sgesdd(LAPACK_ROW_MAJOR, 'S', m, n, A, n, S, U, m, V_T, n);
 
     // Diagonalize and invert non-zero singular values (create S+)
     float *S_inv;
