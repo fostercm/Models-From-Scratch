@@ -67,7 +67,7 @@ void computePseudoinverse(float *A, float *A_inv, const int m, const int n) {
 
     // Compute VS_inv = V * S_inv
     float *VS_inv;
-    VS_inv = (float *) malloc(n * m * sizeof(float));
+    VS_inv = (float *) safeMalloc(n * m * sizeof(float));
     cblas_sgemm(
         CblasRowMajor, CblasTrans, CblasNoTrans, 
         n, m, n, 

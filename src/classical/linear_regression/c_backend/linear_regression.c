@@ -13,6 +13,7 @@
 #include "linear_regression.h"
 #include "c_mathematical_functions/pseudoinverse.h"
 #include "c_loss_functions/loss_functions.h"
+#include "c_memory_functions/memory_functions.h"
 #include <gsl/gsl_matrix.h>
 
 /**
@@ -31,7 +32,8 @@
  */
 void fit(const float *X, const float *Y, float *Beta, const int num_samples, const int num_input_features, const int num_output_features) {
     // Calculate the inner product of the input matrix and allocate memory for the result
-    float *XTX = (float *) malloc(num_input_features * num_input_features * sizeof(float));
+    float *XTX;
+    XTX = (float*) safeMalloc(num_input_features * num_input_features * sizeof(float));
     cblas_sgemm(
         CblasRowMajor, CblasTrans, CblasNoTrans,
         num_input_features, num_input_features, num_samples,
@@ -43,14 +45,16 @@ void fit(const float *X, const float *Y, float *Beta, const int num_samples, con
         );
     
     // Take the pseudoinverse of the inner product and allocate memory for the result
-    float *XTX_inverse = (float *) malloc(num_input_features * num_samples * sizeof(float));
+    float *XTX_inverse;
+    XTX_inverse = (float*) safeMalloc(num_input_features * num_input_features * sizeof(float));
     computePseudoinverse(XTX, XTX_inverse, num_input_features, num_input_features);
 
     // Free intermediate
-    free(XTX);
+    safeFree(XTX);
 
     // Multiply the pseudoinverse and the input matrix and allocate memory for the result
-    float *XTX_inverse_XT = (float *) malloc(num_input_features * num_samples * sizeof(float));
+    float *XTX_inverse_XT;
+    XTX_inverse_XT = (float*) safeMalloc(num_input_features * num_samples * sizeof(float));
     cblas_sgemm(
         CblasRowMajor, CblasNoTrans, CblasTrans,
         num_input_features, num_samples, num_input_features,
@@ -62,7 +66,7 @@ void fit(const float *X, const float *Y, float *Beta, const int num_samples, con
         );
     
     // Free intermediate
-    free(XTX_inverse);
+    safeFree(XTX_inverse);
 
     // Multiply the running product with Y
     cblas_sgemm(
@@ -76,7 +80,7 @@ void fit(const float *X, const float *Y, float *Beta, const int num_samples, con
         );
     
     // Free intermediate
-    free(XTX_inverse_XT);
+    safeFree(XTX_inverse_XT);
 }
 
 /**
