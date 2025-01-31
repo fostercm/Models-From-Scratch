@@ -16,7 +16,7 @@
 A linear regression model assumes a linear relationship between the dependent variables $\Huge Y$ and the independent variables $\Huge X$:
 
 $$
-\Huge y = X\beta
+\Huge Y = X\beta
 $$
 
 where:
