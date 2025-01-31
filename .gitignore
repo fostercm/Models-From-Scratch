@@ -1,6 +1,6 @@
 *.egg-info
 __pycache__/
-.*
+.v*
 *.so
 build
 *:Zone.Identifier
