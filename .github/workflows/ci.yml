@@ -27,4 +27,4 @@ jobs:
 
       - name: Run API and src tests
         run: |
-          python -m unittest discover -s /home/runner/work/Models-From-Scratch/src/
+          python -m unittest discover
