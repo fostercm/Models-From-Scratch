@@ -145,5 +145,6 @@ Some specifics to keep in mind for this implementation:
 ## Thoughts & Ideas  
 
 I found it fascinating that linear regression has a closed-form solution and I'm happy I was able to derive it.
+It is worth noting that the C class is clearly slower than the others at scale, I found this to be because of SVD computation and lack of multiprocessing.
 Coding this up has been a good exercise in created shared C/C++/CUDA libraries, which is likely what I spent the most time on.
 I will code up logistic regression next, it should work well as a child class of this.
