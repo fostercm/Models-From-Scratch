@@ -27,4 +27,5 @@ jobs:
 
       - name: Run API and src tests
         run: |
-          python -m unittest discover
+          python -m unittest discover -s api
+          python -m unittest discover -s src
