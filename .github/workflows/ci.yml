@@ -39,9 +39,6 @@ jobs:
           cmake ..
           make
 
-      - name: Check Shared Library Dependencies
-        run: ldd build/lib/*.so
-
       - name: Run API and src tests
         run: |
           python -m unittest discover -s src
