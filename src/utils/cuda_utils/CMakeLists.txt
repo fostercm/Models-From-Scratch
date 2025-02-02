@@ -15,8 +15,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-message("${CMAKE_CURRENT_SOURCE_DIR}")
-
 # Source files
 file(GLOB_RECURSE SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp

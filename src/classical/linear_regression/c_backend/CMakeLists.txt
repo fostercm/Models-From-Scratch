@@ -21,7 +21,6 @@ set(SOURCES linear_regression.c)
 add_library(linear_regression_c SHARED ${SOURCES})
 
 # Link libraries
-find_library (LAPACKE lapacke)
 target_link_libraries(linear_regression_c 
         c_utils
         ${GSL_LIBRARIES}
