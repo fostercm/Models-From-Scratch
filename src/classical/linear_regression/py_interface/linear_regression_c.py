@@ -25,7 +25,7 @@ class LinearRegressionC(LinearRegressionBase):
         super().__init__()
         
         # Load the C library
-        lib_path = Path(__file__).resolve().parents[5] / 'build' / 'lib' / 'liblinear_regression_c.so'
+        lib_path = Path(__file__).resolve().parents[4] / 'build' / 'lib' / 'liblinear_regression_c.so'
         self.lib = ctypes.CDLL(str(lib_path))
         
         # Define the types of the arguments
