@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "linear_regression.h"
-#include "c_mathematical_functions/pseudoinverse.h"
+#include "c_mathematical_functions/inverse.h"
 #include "c_loss_functions/loss_functions.h"
 #include "c_memory_functions/memory_functions.h"
 #include <gsl/gsl_matrix.h>
@@ -44,15 +44,15 @@ void fit(const float *X, const float *Y, float *Beta, const int num_samples, con
         XTX,num_input_features
         );
     
-    // Take the pseudoinverse of the inner product and allocate memory for the result
+    // Take the inverse of the inner product and allocate memory for the result
     float *XTX_inverse;
     XTX_inverse = (float*) safeMalloc(num_input_features * num_input_features * sizeof(float));
-    computePseudoinverse(XTX, XTX_inverse, num_input_features, num_input_features);
+    computeInverse(XTX, XTX_inverse, num_input_features);
 
     // Free intermediate
     safeFree(XTX);
 
-    // Multiply the pseudoinverse and the input matrix and allocate memory for the result
+    // Multiply the inverse and the input matrix and allocate memory for the result
     float *XTX_inverse_XT;
     XTX_inverse_XT = (float*) safeMalloc(num_input_features * num_samples * sizeof(float));
     cblas_sgemm(
