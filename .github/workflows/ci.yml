@@ -38,12 +38,6 @@ jobs:
           cd build
           cmake ..
           make
-      
-      - name: LS
-        run: |
-          ls
-          ls build
-          ls build/lib
 
       # - name: Run API and src tests
       #   run: |
