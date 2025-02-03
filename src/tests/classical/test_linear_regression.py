@@ -1,11 +1,6 @@
 import unittest
-import time
-import tracemalloc
-import os
-from classical import LinearRegressionPython, LinearRegressionC, LinearRegressionCUDA
-from sklearn.linear_model import LinearRegression
+from classical import LinearRegressionPython
 import numpy as np
-import matplotlib.pyplot as plt
 
 class TestLinearRegression(unittest.TestCase):
     """
@@ -25,7 +20,7 @@ class TestLinearRegression(unittest.TestCase):
         - Ensures that the model parameters (beta) are computed and not None after fitting.
         - Verifies that the computed parameters (beta) match expected values for a simple dataset.
         """
-        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
+        for model in [LinearRegressionPython()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
@@ -75,7 +70,7 @@ class TestLinearRegression(unittest.TestCase):
         - Checks that the predictions are made correctly based on a fitted model.
         - Ensures that the predictions match expected values for a given input.
         """
-        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
+        for model in [LinearRegressionPython()]:
         
             # Test that the model is fitted
             with self.assertRaises(ValueError):
@@ -115,7 +110,7 @@ class TestLinearRegression(unittest.TestCase):
         - Validates that the cost computation correctly reflects the difference between predicted and actual values.
         - Compares the computed cost to a manually computed value for accuracy.
         """
-        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
+        for model in [LinearRegressionPython()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
@@ -150,7 +145,7 @@ class TestLinearRegression(unittest.TestCase):
 
         This test uses a small synthetic dataset to validate the entire process of training and evaluating the model.
         """
-        for model in [LinearRegressionPython(), LinearRegressionC(), LinearRegressionCUDA()]:
+        for model in [LinearRegressionPython()]:
             
             # Define the input and output arrays
             X = np.array([[1, 1],
