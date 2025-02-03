@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from api.schemas import DataUploadRequest
+from api.schemas.data_schemas import DataUploadRequest
 from api.services.data_services import store_data
 
 router = APIRouter()
