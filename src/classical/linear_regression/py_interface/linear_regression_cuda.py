@@ -25,7 +25,6 @@ class LinearRegressionCUDA(LinearRegressionBase):
         super().__init__()
         
         # Load the CUDA library
-        # lib_path = Path(__file__).resolve().parents[4] / 'build' / 'lib' / 'liblinear_regression_cuda.so'
         lib_path = os.path.abspath("build/lib/liblinear_regression_cuda.so")
         self.lib = ctypes.CDLL(lib_path)
         
