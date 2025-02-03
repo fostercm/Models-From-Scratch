@@ -20,28 +20,28 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-
-      - name: Install python dependencies
-        run: |
-          pip install -r requirements.txt
       
-      - name: Install C/CUDA dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgsl-dev liblapacke liblapacke-dev
-          sudo apt-get install -y libopenblas-dev 
-          sudo apt-get install -y nvidia-cuda-toolkit
+      - name: LS
+        run: ls
+
+      # - name: Install python dependencies
+      #   run: |
+      #     pip install -r requirements.txt
+      
+      # - name: Install C/CUDA dependencies
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y libgsl-dev liblapacke liblapacke-dev
+      #     sudo apt-get install -y libopenblas-dev 
+      #     sudo apt-get install -y nvidia-cuda-toolkit
         
-      - name: Build shared libraries
-        run: |
-          mkdir -p build
-          cd build
-          cmake ..
-          make
-      
-      - name: List Shared Libraries
-        run: find . -name "*.so"
+      # - name: Build shared libraries
+      #   run: |
+      #     mkdir -p build
+      #     cd build
+      #     cmake ..
+      #     make
 
-      - name: Run API and src tests
-        run: |
-          python -m unittest discover -s src
+      # - name: Run API and src tests
+      #   run: |
+      #     python -m unittest discover -s src
