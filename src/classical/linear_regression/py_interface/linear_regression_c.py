@@ -1,7 +1,7 @@
 from .linear_regression_base import LinearRegressionBase
 import ctypes
 import numpy as np
-from pathlib import Path
+import os
 
 class LinearRegressionC(LinearRegressionBase):
     """
@@ -25,8 +25,8 @@ class LinearRegressionC(LinearRegressionBase):
         super().__init__()
         
         # Load the C library
-        lib_path = Path(__file__).resolve().parents[4] / 'build' / 'lib' / 'liblinear_regression_c.so'
-        self.lib = ctypes.CDLL(str(lib_path))
+        lib_path = os.path.abspath("build/lib/liblinear_regression_c.so")
+        self.lib = ctypes.CDLL(lib_path)
         
         # Define the types of the arguments
         self.lib.fit.argtypes = [
