@@ -18,7 +18,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 # Set the flags for the static library
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fopenmp -O3 -Wall")
 
 # Create the static library
 add_library(c_utils STATIC ${SOURCES})
