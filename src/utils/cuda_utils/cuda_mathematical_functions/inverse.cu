@@ -18,6 +18,19 @@
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
+/**
+ * @brief Computes the inverse of a matrix using LU decomposition, or the pseudoinverse if the matrix is singular.
+ *
+ * This function computes the inverse of the matrix `A` using LU decomposition with the cuSolver library.
+ * If the matrix is singular (i.e., its determinant is zero), it falls back to computing the pseudoinverse 
+ * using Singular Value Decomposition (SVD) instead. The computation is performed on the GPU using cuBLAS 
+ * and cuSolver for efficient matrix operations.
+ *
+ * @param[in] d_A Pointer to the input matrix `A` stored on the GPU with size `n * n` (square matrix).
+ * @param[out] d_A_inv Pointer to the resulting inverse matrix stored on the GPU with size `n * n`.
+ * @param[in] n The number of rows and columns in the square matrix `A` (i.e., the matrix is `n x n`).
+ * @param[in] cublasHandle Handle to the cuBLAS library used for matrix operations.
+ */
 void computeInverse(float *d_A, float *d_A_inv, int n, cublasHandle_t cublasHandle) {
     // Initialize the cuSolver library
     cusolverDnHandle_t cusolverHandle;
