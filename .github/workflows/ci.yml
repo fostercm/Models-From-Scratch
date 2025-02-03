@@ -39,6 +39,6 @@ jobs:
           cmake ..
           make
 
-      # - name: Run API and src tests
-      #   run: |
-      #     python -m unittest discover -s src
+      - name: Run API and src tests
+        run: |
+          python -m unittest discover -s src
