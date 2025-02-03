@@ -9,6 +9,7 @@
 #include "memory_functions.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief Allocates memory safely and exits on failure.
@@ -40,4 +41,22 @@ void safeFree(void* d_ptr) {
     if (d_ptr != NULL) {
         free(d_ptr);
     }
+}
+
+/**
+ * @brief Safely copies memory from source to destination.
+ *
+ * This function checks if the source and destination pointers are non-null 
+ * before calling `memcpy()`, preventing potential segmentation faults.
+ *
+ * @param[out] dest Pointer to the destination memory.
+ * @param[in] src Pointer to the source memory.
+ * @param[in] size Number of bytes to copy.
+ */
+void safeMemcpy(void* dest, const void* src, size_t size) {
+    if (dest == NULL || src == NULL) {
+        fprintf(stderr, "Error: Invalid memory copy operation\n");
+        exit(EXIT_FAILURE);
+    }
+    memcpy(dest, src, size);
 }

@@ -3,8 +3,6 @@
 #include "../c_memory_functions/memory_functions.h"
 #include "../c_matrix_functions/matrix_functions.h"
 #include <lapacke.h>
-#include <string.h>
-#include <stdio.h>
 
 void computeInverse(float *A, float *A_inv, const int n) {
     // Allocate memory for the LU decomposition
@@ -13,7 +11,7 @@ void computeInverse(float *A, float *A_inv, const int n) {
     ipiv = (int*) safeMalloc(n * sizeof(int));
 
     // Copy the input matrix
-    memcpy(A_inv, A, n * n * sizeof(float));
+    safeMemcpy(A_inv, A, n * n * sizeof(float));
 
     // Perform LU decomposition
     info = LAPACKE_sgetrf(LAPACK_ROW_MAJOR, n, n, A_inv, n, ipiv);
