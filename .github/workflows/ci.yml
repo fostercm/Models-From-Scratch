@@ -38,6 +38,9 @@ jobs:
           cd build
           cmake ..
           make
+      
+      - name: List Shared Libraries
+        run: find . -name "*.so"
 
       - name: Run API and src tests
         run: |
