@@ -1,4 +1,5 @@
 import numpy as np
+np.seterr(all='ignore')
 from .linear_regression_base import LinearRegressionBase
 
 class LinearRegressionPython(LinearRegressionBase):
@@ -37,7 +38,12 @@ class LinearRegressionPython(LinearRegressionBase):
         X, Y = super().fit(X, Y)
         
         # Evaluate the model parameters using OLS
-        self.params['beta'] = np.linalg.pinv(X.T @ X) @ X.T @ Y
+        gram_matrix = X.T @ X
+        # self.params['beta'] = np.linalg.pinv(gram_matrix) @ X.T @ Y
+        if np.isclose(np.linalg.det(gram_matrix), 0.0):
+            self.params['beta'] = np.linalg.pinv(gram_matrix) @ X.T @ Y
+        else:
+            self.params['beta'] = np.linalg.inv(X.T @ X) @ X.T @ Y
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
