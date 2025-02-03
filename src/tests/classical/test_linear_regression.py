@@ -1,5 +1,5 @@
 import unittest
-from classical import LinearRegressionPython
+from classical import LinearRegressionPython, LinearRegressionC
 import numpy as np
 
 class TestLinearRegression(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestLinearRegression(unittest.TestCase):
         - Ensures that the model parameters (beta) are computed and not None after fitting.
         - Verifies that the computed parameters (beta) match expected values for a simple dataset.
         """
-        for model in [LinearRegressionPython()]:
+        for model in [LinearRegressionPython(), LinearRegressionC()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
