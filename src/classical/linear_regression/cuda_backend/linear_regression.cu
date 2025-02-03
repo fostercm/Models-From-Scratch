@@ -8,7 +8,7 @@
  */
 
 #include "linear_regression.h"
-#include "cuda_mathematical_functions/pseudoinverse.h"
+#include "cuda_mathematical_functions/inverse.h"
 #include "cuda_memory_functions/memory_functions.h"
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
@@ -60,7 +60,7 @@ void fitCUDA(const float *X, const float *Y, float *Beta, const int num_samples,
     // Compute XTX inverse and free XTX
     float *d_XTX_inv;
     d_XTX_inv = (float*) safeCudaMalloc(num_input_features * num_input_features * sizeof(float), &err);
-    computePseudoinverse(d_XTX, d_XTX_inv, num_input_features, num_input_features, handle);
+    computeInverse(d_XTX, d_XTX_inv, num_input_features, handle);
     safeCudaFree(d_XTX);
 
     // Compute (XTX)^-1 * XT and free X and XTX_inv

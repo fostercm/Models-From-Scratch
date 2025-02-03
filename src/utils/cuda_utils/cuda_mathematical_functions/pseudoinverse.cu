@@ -35,11 +35,7 @@
  * @note This function uses cuBLAS for matrix operations and cuSolver for computing the SVD of the matrix.
  *       Memory is allocated and freed for intermediate results throughout the process.
  */
-void computePseudoinverse(float *d_A, float *d_A_inv, const int m, const int n, cublasHandle_t cublasH) {
-    // Initialize Cusolver
-    cusolverDnHandle_t cusolverH;
-    cusolverDnCreate(&cusolverH);
-
+void computePseudoinverse(float *d_A, float *d_A_inv, const int m, const int n, cublasHandle_t cublasH, cusolverDnHandle_t cusolverH) {
     // Initialize alpha and beta
     const float alpha = 1.0f;
     const float beta = 0.0f;

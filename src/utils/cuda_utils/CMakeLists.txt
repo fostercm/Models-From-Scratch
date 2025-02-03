@@ -22,7 +22,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 # Set the flags for the static library
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler -fPIC")
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler -fPIC -O3 -Wall")
 
 # Create the static library
 add_library(cuda_utils STATIC ${SOURCES})

@@ -89,3 +89,32 @@ void launchPopulateDiagonalKernel(float *matrix, const float *diagonal, const in
     // Launch kernel
     populateDiagonalKernel<<<gridSize, blockSize>>>(matrix, diagonal, m, n);
 }
+
+__global__ void identityMatrixKernel(float *matrix, const int m, const int n) {
+    // Get thread ID
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+
+    // Populate identity matrix
+    if (idx < m * n) {
+
+        // Calculate row and column
+        int row = idx / n;
+        int col = idx % n;
+
+        // Set identity values
+        if (row == col) {
+            matrix[idx] = 1.0f;
+        } else {
+            matrix[idx] = 0.0f;
+        }
+    }
+}
+
+void launchIdentityMatrixKernel(float *matrix, const int m, const int n) {
+    // Set up grid and block sizes
+    int blockSize = 256;
+    int gridSize = (n + blockSize - 1) / blockSize;
+
+    // Launch kernel
+    identityMatrixKernel<<<gridSize, blockSize>>>(matrix, m, n);
+}
