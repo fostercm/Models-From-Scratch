@@ -70,7 +70,7 @@ class TestLinearRegression(unittest.TestCase):
         - Checks that the predictions are made correctly based on a fitted model.
         - Ensures that the predictions match expected values for a given input.
         """
-        for model in [LinearRegressionPython()]:
+        for model in [LinearRegressionPython(), LinearRegressionC()]:
         
             # Test that the model is fitted
             with self.assertRaises(ValueError):
@@ -110,7 +110,7 @@ class TestLinearRegression(unittest.TestCase):
         - Validates that the cost computation correctly reflects the difference between predicted and actual values.
         - Compares the computed cost to a manually computed value for accuracy.
         """
-        for model in [LinearRegressionPython()]:
+        for model in [LinearRegressionPython(), LinearRegressionC()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
@@ -145,7 +145,7 @@ class TestLinearRegression(unittest.TestCase):
 
         This test uses a small synthetic dataset to validate the entire process of training and evaluating the model.
         """
-        for model in [LinearRegressionPython()]:
+        for model in [LinearRegressionPython(), LinearRegressionC()]:
             
             # Define the input and output arrays
             X = np.array([[1, 1],
