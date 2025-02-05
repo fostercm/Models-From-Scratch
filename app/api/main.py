@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .routes import data_routes
 
 # Create FastAPI app
 app = FastAPI(
@@ -21,3 +22,6 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "ML API is running!"}
+
+# Include data routes
+app.include_router(data_routes.router)
