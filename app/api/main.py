@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import data_routes
 
 # Create FastAPI app
 app = FastAPI(
@@ -17,9 +16,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# # Include routes
-# app.include_router(data_routes.router, prefix="/data", tags=["Data"])
 
 # Health check route
 @app.get("/")

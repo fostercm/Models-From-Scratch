@@ -1,8 +1,8 @@
-const API_BASE_URL = "https://models-from-scratch.onrender.com/"; // Update this
+const API_BASE_URL = "https://models-from-scratch.onrender.com/";
 
 async function testAPI() {
     try {
-        let response = await fetch(`${API_BASE_URL}/`, {
+        let response = await fetch(`${API_BASE_URL}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
         });
