@@ -3,47 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV Upload</title>
+    <title>FastAPI Test</title>
+    <script defer src="script.js"></script>
 </head>
 <body>
-    <h1>Upload a CSV File</h1>
-    <input type="file" id="csvFile" accept=".csv">
-    <button onclick="handleFile()">Read File</button>
-    <button onclick="uploadFile()">Upload</button>
-
-    <script>
-        function handleFile() {
-            const fileInput = document.getElementById("csvFile");
-            if (fileInput.files.length === 0) {
-                alert("Please select a file first.");
-                return;
-            }
-            const file = fileInput.files[0];
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                console.log("CSV Content:", event.target.result);
-            };
-            reader.readAsText(file);
-        }
-
-        async function uploadFile() {
-            const fileInput = document.getElementById("csvFile");
-            if (fileInput.files.length === 0) {
-                alert("Please select a file first.");
-                return;
-            }
-            const formData = new FormData();
-            formData.append("file", fileInput.files[0]);
-
-            const response = await fetch("http://localhost:8000/upload", {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await response.json();
-            console.log("Server Response:", result);
-        }
-    </script>
+    <h1>GitHub Pages + FastAPI</h1>
+    <button id="testButton">Test API</button>
+    <pre id="output"></pre>
 </body>
 </html>
