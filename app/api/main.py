@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .routes import data_routes
 
 # Create FastAPI app
@@ -8,8 +9,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Include routes
-app.include_router(data_routes.router, prefix="/data", tags=["Data"])
+# Allow requests from GitHub Pages
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://fostercm.github.io"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# # Include routes
+# app.include_router(data_routes.router, prefix="/data", tags=["Data"])
 
 # Health check route
 @app.get("/")
