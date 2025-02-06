@@ -1,22 +1,43 @@
 from fastapi import HTTPException
+import logging
 from classical import LinearRegressionPython, LinearRegressionC
-from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
-import numpy as np
 
-def getModel(model_name, model_language):
+# Set up logging
+logger = logging.getLogger(__name__)
+
+def getModel(model_name: str, model_language: str):
+    """
+    Retrieves the model instance based on the provided model name and language.
+
+    Args:
+        model_name (str): The name of the model to retrieve.
+        model_language (str): The programming language in which the model is implemented.
+
+    Returns:
+        object: The model instance.
+
+    Raises:
+        HTTPException: If the model name or language is not supported.
+    """
     
-    if model_language == "Python":
-        if model_name == "Linear Regression":
-            return LinearRegressionPython()
-        else:
-            raise HTTPException(status_code=400, detail="Model name not supported.")
-    
-    elif model_language == "C":
-        if model_name == "Linear Regression":
-            return LinearRegressionC()
-        else:
-            raise HTTPException(status_code=400, detail="Model name not supported.")
-    
-    else:
+    # Check for invalid language
+    if model_language not in ["Python", "C"]:
+        logger.error(f"Unsupported model language: {model_language}")
         raise HTTPException(status_code=400, detail="Model language not supported.")
     
+    # Map model names to corresponding classes
+    model_mapping = {
+        "Linear Regression": {
+            "Python": LinearRegressionPython,
+            "C": LinearRegressionC
+        }
+    }
+
+    # Check if the model exists for the specified language
+    if model_name in model_mapping and model_language in model_mapping[model_name]:
+        model_class = model_mapping[model_name][model_language]
+        logger.info(f"Model '{model_name}' for language '{model_language}' selected.")
+        return model_class()
+    else:
+        logger.error(f"Unsupported model '{model_name}' for language '{model_language}'")
+        raise HTTPException(status_code=400, detail="Model name not supported.")
