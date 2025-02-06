@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import data_routes
+from . import routes
 
 # Create FastAPI app
 app = FastAPI(
@@ -12,7 +12,7 @@ app = FastAPI(
 # Allow requests from GitHub Pages
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://fostercm.github.io"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -23,5 +23,5 @@ app.add_middleware(
 async def root():
     return {"message": "ML API is running!"}
 
-# Include data routes
-app.include_router(data_routes.router)
+# Include routes
+app.include_router(routes.router)

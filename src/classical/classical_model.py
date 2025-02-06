@@ -88,3 +88,5 @@ class ClassicalModel():
     def load_params(self, params: dict) -> None:
         """Load the parameters of the model"""
         self.params = params
+        for key, value in self.params.items():
+            self.params[key] = np.array(value, dtype=np.float32)

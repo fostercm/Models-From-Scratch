@@ -7,10 +7,72 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <h1>GitHub Pages + FastAPI</h1>
-    <button id="testButton">API Test</button>
-    <button id="fetchButton">Test data route</button>
-    <pre id="output"></pre>
-    <pre id="response"></pre>
+    <h1>Cole's Model Hub</h1>
+    <h2>Select a Machine Learning Model and Language:</h2>
+    
+        <label for="modelSelect">Choose a model:</label>
+        <select id="modelSelect">
+            <!-- Options will be dynamically populated by JavaScript -->
+        </select>
+
+        <br><br>
+
+        <label for="languageSelect">Choose a language:</label>
+        <select id="languageSelect">
+            <!-- Options will be dynamically populated by JavaScript -->
+        </select>
+
+        <br><br>
+
+        <button id="selectBtn">Select Model and Language</button>
+
+        <p id="output"></p> <!-- To show the selected model and language -->
+    
+    <div id="actionSection" style="display: none">
+        <h2>Choose an Action:</h2>
+        <input type="radio" id="trainModel" name="modelAction" value="train">
+        <label for="trainModel">Train</label>
+        
+        <input type="radio" id="predictModel" name="modelAction" value="upload">
+        <label for="uploadModel">Predict</label>
+    </div>
+
+    <div id="trainSection" style="display: none">
+        <h2>Train:</h2>
+        <label for="inputData">Upload Indicator Data (CSV):</label>
+        <input type="file" id="indicatorData" accept=".csv">
+
+        <br><br>
+
+        <label for="outputData">Upload Response Data (CSV):</label>
+        <input type="file" id="responseData" accept=".csv">
+
+        <br><br>
+
+        <button id="trainBtn">Train Model</button>
+        <p id="trainMessage1"></p>
+
+        <p id="trainMessage2"></p>
+    </div>
+
+    <div id="predictSection" style="display: none">
+        <h2>Predict</h2>
+        <label for="modelFile">Upload Model (JSON):</label>
+        <input type="file" id="modelFile" accept=".json">
+
+        <br><br>
+
+        <label for="inputData">Upload Data (CSV):</label>
+        <input type="file" id="inputData" accept=".csv">
+
+        <br><br>
+
+        <button id="predictBtn">Predict</button>
+        <p id="predictMessage1"></p>
+
+        <p id="predictMessage2"></p>
 </body>
+
+<script src="model_selection.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </html>
