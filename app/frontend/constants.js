@@ -10,5 +10,6 @@ export const MODELS = [
 
 export const LANGUAGES = [
     "Python", 
-    "C"
+    "C",
+    "CUDA"
 ];

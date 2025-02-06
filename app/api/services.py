@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 import logging
-from classical import LinearRegressionPython, LinearRegressionC
+from classical import LinearRegressionPython, LinearRegressionC, LinearRegressionCUDA
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ def getModel(model_name: str, model_language: str):
     """
     
     # Check for invalid language
-    if model_language not in ["Python", "C"]:
+    if model_language not in ["Python", "C", "CUDA"]:
         logger.error(f"Unsupported model language: {model_language}")
         raise HTTPException(status_code=400, detail="Model language not supported.")
     
@@ -29,7 +29,8 @@ def getModel(model_name: str, model_language: str):
     model_mapping = {
         "Linear Regression": {
             "Python": LinearRegressionPython,
-            "C": LinearRegressionC
+            "C": LinearRegressionC,
+            "CUDA": LinearRegressionCUDA
         }
     }
 
