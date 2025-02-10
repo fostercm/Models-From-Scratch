@@ -7,9 +7,5 @@ setup(
     package_dir={'': 'src'},
     install_requires=[
         "numpy"
-    ],
-    include_package_data=True,
-    package_data={
-        'Shared Libraries': ["build/lib/*.so"]
-    }
+    ]
 )
