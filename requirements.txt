@@ -13,7 +13,7 @@ idna==3.10
 joblib==1.4.2
 kiwisolver==1.4.8
 matplotlib==3.10.0
--e git+https://github.com/fostercm/Models-From-Scratch.git@53eff8c61f18ed43ea36c286ad1aa52346dfdd7a#egg=MLFromScratch
+git+https://github.com/fostercm/Models-From-Scratch.git@53eff8c61f18ed43ea36c286ad1aa52346dfdd7a#egg=MLFromScratch
 numpy==2.2.2
 packaging==24.2
 pandas==2.2.3
@@ -24,6 +24,7 @@ pydantic==2.10.6
 pydantic_core==2.27.2
 pyparsing==3.2.1
 python-dateutil==2.9.0.post0
+python-multipart==0.0.20
 pytz==2025.1
 scikit-learn==1.6.1
 scipy==1.15.1
