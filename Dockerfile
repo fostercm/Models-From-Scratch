@@ -23,9 +23,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # Copy API folder
 COPY app/api ./app/api
 
-# Copy precompiled C/C++/CUDA libraries to the container
-COPY build/lib /app/build/lib
-
 # Set working directory in container
 WORKDIR /app
 
