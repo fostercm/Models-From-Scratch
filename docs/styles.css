@@ -1,0 +1,21 @@
+.status-box {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    width: 110px;
+    padding: 3px;
+    z-index: 1000;
+}
+
+
+.status-up {
+    background-color: green;
+}
+
+.status-down {
+    background-color: red;
+}

@@ -1,5 +1,5 @@
 import { API_BASE_URL, VALID_FILE_TYPES, MODELS, LANGUAGES } from './constants.js';
-import { callApi } from './api.js';
+import { callApi, checkAPIStatus} from './api.js';
 import { validateFileInput, downloadJSON, downloadCSV } from './fileHandling.js';
 import { initializeDropdown, updateUIForTraining, displayTrainSection, displayPredictSection, updateMessage } from './ui.js';
 
@@ -84,3 +84,9 @@ async function handlePredictModel() {
         alert(error.message);
     }
 }
+
+// Check API status
+document.addEventListener("DOMContentLoaded", () => {
+    checkAPIStatus();
+    setInterval(checkAPIStatus, 5000);
+});
