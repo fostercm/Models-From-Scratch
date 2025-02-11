@@ -33,3 +33,7 @@ EXPOSE 8000
 
 # Start the application with Uvicorn
 CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+## Docker commands
+# docker build -t ml-from-scratch-backend .
+# docker run --gpus all -p 8000:8000 ml-from-scratch-backend:latest
