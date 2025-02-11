@@ -23,7 +23,7 @@ COPY requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy API folder
-COPY app/api ./app/api
+COPY api ./api
 
 # Set working directory in container
 WORKDIR /app
@@ -32,8 +32,8 @@ WORKDIR /app
 EXPOSE 8000
 
 # Start the application with Uvicorn
-CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 ## Docker commands
 # docker build -t ml-from-scratch-backend .
-# docker run --gpus all -p 8000:8000 ml-from-scratch-backend:latest
+# docker run --rm --gpus all -p 8000:8000 ml-from-scratch-backend:latest
