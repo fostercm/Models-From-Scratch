@@ -3,7 +3,6 @@
     top: 10px;
     right: 10px;
     border-radius: 5px;
-    color: white;
     font-weight: bold;
     text-align: center;
     width: 110px;
@@ -14,8 +13,10 @@
 
 .status-up {
     background-color: green;
+    color: white;
 }
 
 .status-down {
     background-color: red;
+    color: white;
 }

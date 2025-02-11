@@ -14,20 +14,32 @@ export async function callApi(url, formData) {
 }
 
 export async function checkAPIStatus() {
+    const statusBox = document.getElementById("api-status");
+
+    const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out")), 5000)
+    );
+
     try {
-        const response = await fetch(`${API_BASE_URL}/health`);
+        console.log("Checking API status...");
+        const response = await Promise.race([
+            fetch(`${API_BASE_URL}/health`),
+            timeout
+        ]);
         const data = await response.json();
-        const statusBox = document.getElementById("api-status");
+
 
         if (data.status === "up") {
+            console.log("API is UP");
             statusBox.className = "status-box status-up";
             statusBox.textContent = "API is UP";
         } else {
+            console.log("API is DOWN");
             statusBox.className = "status-box status-down";
             statusBox.textContent = "API is DOWN";
         }
     } catch (error) {
-        const statusBox = document.getElementById("api-status");
+        console.error("Error checking API status:", error);
         statusBox.className = "status-box status-down";
         statusBox.textContent = "API is DOWN";
     }

@@ -88,5 +88,4 @@ async function handlePredictModel() {
 // Check API status
 document.addEventListener("DOMContentLoaded", () => {
     checkAPIStatus();
-    setInterval(checkAPIStatus, 5000);
 });
