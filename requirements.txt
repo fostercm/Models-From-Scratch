@@ -13,7 +13,7 @@ idna==3.10
 joblib==1.4.2
 kiwisolver==1.4.8
 matplotlib==3.10.0
-git+https://github.com/fostercm/Models-From-Scratch.git@53eff8c61f18ed43ea36c286ad1aa52346dfdd7a#egg=MLFromScratch
+-e git+https://github.com/fostercm/Models-From-Scratch.git@738f38232dfca52423065b9ca2480751d70e784e#egg=MLFromScratch
 numpy==2.2.2
 packaging==24.2
 pandas==2.2.3

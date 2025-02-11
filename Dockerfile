@@ -8,7 +8,9 @@ WORKDIR /app
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get update && apt-get install -y \
     python3 python3-pip python3-dev python3-venv git \
-    && rm -rf /var/lib/apt/lists/*
+    libgsl-dev liblapacke-dev libopenblas-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # Create a virtual environment
 RUN python3 -m venv /opt/venv
