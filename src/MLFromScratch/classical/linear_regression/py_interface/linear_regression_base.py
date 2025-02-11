@@ -1,5 +1,5 @@
-from classical.classical_model import ClassicalModel
 import numpy as np
+from ...classical_model import ClassicalModel
 
 class LinearRegressionBase(ClassicalModel):
     """
