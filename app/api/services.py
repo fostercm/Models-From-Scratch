@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 import logging
-from classical import LinearRegressionPython, LinearRegressionC, LinearRegressionCUDA
+from MLFromScratch.classical import LinearRegressionPython, LinearRegressionC, LinearRegressionCUDA
 
 # Set up logging
 logger = logging.getLogger(__name__)

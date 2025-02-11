@@ -1,4 +1,4 @@
-from classical import LinearRegressionPython, LinearRegressionC, LinearRegressionCUDA
+from MLFromScratch.classical import LinearRegressionPython, LinearRegressionC, LinearRegressionCUDA
 from sklearn.linear_model import LinearRegression
 import numpy as np
 import matplotlib.pyplot as plt
