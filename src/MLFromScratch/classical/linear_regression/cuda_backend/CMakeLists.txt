@@ -11,7 +11,7 @@ find_package(CUDAToolkit REQUIRED)
 set(CMAKE_CUDA_ARCHITECTURES 86)
 
 # Include directories
-include_directories(${CMAKE_SOURCE_DIR}/src/utils/cuda_utils)
+include_directories(${CMAKE_SOURCE_DIR}/src/MLFromScratch/utils/cuda_utils)
 
 # Source files
 set(SOURCES 

@@ -11,7 +11,7 @@ find_package(LAPACK REQUIRED)
 # Include directories
 include_directories(
         ${GSL_INCLUDE_DIRS}
-        ${CMAKE_SOURCE_DIR}/src/utils/c_utils
+        ${CMAKE_SOURCE_DIR}/src/MLFromScratch/utils/c_utils
 )
 
 # Source files
