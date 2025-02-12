@@ -1,6 +1,7 @@
 import numpy as np
 np.seterr(all='ignore')
 from .linear_regression_base import LinearRegressionBase
+from ....utils.python_utils.loss_functions import meanSquaredError
 
 class LinearRegressionPython(LinearRegressionBase):
     """
@@ -85,5 +86,4 @@ class LinearRegressionPython(LinearRegressionBase):
             ValueError: If the dimensions of Y_pred and Y do not match.
         """
         Y_pred, Y = super().cost(Y_pred, Y)
-        SCALE_FACTOR = 0.5 / Y.shape[0]
-        return SCALE_FACTOR * np.linalg.norm(Y_pred - Y)**2
+        return meanSquaredError(Y_pred, Y)
