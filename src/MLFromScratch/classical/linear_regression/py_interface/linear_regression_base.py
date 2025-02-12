@@ -109,7 +109,12 @@ class LinearRegressionBase(ClassicalModel):
         Raises:
             ValueError: If the dimensions of Y_pred and Y do not match.
         """
+        # Validate the input arrays
         Y_pred, Y = super()._validate_input(Y_pred, Y)
+        
+        # Check if the dimensions of Y_pred and Y match
+        if Y_pred.shape != Y.shape:
+            raise ValueError(f"Dimensions of Y_pred {Y_pred.shape} and Y {Y.shape} do not match")
         
         return Y_pred, Y
         
