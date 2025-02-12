@@ -1,6 +1,6 @@
 import numpy as np
 
-def meanSquaredError(Y_pred, Y_true):
+def meanSquaredError(Y_pred: np.ndarray, Y_true: np.ndarray) -> float:
     """
     Compute the mean squared error between the predicted and true labels.
     
