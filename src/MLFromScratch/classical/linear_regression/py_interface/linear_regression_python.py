@@ -40,7 +40,6 @@ class LinearRegressionPython(LinearRegressionBase):
         
         # Evaluate the model parameters using OLS
         gram_matrix = X.T @ X
-        # self.params['beta'] = np.linalg.pinv(gram_matrix) @ X.T @ Y
         if np.isclose(np.linalg.det(gram_matrix), 0.0):
             self.params['beta'] = np.linalg.pinv(gram_matrix) @ X.T @ Y
         else:
