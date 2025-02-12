@@ -18,14 +18,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Health check route
-@app.get("/")
-async def root():
-    return {"message": "ML API is running!"}
-
-@app.get("/health")
-async def health_check():
-    return {"status": "up"}
-
 # Include routes
 app.include_router(routes.router)

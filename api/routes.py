@@ -10,6 +10,28 @@ router = APIRouter()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+@router.get("/")
+async def root():
+    """
+    Root endpoint for the API
+    
+    Returns:
+        dict: A dictionary confirming the API is running
+    """
+    return {"message": "ML API is running!"}
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Checks the health of the API
+    
+    Returns:
+        dict: A dictionary containing the status of the API
+    """
+    return {"status": "up"}
+
+
 @router.post("/train")
 async def train(
     model_name: str = Form(...), 
@@ -18,16 +40,16 @@ async def train(
     response: UploadFile = File(...)
 ):
     """
-    Trains a machine learning model using provided indicator and response data.
+    Trains a machine learning model using provided indicator and response data
 
     Args:
         model_name (str): The name of the model to train.
-        language (str): The programming language used to train the model.
-        indicator (UploadFile): The CSV file containing the indicator data.
-        response (UploadFile): The CSV file containing the response data.
+        language (str): The programming language used to train the model
+        indicator (UploadFile): The CSV file containing the indicator data
+        response (UploadFile): The CSV file containing the response data
 
     Returns:
-        dict: A dictionary containing model details and performance metrics.
+        dict: A dictionary containing model details and performance metrics
     """
     
     try:
@@ -64,16 +86,16 @@ async def predict(
     model_file: UploadFile = File(...)
 ):
     """
-    Predicts outputs using a trained machine learning model.
+    Predicts outputs using a trained machine learning model
 
     Args:
-        model_name (str): The name of the model to use for predictions.
-        language (str): The programming language used for the model.
-        indicator (UploadFile): The CSV file containing indicator data for prediction.
-        model_file (UploadFile): The JSON file containing model parameters.
+        model_name (str): The name of the model to use for predictions
+        language (str): The programming language used for the model
+        indicator (UploadFile): The CSV file containing indicator data for prediction
+        model_file (UploadFile): The JSON file containing model parameters
 
     Returns:
-        dict: A dictionary containing the predictions from the model.
+        dict: A dictionary containing the predictions from the model
     """
     
     try:
