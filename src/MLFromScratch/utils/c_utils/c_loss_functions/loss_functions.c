@@ -75,9 +75,20 @@ float crossEntropy(const float *Y_pred, const float *Y, const int num_samples, c
 
     // Calculate cross entropy
     float cost = 0;
-    #pragma omp parallel for reduction(+:cost)
-    for (int i=0 ; i<num_samples * num_classes ; i++) {
-        cost += Y[i] * log(Y_pred[i]);
+
+    if (num_classes == 2) {
+        // Binary classification
+        #pragma omp parallel for reduction(+:cost)
+        for (int i=0 ; i<num_samples ; i++) {
+            cost += Y[i] * log(Y_pred[i]) + (1 - Y[i]) * log(1 - Y_pred[i]);
+        }
+    }
+    else {
+        // Multi-class classification
+        #pragma omp parallel for reduction(+:cost)
+        for (int i=0 ; i<num_samples * num_classes ; i++) {
+            cost += Y[i] * log(Y_pred[i]);
+        }
     }
 
     // Return scaled cost
