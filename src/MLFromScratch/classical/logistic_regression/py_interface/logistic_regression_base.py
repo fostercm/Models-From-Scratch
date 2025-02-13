@@ -45,8 +45,9 @@ class LogisticRegressionBase(LinearRegressionBase):
         Raises:
             ValueError: If the output dimension of Y is not 1.
         """
-        # Validate the input arrays and pad X with ones
+        # Validate the input arrays
         X, Y = super().fit(X, Y)
+        Y = Y.astype(int)
         
         # Check if the output dimension of Y is 1
         if Y.shape[1] != 1:
@@ -55,13 +56,22 @@ class LogisticRegressionBase(LinearRegressionBase):
         # Set the number of classes
         self.params['num_classes'] = len(np.unique(Y))
         
-        # Transform the target values to one-hot encoding
-        Y_new = np.zeros((Y.shape[0], self.params['num_classes']), dtype=np.float32)
-        Y_new[np.arange(Y.shape[0]), Y.flatten()] = 1
+        # Check if there is only one class
+        if self.params['num_classes'] == 1:
+            raise ValueError(f"Only one class found in Y. Please check the target values.")
         
-        return X, Y_new
+        # Check if the output classes are from 0 to num_classes-1
+        if not np.array_equal(np.unique(Y), np.arange(self.params['num_classes'])):
+            raise ValueError(f"Output classes should be from 0 to num_classes-1.")
+        
+        # Transform the target values to one-hot encoding
+        if self.params['num_classes'] > 2:
+            Y_new = np.zeros((Y.shape[0], self.params['num_classes']), dtype=np.float32)
+            Y_new[np.arange(Y.shape[0]), Y.flatten()] = 1
+        
+        return X, Y_new if self.params['num_classes'] > 2 else Y
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
+    def predict(self, X: np.ndarray, pad: bool=True) -> np.ndarray:
         """
         Predict target values using the learned model.
         
@@ -76,7 +86,7 @@ class LogisticRegressionBase(LinearRegressionBase):
             np.ndarray: Predicted target values.
         """
         # Validate the input arrays and pad X with ones
-        X = super().predict(X)    
+        X = super().predict(X, pad)    
         
         return X
     
