@@ -53,7 +53,7 @@ class LinearRegressionBase(ClassicalModel):
         
         # To be implemented in derived classes
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
+    def predict(self, X: np.ndarray, pad: bool=True) -> np.ndarray:
         """
         Predict target values using the learned model.
 
@@ -80,8 +80,9 @@ class LinearRegressionBase(ClassicalModel):
         if self.params['beta'] is None:
             raise ValueError("Model is not fitted")
         
-        # Pad the feature matrix with ones for the bias term
-        X = np.hstack((np.ones((X.shape[0], 1)), X), dtype=np.float32)
+        if pad:
+            # Pad the feature matrix with ones for the bias term
+            X = np.hstack((np.ones((X.shape[0], 1)), X), dtype=np.float32)
         
         # Check if the input dimensions match the model parameters
         if X.shape[1] != self.params['beta'].shape[0]:
