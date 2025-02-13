@@ -1,6 +1,5 @@
 import numpy as np
 from ...linear_regression.py_interface.linear_regression_base import LinearRegressionBase
-from ....utils.python_utils.loss_functions import crossEntropy
 
 class LogisticRegressionBase(LinearRegressionBase):
     """
@@ -13,7 +12,7 @@ class LogisticRegressionBase(LinearRegressionBase):
         params (dict): A dictionary storing the model parameters, including 'beta'.
     """
     
-    def __init__(self) -> None:
+    def __init__(self, learning_rate: float=0.01, tolerance: float=0.01, max_iters: int=10000) -> None:
         """
         Initialize the Logistic Regression model parameters.
 
@@ -22,6 +21,9 @@ class LogisticRegressionBase(LinearRegressionBase):
         """
         super().__init__()
         self.params['num_classes'] = None
+        self.learning_rate = learning_rate
+        self.tolerance = tolerance
+        self.max_iters = max_iters
     
     def fit(self, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
         """

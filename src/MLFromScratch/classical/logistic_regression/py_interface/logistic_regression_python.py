@@ -13,7 +13,7 @@ class LogisticRegressionPython(LogisticRegressionBase):
     fitting the model, making predictions, and calculating the cost (Cross Entropy Loss).
     """
     
-    def __init__(self, learning_rate: float=0.01, tolerance: float=0.01, max_iters: int=10000) -> None:
+    def __init__(self) -> None:
         """
         Initialize the LogisticRegressionPython model.
 
@@ -21,9 +21,6 @@ class LogisticRegressionPython(LogisticRegressionBase):
         and setting up the necessary model parameters.
         """
         super().__init__()
-        self.learning_rate = learning_rate
-        self.tolerance = tolerance
-        self.max_iters = max_iters
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
         """
