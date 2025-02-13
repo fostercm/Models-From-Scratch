@@ -1,7 +1,7 @@
 #ifndef ACTIVATION_H
 #define ACTIVATION_H
 
-void sigmoid(double *x, int size);
-void softmax(double *x, int size);
+void sigmoid(float *x, const int rows, const int cols);
+void softmax(float *x, const int rows, const int cols);
 
 #endif /* ACTIVATION_H */

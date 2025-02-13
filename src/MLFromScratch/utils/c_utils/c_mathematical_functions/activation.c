@@ -56,9 +56,9 @@
  * @note The function modifies the input array in place.
  * @note OpenMP is used to parallelize the computation for faster performance.
  */
-void sigmoid(double *x, int size) {
+void sigmoid(float *x, const int rows, const int cols) {
     #pragma omp parallel for
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < rows*cols; i++) {
         // Use different forms of the sigmoid function for numerical stability
         if (x[i] >= 0)
             x[i] = 1 / (1 + exp(-x[i]));
@@ -82,27 +82,31 @@ void sigmoid(double *x, int size) {
  * @note The function modifies the input array in place.
  * @note OpenMP is used to parallelize the computations for performance.
  */
-void softmax(double *x, int size) {
-    // Find the maximum value in the array for stability
-    double MAX_VAL = -INFINITY;
-    #pragma omp parallel for reduction(max:MAX_VAL)
-    for (int i = 0; i < size; i++) {
-        if (x[i] > MAX_VAL) {
-            MAX_VAL = x[i];
-        }
-    }
+void softmax(float *x, const int rows, const int cols) {
 
-    // Find the sum of exponentials of the array elements
-    double sum = 0;
-    #pragma omp parallel for reduction(+:sum)
-    for (int i = 0; i < size; i++) {
-        x[i] = exp(x[i] - MAX_VAL);
-        sum += x[i];
-    }
-
-    // Normalize the array by the sum
     #pragma omp parallel for
-    for (int i = 0; i < size; i++) {
-        x[i] /= sum;
+    for (int i = 0; i < rows; i++) {
+        // Find the maximum value in the row for stability
+        double MAX_VAL = -INFINITY;
+        #pragma omp parallel for reduction(max:MAX_VAL)
+        for (int j = 0; j < cols; j++) {
+            if (x[i*cols + j] > MAX_VAL) {
+                MAX_VAL = x[i*cols + j];
+            }
+        }
+
+        // Find the sum of exponentials of the array elements
+        double sum = 0;
+        #pragma omp parallel for reduction(+:sum)
+        for (int j = 0; j < cols; j++) {
+            x[i*cols + j] = exp(x[i*cols + j] - MAX_VAL);
+            sum += x[i*cols + j];
+        }
+
+        // Normalize the array by the sum
+        #pragma omp parallel for
+        for (int j = 0; j < cols; j++) {
+            x[i*cols + j] /= sum;
+        }
     }
 }
