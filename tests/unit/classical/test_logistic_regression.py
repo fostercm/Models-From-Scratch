@@ -74,7 +74,7 @@ class TestLogisticRegression(unittest.TestCase):
         - Checks that the predictions are made correctly based on a fitted model.
         - Ensures that the predictions match expected values for a given input.
         """
-        for model in [LogisticRegressionPython()]:
+        for model in [LogisticRegressionPython(), LogisticRegressionC()]:
         
             # Test that the model is fitted
             with self.assertRaises(ValueError):
@@ -189,11 +189,11 @@ class TestLogisticRegression(unittest.TestCase):
             self.assertTupleEqual(predictions.shape, (4, 1))
             self.assertTupleEqual(tuple(np.round(predictions.flatten())), tuple(self.Y_bin.flatten()))
             
-            # # Multiclass classification
-            # model.fit(self.X_multi, self.Y_multi)
-            # predictions = model.predict(self.X_multi)
-            # self.assertTupleEqual(predictions.shape, (5, 3))
-            # self.assertTupleEqual(tuple(predictions.argmax(axis=1)), tuple(self.Y_multi.flatten()))
+            # Multiclass classification
+            model.fit(self.X_multi, self.Y_multi)
+            predictions = model.predict(self.X_multi)
+            self.assertTupleEqual(predictions.shape, (5, 3))
+            self.assertTupleEqual(tuple(predictions.argmax(axis=1)), tuple(self.Y_multi.flatten()))
 
 if __name__ == "__main__":
     unittest.main()

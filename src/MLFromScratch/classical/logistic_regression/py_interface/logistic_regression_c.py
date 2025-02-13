@@ -44,7 +44,7 @@ class LogisticRegressionC(LogisticRegressionBase):
             np.ctypeslib.ndpointer(dtype=np.float32),
             np.ctypeslib.ndpointer(dtype=np.float32),
             np.ctypeslib.ndpointer(dtype=np.float32),
-            ctypes.c_int, 
+            ctypes.c_int,
             ctypes.c_int,
             ctypes.c_int
         ]
@@ -89,39 +89,39 @@ class LogisticRegressionC(LogisticRegressionBase):
     #     # Reshape the Beta array and store it
     #     self.params['beta'] = Beta.reshape((num_input_features, num_output_features))
 
-    # def predict(self, X: np.ndarray) -> np.ndarray:
-    #     """
-    #     Predict target values using the fitted model and the C implementation.
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Predict target values using the fitted model and the C implementation.
 
-    #     This method validates the input data, flattens the arrays, and calls the
-    #     C function to make predictions. The predictions are then reshaped to
-    #     the appropriate dimensions.
+        This method validates the input data, flattens the arrays, and calls the
+        C function to make predictions. The predictions are then reshaped to
+        the appropriate dimensions.
 
-    #     Args:
-    #         X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+        Args:
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features).
 
-    #     Returns:
-    #         np.ndarray: The predicted target values of shape (n_samples, n_targets).
+        Returns:
+            np.ndarray: The predicted target values of shape (n_samples, n_targets).
 
-    #     Raises:
-    #         ValueError: If the model is not fitted or the dimensions of X do not match.
-    #     """
-    #     X = super().predict(X)
+        Raises:
+            ValueError: If the model is not fitted or the dimensions of X do not match.
+        """
+        X = super().predict(X)
         
-    #     # Get the dimensions of the input and output
-    #     num_samples, num_input_features = X.shape
-    #     num_output_features = self.params['beta'].shape[1]
+        # Get the dimensions of the input and output
+        num_samples, num_input_features = X.shape
+        num_classes = self.params['beta'].shape[1]
         
-    #     # Allocate memory for the prediction and flatten
-    #     prediction = np.zeros((num_samples, num_output_features), dtype=np.float32).flatten()
-    #     X = X.flatten()
-    #     Beta = self.params['beta'].flatten()
+        # Allocate memory for the prediction and flatten
+        prediction = np.zeros((num_samples, num_classes), dtype=np.float32).flatten()
+        X = X.flatten()
+        Beta = self.params['beta'].flatten()
         
-    #     # Predict
-    #     self.lib.predict(X, Beta, prediction, num_samples, num_input_features, num_output_features)
+        # Predict
+        self.lib.predict(X, Beta, prediction, num_samples, num_input_features, num_classes)
         
-    #     # Reshape the prediction array and return it
-    #     return prediction.reshape((num_samples, num_output_features))
+        # Reshape the prediction array and return it
+        return prediction.reshape((num_samples, num_classes))
     
     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
         """
