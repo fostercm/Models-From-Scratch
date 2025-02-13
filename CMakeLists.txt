@@ -13,3 +13,5 @@ add_subdirectory(src/MLFromScratch/utils/cuda_utils)
 # Add shared library subdirectories to the build process
 add_subdirectory(src/MLFromScratch/classical/linear_regression/c_backend)
 add_subdirectory(src/MLFromScratch/classical/linear_regression/cuda_backend)
+
+add_subdirectory(src/MLFromScratch/classical/logistic_regression/c_backend)
