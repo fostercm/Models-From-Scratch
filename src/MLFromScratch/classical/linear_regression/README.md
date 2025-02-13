@@ -139,8 +139,8 @@ Some specifics to keep in mind for this implementation:
 
 ## Benchmarking & Performance  
 
-<img src="../../../benchmarks/linear_regression/execution_time.png" width="600">
-<img src="../../../benchmarks/linear_regression/memory_usage.png" width="600">
+<img src="../../../../benchmarks/linear_regression/execution_time.png" width="600">
+<img src="../../../../benchmarks/linear_regression/memory_usage.png" width="600">
 
 ## Thoughts & Ideas  
 
