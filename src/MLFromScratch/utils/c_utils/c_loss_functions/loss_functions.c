@@ -17,8 +17,11 @@
 
 
 #include <math.h>
+#include <stdio.h>
 #include "loss_functions.h"
 #include <omp.h>
+
+#define EPSILON 1e-12
 
 /**
  * @brief Computes the Mean Squared Error (MSE) loss.
@@ -85,7 +88,7 @@ float crossEntropy(const float *Y_pred, const float *Y, const int num_samples, c
     }
     else {
         // Multi-class classification
-        #pragma omp parallel for reduction(+:cost)
+        // #pragma omp parallel for reduction(+:cost)
         for (int i=0 ; i<num_samples * num_classes ; i++) {
             cost += Y[i] * log(Y_pred[i]);
         }
