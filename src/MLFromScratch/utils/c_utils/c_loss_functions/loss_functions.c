@@ -89,7 +89,7 @@ float crossEntropy(const float *Y_pred, const float *Y, const int num_samples, c
         // Multi-class classification
         // #pragma omp parallel for reduction(+:cost)
         for (int i=0 ; i<num_samples * num_classes ; i++) {
-            cost += Y[i] * log(Y_pred[i]);
+            cost += Y[i] * log(Y_pred[i] + 1e-9);
         }
     }
 
