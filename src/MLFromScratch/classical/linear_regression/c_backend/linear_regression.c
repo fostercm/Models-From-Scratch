@@ -14,7 +14,7 @@
 #include "c_mathematical_functions/inverse.h"
 #include "c_loss_functions/loss_functions.h"
 #include "c_memory_functions/memory_functions.h"
-#include <gsl/gsl_matrix.h>
+#include <cblas.h>
 
 /**
  * @brief Fit the linear regression model to the given data.
