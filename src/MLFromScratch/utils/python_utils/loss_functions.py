@@ -36,4 +36,10 @@ def crossEntropy(Y_pred: np.ndarray, Y_true: np.ndarray) -> float:
         Cross-entropy loss.
     """
     SCALE_FACTOR = -1 / Y_true.shape[0]
-    return SCALE_FACTOR * np.sum(Y_true * np.log(Y_pred + 1e-9))
+    
+    if Y_pred.shape[1] == 1:
+        # Binary classification
+        return SCALE_FACTOR * np.sum(Y_true * np.log(Y_pred + 1e-9) + (1 - Y_true) * np.log(1 - Y_pred))
+    else:
+        # Multi-class classification
+        return SCALE_FACTOR * np.sum(Y_true * np.log(Y_pred + 1e-9))
