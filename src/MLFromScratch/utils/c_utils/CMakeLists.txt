@@ -26,4 +26,5 @@ add_library(c_utils STATIC ${SOURCES})
 # Link libraries
 target_link_libraries(
     c_utils 
-    ${LAPACK_LIBRARIES})
+    ${LAPACK_LIBRARIES}
+)
