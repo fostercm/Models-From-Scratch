@@ -15,25 +15,25 @@ This repository contains (or will contain) implementations of the following mode
 ### Classical Models
 
 #### Supervised Learning
-- **[Linear Regression](src/classical/linear_regression/README.md)**
-- **[Logistic Regression](src/classical/logistic_regression/README.md)**
-- **[K-Nearest Neighbors](src/classical/k_nearest_neighbors/README.md)**
-- **[Naive Bayes](src/classical/naive_bayes/README.md)**
-- **[Decision Tree](src/classical/decision_tree/README.md)**
-- **[Random Forest](src/classical/random_forest/README.md)**
-- **[Support Vector Machine](src/classical/support_vector_machine/README.md)**
+- **[Linear Regression](src/MLFromScratch/classical/linear_regression/README.md)**
+- **[Logistic Regression](src/MLFromScratch/classical/logistic_regression/README.md)**
+- **[K-Nearest Neighbors](src/MLFromScratch/classical/k_nearest_neighbors/README.md)**
+- **[Naive Bayes](src/MLFromScratch/classical/naive_bayes/README.md)**
+- **[Decision Tree](src/MLFromScratch/classical/decision_tree/README.md)**
+- **[Random Forest](src/MLFromScratch/classical/random_forest/README.md)**
+- **[Support Vector Machine](src/MLFromScratch/classical/support_vector_machine/README.md)**
 
 #### Unsupervised Learning
-- **[K-Means Clustering](src/classical/k_means/README.md)**
-- **[Principal Component Analysis](src/classical/principal_component_analysis/README.md)**
+- **[K-Means Clustering](src/MLFromScratch/classical/k_means/README.md)**
+- **[Principal Component Analysis](src/MLFromScratch/classical/principal_component_analysis/README.md)**
 
 ### Deep Learning Models
-- **[Feedforward Neural Networks](src/neural/feed_forward/README.md)**
-- **[Convolutional Neural Networks](src/neural/convolutional/README.md)**
-- **[Graph Neural Networks](src/neural/graph/README.md)**
-- **[Recurrent Neural Networks](src/neural/recurrent/README.md)**
-- **[Long Short-Term Memory](src/neural/lstm/README.md)**
-- **[Transformers](src/neural/transformer/README.md)**
+- **[Feedforward Neural Networks](src/MLFromScratch/neural/feed_forward/README.md)**
+- **[Convolutional Neural Networks](src/MLFromScratch/neural/convolutional/README.md)**
+- **[Graph Neural Networks](src/MLFromScratch/neural/graph/README.md)**
+- **[Recurrent Neural Networks](src/MLFromScratch/neural/recurrent/README.md)**
+- **[Long Short-Term Memory](src/MLFromScratch/neural/lstm/README.md)**
+- **[Transformers](src/MLFromScratch/neural/transformer/README.md)**
 
 (*Future additions may include generative models.*)  
 
