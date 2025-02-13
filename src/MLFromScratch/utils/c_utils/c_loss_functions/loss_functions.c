@@ -43,6 +43,7 @@ float meanSquaredError(const float *Y_pred, const float *Y, const int num_sample
 
     // Calculate squared matrix norm
     float cost = 0;
+    #pragma omp parallel for reduction(+:cost)
     for (int i=0 ; i<num_samples * num_output_features ; i++) {
         cost += pow(Y_pred[i] - Y[i], 2);
     }
