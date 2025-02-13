@@ -5,12 +5,11 @@ cmake_minimum_required(VERSION 3.10)
 project(LogisticRegressionCBackend)
 
 # Find packages
-find_package(GSL REQUIRED)
-find_package(LAPACK REQUIRED)
+find_package(BLAS REQUIRED)
 
 # Include directories
 include_directories(
-        ${GSL_INCLUDE_DIRS}
+        ${BLAS_INCLUDE_DIRS}
         ${CMAKE_SOURCE_DIR}/src/MLFromScratch/utils/c_utils
 )
 
@@ -26,7 +25,5 @@ add_library(logistic_regression_c SHARED ${SOURCES})
 # Link libraries
 target_link_libraries(logistic_regression_c 
         c_utils
-        ${GSL_LIBRARIES}
-        ${LAPACK_LIBRARIES}
-        -llapacke
+        ${BLAS_LIBRARIES}
 )
