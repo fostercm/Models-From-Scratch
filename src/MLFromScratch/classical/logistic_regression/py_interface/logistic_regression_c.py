@@ -15,14 +15,14 @@ class LogisticRegressionC(LogisticRegressionBase):
         lib (ctypes.CDLL): The C shared library for logistic regression operations.
     """
     
-    def __init__(self):
+    def __init__(self, learning_rate: float=0.1, tolerance: float=0.01, max_iters: int=1000):
         """
         Initialize the LogisticRegressionC model.
 
         This method loads the C shared library and sets up the argument types
         for the C functions used for fitting, predicting, and calculating cost.
         """
-        super().__init__()
+        super().__init__(learning_rate, tolerance, max_iters)
         
         # Load the C library
         package_dir = os.path.dirname(os.path.abspath(__file__))
