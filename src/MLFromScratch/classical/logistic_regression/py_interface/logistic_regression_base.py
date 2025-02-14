@@ -12,7 +12,7 @@ class LogisticRegressionBase(LinearRegressionBase):
         params (dict): A dictionary storing the model parameters, including 'beta'.
     """
     
-    def __init__(self, learning_rate, tolerance, max_iters) -> None:
+    def __init__(self, learning_rate: float=0.1, tolerance: float=0.01, max_iters: int=1000) -> None:
         """
         Initialize the Logistic Regression model parameters.
 
