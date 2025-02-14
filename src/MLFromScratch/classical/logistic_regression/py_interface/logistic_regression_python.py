@@ -50,16 +50,12 @@ class LogisticRegressionPython(LogisticRegressionBase):
             self.params['beta'] = np.zeros((X.shape[1], self.params['num_classes']), dtype=np.float32)
         
         # Gradient Descent
-        for _ in range(self.max_iters):
+        for _ in range(self.iterations):
             # Compute the predicted values
             Y_pred = self.predict(X, pad=False)
             
             # Compute the gradient of the cost function
             gradient = X.T @ (Y_pred - Y) / X.shape[0]
-            
-            # Check for convergence
-            if np.linalg.norm(gradient) < self.tolerance:
-                break
             
             # Update the model parameters
             self.params['beta'] -= self.learning_rate * gradient
