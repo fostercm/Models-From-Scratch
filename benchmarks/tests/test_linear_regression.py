@@ -41,7 +41,7 @@ class TestBenchmarks(unittest.TestCase):
         execution_times = []
         peak_memories = []
 
-        for _ in range(self.n_runs):
+        for _ in range(self.n_runs+1):
             model = model_class()
 
             # Measure execution time and memory usage
@@ -54,7 +54,7 @@ class TestBenchmarks(unittest.TestCase):
 
             peak_memories.append(peak_mem)
 
-        return np.mean(execution_times), np.mean(peak_memories) / 10**6  # Convert bytes to MB
+        return np.mean(execution_times[1:]), np.mean(peak_memories[1:]) / 10**6  # Convert bytes to MB
 
     def test_linear_regression(self):
         """Benchmark all models across dataset sizes and generate plots."""
