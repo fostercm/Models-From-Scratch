@@ -2,6 +2,8 @@ import unittest
 from MLFromScratch.classical import LogisticRegressionPython, LogisticRegressionC
 import numpy as np
 
+np.random.seed(0)
+
 class TestLogisticRegression(unittest.TestCase):
     """
     Tests for the LogisticRegression class implementations in Python, C, and CUDA.
@@ -138,21 +140,21 @@ class TestLogisticRegression(unittest.TestCase):
             with self.assertRaises(ValueError):
                 model.cost(np.zeros((2,3)), np.zeros((3,3)))
             
-        # Test binary cost
-        Y_pred_binary = np.random.uniform(0.01, 0.99, (10, 1))
-        Y_binary = np.random.randint(0, 2, (10, 1))
-        expected_cost_binary = -np.sum(Y_binary * np.log(Y_pred_binary) + (1 - Y_binary) * np.log(1 - Y_pred_binary)) / 10
-        self.assertAlmostEqual(model.cost(Y_pred_binary, Y_binary), expected_cost_binary, places=3)
-        
-        # Test multiclass cost
-        m, K = 10, 4
-        raw = np.random.uniform(0.01, 1.0, (m, K))
-        Y_pred_multi = raw / raw.sum(axis=1, keepdims=True)
-        Y_multi = np.zeros((m, K))
-        indices = np.random.randint(0, K, size=m)
-        Y_multi[np.arange(m), indices] = 1
-        expected_cost_multi = -np.sum(Y_multi * np.log(Y_pred_multi)) / m
-        self.assertAlmostEqual(model.cost(Y_pred_multi, Y_multi), expected_cost_multi, places=3)
+            # Test binary cost
+            Y_pred_binary = np.random.uniform(0.01, 0.99, (10, 1))
+            Y_binary = np.random.randint(0, 2, (10, 1))
+            expected_cost_binary = -np.sum(Y_binary * np.log(Y_pred_binary) + (1 - Y_binary) * np.log(1 - Y_pred_binary)) / 10
+            self.assertAlmostEqual(model.cost(Y_pred_binary, Y_binary), expected_cost_binary, places=3)
+            
+            # Test multiclass cost
+            m, K = 10, 4
+            raw = np.random.uniform(0.01, 1.0, (m, K))
+            Y_pred_multi = raw / raw.sum(axis=1, keepdims=True)
+            Y_multi = np.zeros((m, K))
+            indices = np.random.randint(0, K, size=m)
+            Y_multi[np.arange(m), indices] = 1
+            expected_cost_multi = -np.sum(Y_multi * np.log(Y_pred_multi)) / m
+            self.assertAlmostEqual(model.cost(Y_pred_multi, Y_multi), expected_cost_multi, places=3)
     
     def test_end_to_end(self):
         """

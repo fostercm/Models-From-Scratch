@@ -1,11 +1,34 @@
+/**
+ * @file logistic_regression.c
+ * @brief Logistic regression model functions for fitting, prediction, and cost calculation.
+ *
+ * This file contains the implementation of a basic logistic regression model. It includes functions for fitting
+ * the model using gradient descent, predicting the output based on input features, and calculating 
+ * the cost (cross-entropy loss).
+ */
+
 #include "c_loss_functions/loss_functions.h"
 #include "c_memory_functions/memory_functions.h"
 #include "c_mathematical_functions/activation.h"
-#include "c_matrix_functions/matrix_functions.h"
 #include "logistic_regression.h"
-#include <stdio.h>
 #include <cblas.h>
 
+/**
+ * @brief Fit the logistic regression model to the given data.
+ *
+ * This function trains the logistic regression model using gradient descent.
+ * The model weights (Beta) are updated iteratively based on the gradient of the loss.
+ *
+ * @param[in] X The input matrix of size (n_samples x n_input_features).
+ * @param[in] Y The target/output matrix of size (n_samples x n_classes).
+ * @param[out] Beta The weights of the model, of size (n_input_features x n_classes).
+ * @param[in] n_samples The number of training samples.
+ * @param[in] n_input_features The number of input features.
+ * @param[in] n_classes The number of output classes.
+ * @param[in] max_iters The maximum number of gradient descent iterations.
+ * @param[in] lr The learning rate for gradient descent.
+ * @param[in] tol The tolerance for early stopping based on the gradient norm.
+ */
 void fit(const float *X, const float *Y, float *Beta, const int n_samples, const int n_input_features, const int n_classes, const int max_iters, const float lr, const float tol) {
     // Initialize the gradient and prediction matrices
     float *Gradient = safeMalloc(n_input_features * n_classes * sizeof(float));
@@ -30,16 +53,13 @@ void fit(const float *X, const float *Y, float *Beta, const int n_samples, const
             Gradient, n_classes
             );
 
-        // Divide the gradient by the number of samples
-        cblas_sscal(n_input_features*n_classes, 1.0/n_samples, Gradient, 1);
-
         // Check if the norm of the gradient is less than the tolerance
         if (cblas_snrm2(n_input_features*n_classes, Gradient, 1) < tol) {
             break;
         }
         
         // Update the weights
-        cblas_saxpy(n_input_features*n_classes, -lr, Gradient, 1, Beta, 1);
+        cblas_saxpy(n_input_features*n_classes, -lr/n_samples, Gradient, 1, Beta, 1);
     }
 
     // Free the memory
@@ -47,6 +67,20 @@ void fit(const float *X, const float *Y, float *Beta, const int n_samples, const
     safeFree(Prediction);
 }
 
+/**
+ * @brief Predict the output based on the input features using the trained model.
+ *
+ * This function predicts the output probabilities using the logistic regression model.
+ * For binary classification, it applies the sigmoid activation function.
+ * For multiclass classification, it applies the softmax activation function.
+ *
+ * @param[in] X The input matrix of size (n_samples x n_input_features).
+ * @param[in] Beta The model weights, of size (n_input_features x n_classes).
+ * @param[out] Prediction The predicted probabilities, of size (n_samples x n_classes).
+ * @param[in] n_samples The number of input samples.
+ * @param[in] n_input_features The number of input features.
+ * @param[in] n_classes The number of output classes.
+ */
 void predict(const float *X, const float *Beta, float *Prediction, const int n_samples, const int n_input_features, const int n_classes) {
     // Multiply the input matrix by the weights
     cblas_sgemm(
@@ -69,6 +103,19 @@ void predict(const float *X, const float *Beta, float *Prediction, const int n_s
     }
 }
 
+/**
+ * @brief Calculate the cost (cross-entropy loss) of the model.
+ *
+ * This function computes the cross-entropy loss between the predicted values and the actual values.
+ * It is used to evaluate the performance of the model after training.
+ *
+ * @param[in] Y_pred The predicted probabilities, of size (n_samples x n_classes).
+ * @param[in] Y The actual target/output matrix, of size (n_samples x n_classes).
+ * @param[in] n_samples The number of samples.
+ * @param[in] n_classes The number of output classes.
+ *
+ * @return The cross-entropy loss between the predicted and actual outputs.
+ */
 float cost(const float *Y_pred, const float *Y, const int n_samples, const int n_classes) {
     // Calculate the cross-entropy loss
     return crossEntropy(Y_pred, Y, n_samples, n_classes);
