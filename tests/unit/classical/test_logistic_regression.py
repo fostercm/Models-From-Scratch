@@ -20,7 +20,7 @@ class TestLogisticRegression(unittest.TestCase):
         - Ensures that the model parameters (beta) are computed and not None after fitting.
         - Verifies that the computed parameters (beta) match expected values for a simple dataset.
         """
-        for model in [LogisticRegressionPython()]:
+        for model in [LogisticRegressionPython(), LogisticRegressionC()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
@@ -166,14 +166,14 @@ class TestLogisticRegression(unittest.TestCase):
 
         This test uses a small synthetic dataset to validate the entire process of training and evaluating the model.
         """
-        for model in [LogisticRegressionPython()]:
+        for model in [LogisticRegressionPython(), LogisticRegressionC()]:
             
             # Binary classification dataset
             self.X_bin = np.array([[1, 1], 
                                 [1, 2], 
                                 [2, 2], 
                                 [2, 3]], dtype=np.float32)
-            self.Y_bin = np.array([[0], [0], [1], [1]], dtype=np.int64)
+            self.Y_bin = np.array([[0], [0], [1], [1]], dtype=np.int32)
 
             # Multiclass dataset
             self.X_multi = np.array([[1, 1], 
@@ -181,7 +181,7 @@ class TestLogisticRegression(unittest.TestCase):
                                     [2, 2], 
                                     [2, 3], 
                                     [3, 3]], dtype=np.float32)
-            self.Y_multi = np.array([[0], [1], [1], [2], [2]], dtype=np.int64)
+            self.Y_multi = np.array([[0], [1], [1], [2], [2]], dtype=np.int32)
             
             # Binary classification
             model.fit(self.X_bin, self.Y_bin)

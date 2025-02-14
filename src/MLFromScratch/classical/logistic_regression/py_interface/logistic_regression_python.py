@@ -57,12 +57,12 @@ class LogisticRegressionPython(LogisticRegressionBase):
             # Compute the gradient of the cost function
             gradient = X.T @ (Y_pred - Y) / X.shape[0]
             
-            # Update the model parameters
-            self.params['beta'] -= self.learning_rate * gradient
-            
             # Check for convergence
             if np.linalg.norm(gradient) < self.tolerance:
                 break
+            
+            # Update the model parameters
+            self.params['beta'] -= self.learning_rate * gradient
 
     def predict(self, X: np.ndarray, pad: bool=True) -> np.ndarray:
         """

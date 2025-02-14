@@ -12,7 +12,7 @@ class LogisticRegressionBase(LinearRegressionBase):
         params (dict): A dictionary storing the model parameters, including 'beta'.
     """
     
-    def __init__(self, learning_rate: float=0.01, tolerance: float=0.01, max_iters: int=10000) -> None:
+    def __init__(self, learning_rate: float=0.1, tolerance: float=0.01, max_iters: int=1000) -> None:
         """
         Initialize the Logistic Regression model parameters.
 
@@ -49,7 +49,6 @@ class LogisticRegressionBase(LinearRegressionBase):
         """
         # Validate the input arrays
         X, Y = super().fit(X, Y)
-        Y = Y.astype(int)
         
         # Check if the output dimension of Y is 1
         if Y.shape[1] != 1:
@@ -69,6 +68,7 @@ class LogisticRegressionBase(LinearRegressionBase):
         # Transform the target values to one-hot encoding
         if self.params['num_classes'] > 2:
             Y_new = np.zeros((Y.shape[0], self.params['num_classes']), dtype=np.float32)
+            Y = Y.astype(np.int32)
             Y_new[np.arange(Y.shape[0]), Y.flatten()] = 1
         
         return X, Y_new if self.params['num_classes'] > 2 else Y
