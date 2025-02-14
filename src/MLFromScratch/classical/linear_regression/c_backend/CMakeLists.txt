@@ -18,7 +18,7 @@ include_directories(
 set(SOURCES linear_regression.c)
 
 # Set the flags for the static library
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fopenmp -O3 -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fopenmp -O3 -march=native -Wall")
 
 # Create the shared library
 add_library(linear_regression_c SHARED ${SOURCES})

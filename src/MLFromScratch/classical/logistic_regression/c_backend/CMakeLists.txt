@@ -17,7 +17,7 @@ include_directories(
 set(SOURCES logistic_regression.c)
 
 # Set the flags for the static library
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fopenmp -O3 -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fopenmp -O3 -march=native -Wall")
 
 # Create the shared library
 add_library(logistic_regression_c SHARED ${SOURCES})
