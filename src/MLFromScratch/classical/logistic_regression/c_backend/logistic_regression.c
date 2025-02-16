@@ -29,15 +29,29 @@
  * @param[in] lr The learning rate for gradient descent.
  * @param[in] tol The tolerance for early stopping based on the gradient norm.
  */
-void fit(const float *X, const float *Y, float *Beta, const int n_samples, const int n_input_features, const int n_classes, const int max_iters, const float lr) {
+void fit(const float *X, const float *Y, float *Beta, const int n_samples, const int n_input_features, const int n_classes, const int max_iters, const float lr, const float tol) {
     // Initialize the gradient and prediction matrices
     float *Gradient = safeMalloc(n_input_features * n_classes * sizeof(float));
     float *Prediction = safeMalloc(n_samples * n_classes * sizeof(float));
+    float prev_loss = 0;
+    float loss = 0;
     
     // Loop through the number of iterations
     for (int i=0; i<max_iters; i++) {
         // Make a prediction
         predict(X, Beta, Prediction, n_samples, n_input_features, n_classes);
+
+        // Check for convergence based on cost
+        if (i % 1000 == 0) {
+            // Calculate the cost
+            loss = cost(Prediction, Y, n_samples, n_classes);
+
+            // Check for convergence based on the previos loss
+            if (i > 0 && prev_loss / loss < tol) {
+                break;
+            }
+            prev_loss = loss;
+        }
 
         // Calculate the difference between the prediction and the true values (in place)
         cblas_saxpy(n_samples*n_classes, -1, Y, 1, Prediction, 1);

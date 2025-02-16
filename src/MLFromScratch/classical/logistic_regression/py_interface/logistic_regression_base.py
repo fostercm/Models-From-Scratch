@@ -12,7 +12,7 @@ class LogisticRegressionBase(LinearRegressionBase):
         params (dict): A dictionary storing the model parameters, including 'beta'.
     """
     
-    def __init__(self, learning_rate: float=0.01, iterations: int=10000) -> None:
+    def __init__(self, learning_rate: float=0.01, iterations: int=10000, tolerance: float=0.01) -> None:
         """
         Initialize the Logistic Regression model parameters.
 
@@ -23,6 +23,7 @@ class LogisticRegressionBase(LinearRegressionBase):
         self.params['num_classes'] = None
         self.learning_rate = learning_rate
         self.iterations = iterations
+        self.tolerance = tolerance
     
     def fit(self, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
         """

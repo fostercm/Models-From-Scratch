@@ -49,16 +49,34 @@ class LogisticRegressionPython(LogisticRegressionBase):
             # Initialize beta for multi-class classification
             self.params['beta'] = np.zeros((X.shape[1], self.params['num_classes']), dtype=np.float32)
         
+        # Initialize variables for convergence check
+        prev_cost = None
+        
         # Gradient Descent
-        for _ in range(self.iterations):
+        for i in range(self.iterations):
             # Compute the predicted values
             Y_pred = self.predict(X, pad=False)
+            
+            # Check for convergence
+            if i % 1000 == 0:
+                # Compute the cost
+                cost = self.cost(Y_pred, Y)
+                
+                # Check against previous cost
+                if i > 0 and cost / prev_cost < self.tolerance:
+                    break
+                prev_cost = cost
             
             # Compute the gradient of the cost function
             gradient = X.T @ (Y_pred - Y) / X.shape[0]
             
             # Update the model parameters
             self.params['beta'] -= self.learning_rate * gradient
+            
+            # Check for convergence
+            if prev_cost and cost / prev_cost < self.tolerance:
+                break
+            prev_cost = cost
 
     def predict(self, X: np.ndarray, pad: bool=True) -> np.ndarray:
         """

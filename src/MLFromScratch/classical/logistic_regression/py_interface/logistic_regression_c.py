@@ -40,6 +40,7 @@ class LogisticRegressionC(LogisticRegressionBase):
             ctypes.c_int,
             ctypes.c_int,
             ctypes.c_float,
+            ctypes.c_float
         ]
         
         self.lib.predict.argtypes = [
@@ -88,7 +89,7 @@ class LogisticRegressionC(LogisticRegressionBase):
         Beta = np.zeros((num_input_features * num_classes), dtype=np.float32).flatten()
         
         # Fit the model
-        self.lib.fit(X, Y, Beta, num_samples, num_input_features, num_classes, self.iterations, self.learning_rate)
+        self.lib.fit(X, Y, Beta, num_samples, num_input_features, num_classes, self.iterations, self.learning_rate, self.tolerance)
         
         # Reshape the Beta array and store it
         self.params['beta'] = Beta.reshape((num_input_features, num_classes))
