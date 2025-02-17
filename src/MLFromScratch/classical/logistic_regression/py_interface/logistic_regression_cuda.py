@@ -1,79 +1,161 @@
-# import numpy as np
-# np.seterr(all='ignore')
-# from .logistic_regression_base import LogisticRegressionBase
+from .logistic_regression_base import LogisticRegressionBase
+import ctypes
+import numpy as np
+import os
 
-# class LogisticRegressionPython(LogisticRegressionBase):
-#     """
-#     A simple implementation of Logistic Regression using gradient descent.
+class LogisticRegressionCUDA(LogisticRegressionBase):
+    """
+    Logistic Regression model using a C implementation for performance optimization.
 
-#     This class implements logistic regression using gradient descent to compute the model parameters.
-#     It inherits from the LogisticRegressionBase class and provides the basic functionality for
-#     fitting the model, making predictions, and calculating the cost (Cross Entropy Loss).
-#     """
+    This class extends the LogisticRegressionBase class and utilizes a C-based
+    library for model fitting, prediction, and cost computation to improve
+    performance over pure Python implementations.
+
+    Attributes:
+        lib (ctypes.CDLL): The C shared library for logistic regression operations.
+    """
     
-#     def __init__(self) -> None:
-#         """
-#         Initialize the LogisticRegressionPython model.
+    def __init__(self):
+        """
+        Initialize the LogisticRegressionC model.
 
-#         This method initializes the model by calling the parent class constructor
-#         and setting up the necessary model parameters.
-#         """
-#         super().__init__()
+        This method loads the C shared library and sets up the argument types
+        for the C functions used for fitting, predicting, and calculating cost.
+        """
+        super().__init__()
+        
+        # Load the C library
+        package_dir = os.path.dirname(os.path.abspath(__file__))
+        lib_path = os.path.join(package_dir, "../../../lib/liblogistic_regression_cuda.so")
+        lib_path = os.path.normpath(lib_path)
+        self.lib = ctypes.CDLL(lib_path)
+        
+        # # Define the types of the arguments
+        # self.lib.fit.argtypes = [
+        #     np.ctypeslib.ndpointer(dtype=np.float32),
+        #     np.ctypeslib.ndpointer(dtype=np.float32),
+        #     np.ctypeslib.ndpointer(dtype=np.float32),
+        #     ctypes.c_int, 
+        #     ctypes.c_int,
+        #     ctypes.c_int,
+        #     ctypes.c_int,
+        #     ctypes.c_float,
+        #     ctypes.c_float
+        # ]
+        
+        self.lib.predict.argtypes = [
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_int
+        ]
+        
+        self.lib.cost.argtypes = [
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            ctypes.c_int,
+            ctypes.c_int
+        ]
+        self.lib.cost.restype = ctypes.c_float
 
-#     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
-#         """
-#         Fit the Logistic Regression model to the training data using gradient descent.
+    # def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
+    #     """
+    #     Fit the Logistic Regression model to the training data using the C implementation.
 
-#         This method validates the input data and computes the model parameters (beta)
-#         using gradient descent: β = β - lr * ∇J(β), where J(β) is the cost function and lr is the learning rate
-#         It also checks for convergence by comparing the norm of the gradient with a tolerance value
-#         If the gradient never falls below the tolerance, the model stops after max_iters iterations
+    #     This method validates the input data, flattens the arrays, and calls the
+    #     C function to fit the model. The learned parameters (beta) are then
+    #     reshaped and stored in the model's parameters.
 
-#         Args:
-#             X (np.ndarray): Feature matrix of shape (n_samples, n_features).
-#             Y (np.ndarray): Target matrix of shape (n_samples, 1).
+    #     Args:
+    #         X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+    #         Y (np.ndarray): Target matrix of shape (n_samples, n_targets).
 
-#         Raises:
-#             ValueError: If the dimensions of X and Y are not compatible.
-#         """
-#         # Validate the input arrays and pad X with ones
-#         X, Y = super().fit(X, Y)
+    #     Raises:
+    #         ValueError: If the dimensions of X and Y do not match.
+    #     """
+    #     X, Y = super().fit(X, Y)
+    #     num_classes = self.params['num_classes'] if self.params['num_classes'] > 2 else 1
+        
+    #     # Get the dimensions of the input and output
+    #     num_samples, num_input_features = X.shape
+        
+    #     # Flatten arrays
+    #     X = X.flatten()
+    #     Y = Y.flatten()
+        
+    #     # Allocate memory for the model parameters
+    #     Beta = np.zeros((num_input_features * num_classes), dtype=np.float32).flatten()
+        
+    #     # Fit the model
+    #     self.lib.fit(X, Y, Beta, num_samples, num_input_features, num_classes, self.iterations, self.learning_rate, self.tolerance)
+        
+    #     # Reshape the Beta array and store it
+    #     self.params['beta'] = Beta.reshape((num_input_features, num_classes))
 
-#     def predict(self, X: np.ndarray, pad: bool=True) -> np.ndarray:
-#         """
-#         Predict target values using the learned model.
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Predict target values using the fitted model and the C implementation.
 
-#         This method makes predictions by computing the dot product of the feature matrix (X)
-#         and the learned model parameters (beta), it then passes these values through a sigmoid or softmax function.
+        This method validates the input data, flattens the arrays, and calls the
+        C function to make predictions. The predictions are then reshaped to
+        the appropriate dimensions.
 
-#         Args:
-#             X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+        Args:
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features).
 
-#         Returns:
-#             np.ndarray: Predicted target values of shape (n_samples, n_targets).
+        Returns:
+            np.ndarray: The predicted target values of shape (n_samples, n_targets).
 
-#         Raises:
-#             ValueError: If the model is not fitted before calling predict.
-#         """
-#         # Validate the input array and pad X with ones
-#         X = super().predict(X, pad)
+        Raises:
+            ValueError: If the model is not fitted or the dimensions of X do not match.
+        """
+        X = super().predict(X)
+        
+        # Get the dimensions of the input and output
+        num_samples, num_input_features = X.shape
+        num_classes = self.params['beta'].shape[1]
+        num_classes = 1 if num_classes == 2 else num_classes
+        
+        # Allocate memory for the prediction and flatten
+        prediction = np.zeros((num_samples, num_classes), dtype=np.float32).flatten()
+        X = X.flatten()
+        Beta = self.params['beta'].flatten()
+        
+        # Predict
+        self.lib.predict(X, Beta, prediction, num_samples, num_input_features, num_classes)
     
+        # Reshape the prediction array and return it
+        return prediction.reshape((num_samples, num_classes))
+    
+    def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
+        """
+        Compute the Mean Squared Error (MSE) cost using the C implementation.
 
-#     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
-#         """
-#         Compute the Cross Entropy (CE) cost between the predicted and true target values.
+        This method validates the input data, flattens the arrays, and calls the
+        C function to compute the cost between predicted and true values.
 
-#         This method calculates the CE using the formula: 
-#         CE = -1/n_samples * ΣΣ(Y * log(Y_pred))
+        Args:
+            Y_pred (np.ndarray): Predicted target values of shape (n_samples, n_targets).
+            Y (np.ndarray): True target values of shape (n_samples, n_targets).
 
-#         Args:
-#             Y_pred (np.ndarray): Predicted target values of shape (n_samples, n_targets).
-#             Y (np.ndarray): True target values of shape (n_samples, n_targets).
+        Returns:
+            float: The Mean Squared Error between Y_pred and Y.
 
-#         Returns:
-#             float: The Mean Squared Error (MSE) between the predicted and true values.
-
-#         Raises:
-#             ValueError: If the dimensions of Y_pred and Y do not match.
-#         """
-#         Y_pred, Y = super().cost(Y_pred, Y)
+        Raises:
+            ValueError: If the dimensions of Y_pred and Y do not match.
+        """
+        
+        Y_pred, Y = super().cost(Y_pred, Y)
+        
+        # Get array dimensions
+        num_samples, num_classes = Y_pred.shape
+        num_classes = 1 if num_classes == 2 else num_classes
+        
+        # Flatten arrays
+        Y_pred = Y_pred.flatten()
+        Y = Y.flatten()
+        
+        # Return the cost
+        return self.lib.cost(Y_pred, Y, num_samples, num_classes)
