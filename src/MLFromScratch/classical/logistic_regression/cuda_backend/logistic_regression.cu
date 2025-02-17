@@ -2,7 +2,7 @@
 #include <cublas_v2.h>
 #include "cuda_memory_functions/memory_functions.h"
 #include "cuda_mathematical_functions/activation.h"
-#include "cuda_loss_functions/loss_functions.h"
+#include "cuda_mathematical_functions/loss.h"
 #include "logistic_regression.h"
 
 void fit(const float *X, const float *Y, float *Beta, const int n_samples, const int n_input_features, const int n_classes, const int max_iters, float lr, const float tol) {

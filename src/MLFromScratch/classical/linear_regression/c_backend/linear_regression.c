@@ -12,7 +12,7 @@
 #include <math.h>
 #include "linear_regression.h"
 #include "c_mathematical_functions/inverse.h"
-#include "c_loss_functions/loss_functions.h"
+#include "c_mathematical_functions/loss.h"
 #include "c_memory_functions/memory_functions.h"
 #include <cblas.h>
 

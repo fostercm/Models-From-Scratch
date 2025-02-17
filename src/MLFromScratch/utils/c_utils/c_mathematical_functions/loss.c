@@ -18,7 +18,7 @@
 
 #include <math.h>
 #include <stdio.h>
-#include "loss_functions.h"
+#include "loss.h"
 #include <omp.h>
 
 /**

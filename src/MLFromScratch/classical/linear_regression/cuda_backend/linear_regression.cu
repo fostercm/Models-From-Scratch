@@ -10,7 +10,7 @@
 #include "linear_regression.h"
 #include "cuda_mathematical_functions/inverse.h"
 #include "cuda_memory_functions/memory_functions.h"
-#include "cuda_loss_functions/loss_functions.h"
+#include "cuda_mathematical_functions/loss.h"
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 

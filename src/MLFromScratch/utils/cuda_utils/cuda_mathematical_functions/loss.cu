@@ -7,7 +7,7 @@
  * Memory management is handled via safe functions to prevent errors during allocation and copying.
  */
 
-#include "loss_functions.h"
+#include "loss.h"
 #include "../cuda_memory_functions/memory_functions.h"
 #include "../cuda_matrix_functions/matrix_functions.h"
 #include <cuda_runtime.h>

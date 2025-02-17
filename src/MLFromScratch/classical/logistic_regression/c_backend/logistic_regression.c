@@ -7,7 +7,7 @@
  * the cost (cross-entropy loss).
  */
 
-#include "c_loss_functions/loss_functions.h"
+#include "c_mathematical_functions/loss.h"
 #include "c_memory_functions/memory_functions.h"
 #include "c_mathematical_functions/activation.h"
 #include "logistic_regression.h"
