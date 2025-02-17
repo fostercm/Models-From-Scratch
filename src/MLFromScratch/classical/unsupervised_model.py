@@ -22,6 +22,9 @@ class UnsupervisedModel:
         get_params(): Get the parameters of the model.
         load_params(params): Load the model parameters.
     """
+    
+    def __init__(self):
+        pass
 
     def _validate_input(self, array1: np.ndarray, array2: np.ndarray = None) -> None:
         """

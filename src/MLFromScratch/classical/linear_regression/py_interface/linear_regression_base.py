@@ -20,7 +20,8 @@ class LinearRegressionBase(SupervisedModel):
         Initializes the 'beta' parameter to None. This will be populated
         when the model is fitted to the training data.
         """
-        self.params = {"beta": None}
+        super().__init__()
+        self.params['beta'] = None
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
         """

@@ -23,6 +23,8 @@ class SupervisedModel(UnsupervisedModel):
         get_params(): Get the parameters of the model.
         load_params(params): Load the model parameters.
     """
+    def __init__(self):
+        self.params = {}
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
         """Fit the model to the training data (to be implemented in subclass)."""
