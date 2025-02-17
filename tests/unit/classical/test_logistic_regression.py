@@ -1,5 +1,5 @@
 import unittest
-from MLFromScratch.classical import LogisticRegressionPython, LogisticRegressionC
+from MLFromScratch.classical import LogisticRegressionPython, LogisticRegressionC, LogisticRegressionCUDA
 import numpy as np
 
 np.random.seed(0)
@@ -22,7 +22,7 @@ class TestLogisticRegression(unittest.TestCase):
         - Ensures that the model parameters (beta) are computed and not None after fitting.
         - Verifies that the computed parameters (beta) match expected values for a simple dataset.
         """
-        for model in [LogisticRegressionPython(), LogisticRegressionC()]:
+        for model in [LogisticRegressionPython(), LogisticRegressionC(), LogisticRegressionCUDA()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
@@ -76,7 +76,7 @@ class TestLogisticRegression(unittest.TestCase):
         - Checks that the predictions are made correctly based on a fitted model.
         - Ensures that the predictions match expected values for a given input.
         """
-        for model in [LogisticRegressionPython(), LogisticRegressionC()]:
+        for model in [LogisticRegressionPython(), LogisticRegressionC(), LogisticRegressionCUDA()]:
         
             # Test that the model is fitted
             with self.assertRaises(ValueError):
@@ -122,7 +122,7 @@ class TestLogisticRegression(unittest.TestCase):
         - Validates that the cost computation correctly reflects the difference between predicted and actual values.
         - Compares the computed cost to a manually computed value for accuracy.
         """
-        for model in [LogisticRegressionPython(), LogisticRegressionC()]:
+        for model in [LogisticRegressionPython(), LogisticRegressionC(), LogisticRegressionCUDA()]:
         
             # Test that inputs are numpy arrays
             with self.assertRaises(TypeError):
