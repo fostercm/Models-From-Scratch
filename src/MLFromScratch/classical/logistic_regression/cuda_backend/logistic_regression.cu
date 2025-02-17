@@ -3,6 +3,7 @@
 #include "cuda_memory_functions/memory_functions.h"
 #include "cuda_mathematical_functions/activation.h"
 #include "cuda_mathematical_functions/loss.h"
+#include "cuda_matrix_functions/matrix_functions.h"
 #include "logistic_regression.h"
 
 void fit(const float *X, const float *Y, float *Beta, const int n_samples, const int n_input_features, const int n_classes, const int max_iters, float lr, const float tol) {
@@ -61,7 +62,7 @@ void fit(const float *X, const float *Y, float *Beta, const int n_samples, const
             n_classes, n_input_features, n_samples,
             &alpha,
             d_Prediction, n_classes, // row major
-            d_X, n_samples, // row major
+            d_X, n_input_features, // row major
             &beta,
             d_Gradient, n_classes // row major
         );
