@@ -6,5 +6,6 @@ __global__ void populateDiagonalKernel(float *matrix, const float *diagonal, con
 void launchPopulateDiagonalKernel(float *matrix, const float *diagonal, const int m, const int n);
 __global__ void identityMatrixKernel(float *matrix, const int m, const int n);
 void launchIdentityMatrixKernel(float *matrix, const int m, const int n);
+__global__ void scaleValue(float *value, const float scalar);
 
 #endif /* MATRIX_FUNCTIONS_H */

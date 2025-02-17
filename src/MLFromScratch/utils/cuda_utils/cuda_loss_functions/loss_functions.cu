@@ -9,6 +9,7 @@
 
 #include "loss_functions.h"
 #include "../cuda_memory_functions/memory_functions.h"
+#include "../cuda_matrix_functions/matrix_functions.h"
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
 
@@ -87,6 +88,10 @@ void crossEntropy(const float *d_Y_pred, const float *d_Y, float *d_cost, const 
     } else {
         crossEntropyKernel<<<num_blocks, threads_per_block>>>(d_Y_pred, d_Y, d_cost, n_samples, n_classes);
     }
+
+    // Scale the cost
+    float scale = -1.0f / n_samples;
+    scaleValue<<<1,1>>>(d_cost, scale);
 }
 
 __global__ void crossEntropyKernel(const float *d_Y_pred, const float *d_Y, float *d_cost, const int n_samples, const int n_classes) {

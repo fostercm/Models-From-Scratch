@@ -118,3 +118,7 @@ void launchIdentityMatrixKernel(float *matrix, const int m, const int n) {
     // Launch kernel
     identityMatrixKernel<<<gridSize, blockSize>>>(matrix, m, n);
 }
+
+__global__ void scaleValue(float *value, const float scalar) {
+    *value *= scalar;
+}

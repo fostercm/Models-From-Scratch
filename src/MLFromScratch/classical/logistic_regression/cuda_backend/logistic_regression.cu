@@ -5,30 +5,41 @@
 #include "cuda_loss_functions/loss_functions.h"
 #include "logistic_regression.h"
 
-// void fit(const float *X, const float *Y, float *Beta, const int n_samples, const int n_input_features, const int n_classes, const int max_iters, const float lr, const float tol) {
-//     // Initialize cublas handle
-//     cublasHandle_t handle;
-//     cublasCreate(&handle);
+void fit(const float *X, const float *Y, float *Beta, const int n_samples, const int n_input_features, const int n_classes, const int max_iters, const float lr, const float tol) {
+    // Initialize cublas handle
+    cublasHandle_t handle;
+    cublasCreate(&handle);
     
-//     // Initialize error variable
-//     int err = 0;
+    // Initialize error variable
+    int err = 0;
 
-//     // Initialize device variables
-//     float *d_X, *d_Y, *d_Beta, *d_Gradient, *d_Predictions;
-//     d_X = (float*) safeCudaMalloc(n_samples * n_input_features * sizeof(float), &err);
-//     d_Y = (float*) safeCudaMalloc(n_samples * n_classes * sizeof(float), &err);
-//     d_Beta = (float*) safeCudaMalloc(n_input_features * n_classes * sizeof(float), &err);
-//     d_Gradient = (float*) safeCudaMalloc(n_input_features * n_classes * sizeof(float), &err);
-//     d_Predictions = (float*) safeCudaMalloc(n_samples * n_classes * sizeof(float), &err);
+    // Initialize device variables
+    float *d_X, *d_Y, *d_Beta, *d_Gradient, *d_Predictions;
+    d_X = (float*) safeCudaMalloc(n_samples * n_input_features * sizeof(float), &err);
+    d_Y = (float*) safeCudaMalloc(n_samples * n_classes * sizeof(float), &err);
+    d_Beta = (float*) safeCudaMalloc(n_input_features * n_classes * sizeof(float), &err);
+    d_Gradient = (float*) safeCudaMalloc(n_input_features * n_classes * sizeof(float), &err);
+    d_Predictions = (float*) safeCudaMalloc(n_samples * n_classes * sizeof(float), &err);
 
-//     // Transfer X and Y to device
-//     safeCudaMemcpy(d_X, X, n_samples * n_input_features * sizeof(float), cudaMemcpyHostToDevice);
-//     safeCudaMemcpy(d_Y, Y, n_samples * n_classes * sizeof(float), cudaMemcpyHostToDevice);
+    // Transfer X, Y, and Beta to device
+    safeCudaMemcpy(d_X, X, n_samples * n_input_features * sizeof(float), cudaMemcpyHostToDevice);
+    safeCudaMemcpy(d_Y, Y, n_samples * n_classes * sizeof(float), cudaMemcpyHostToDevice);
+    safeCudaMemcpy(d_Beta, Beta, n_input_features * n_classes * sizeof(float), cudaMemcpyHostToDevice);
 
-//     // Initialize alpha and beta
-//     float alpha = 1.0f;
-//     float beta = 0.0f;
-// }
+    // Initialize alpha and beta
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    for (int i=0; i < max_iters; i++) {
+        // Predict
+        _predict(d_X, d_Beta, d_Predictions, n_samples, n_input_features, n_classes, handle);
+
+        // Check for convergence
+        if (i % 1000 == 0) {
+
+        }
+    }
+}
 
 void predict(const float *X, const float *Beta, float *Prediction, const int n_samples, const int n_input_features, const int n_classes) {
     // Initialize cublas handle
@@ -118,5 +129,5 @@ float cost(const float *Y_pred, const float *Y, const int n_samples, const int n
     safeCudaFree(d_Y);
     safeCudaFree(d_cost);
 
-    return cost * (-1.0 / n_samples);
+    return cost;
 }
