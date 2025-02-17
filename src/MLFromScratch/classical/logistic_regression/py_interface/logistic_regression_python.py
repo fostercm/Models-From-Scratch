@@ -1,8 +1,10 @@
-import numpy as np
-np.seterr(all='ignore')
 from .logistic_regression_base import LogisticRegressionBase
 from ....utils.python_utils.loss_functions import crossEntropy
 from ....utils.python_utils.activation_functions import sigmoid, softmax
+import numpy as np
+
+np.seterr(all="ignore")
+
 
 class LogisticRegressionPython(LogisticRegressionBase):
     """
@@ -12,7 +14,7 @@ class LogisticRegressionPython(LogisticRegressionBase):
     It inherits from the LogisticRegressionBase class and provides the basic functionality for
     fitting the model, making predictions, and calculating the cost (Cross Entropy Loss).
     """
-    
+
     def __init__(self) -> None:
         """
         Initialize the LogisticRegressionPython model.
@@ -40,45 +42,47 @@ class LogisticRegressionPython(LogisticRegressionBase):
         """
         # Validate the input arrays and pad X with ones
         X, Y = super().fit(X, Y)
-        
+
         # Initialize the model parameters
-        if self.params['num_classes'] == 2:
+        if self.params["num_classes"] == 2:
             # Initialize beta for binary classification
-            self.params['beta'] = np.zeros((X.shape[1], 1), dtype=np.float32)
+            self.params["beta"] = np.zeros((X.shape[1], 1), dtype=np.float32)
         else:
             # Initialize beta for multi-class classification
-            self.params['beta'] = np.zeros((X.shape[1], self.params['num_classes']), dtype=np.float32)
-        
+            self.params["beta"] = np.zeros(
+                (X.shape[1], self.params["num_classes"]), dtype=np.float32
+            )
+
         # Initialize variables for convergence check
         prev_cost = None
-        
+
         # Gradient Descent
         for i in range(self.iterations):
             # Compute the predicted values
             Y_pred = self.predict(X, pad=False)
-            
+
             # Check for convergence
             if i % 1000 == 0:
                 # Compute the cost
                 cost = self.cost(Y_pred, Y)
-                
+
                 # Check against previous cost
                 if i > 0 and cost / prev_cost < self.tolerance:
                     break
                 prev_cost = cost
-            
+
             # Compute the gradient of the cost function
             gradient = X.T @ (Y_pred - Y) / X.shape[0]
-            
+
             # Update the model parameters
-            self.params['beta'] -= self.learning_rate * gradient
-            
+            self.params["beta"] -= self.learning_rate * gradient
+
             # Check for convergence
             if prev_cost and cost / prev_cost < self.tolerance:
                 break
             prev_cost = cost
 
-    def predict(self, X: np.ndarray, pad: bool=True) -> np.ndarray:
+    def predict(self, X: np.ndarray, pad: bool = True) -> np.ndarray:
         """
         Predict target values using the learned model.
 
@@ -96,19 +100,19 @@ class LogisticRegressionPython(LogisticRegressionBase):
         """
         # Validate the input array and pad X with ones
         X = super().predict(X, pad)
-        
-        if self.params['num_classes'] == 2:
+
+        if self.params["num_classes"] == 2:
             # Return the predicted values for binary classification
-            return sigmoid(X @ self.params['beta'])
+            return sigmoid(X @ self.params["beta"])
         else:
             # Return the predicted values for multi-class classification
-            return softmax(X @ self.params['beta'])
+            return softmax(X @ self.params["beta"])
 
     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
         """
         Compute the Cross Entropy (CE) cost between the predicted and true target values.
 
-        This method calculates the CE using the formula: 
+        This method calculates the CE using the formula:
         CE = -1/n_samples * ΣΣ(Y * log(Y_pred))
 
         Args:

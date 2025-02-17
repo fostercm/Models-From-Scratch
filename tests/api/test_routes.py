@@ -9,8 +9,8 @@ import io
 client = TestClient(app)
 logging.disable(logging.CRITICAL)
 
+
 class TestRoutes(unittest.TestCase):
-    
     def test_health_check(self):
         response = client.get("/health")
         self.assertEqual(response.status_code, 200)
@@ -20,11 +20,11 @@ class TestRoutes(unittest.TestCase):
         response = client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"message": "ML API is running!"})
-        
+
     @patch("api.services.getModel")
     def test_train(self, mock_get_model):
         """Test the /train endpoint with mock model"""
-        
+
         # Mock the model object and its methods
         mock_model = MagicMock()
         mock_model.fit = MagicMock()
@@ -54,7 +54,7 @@ class TestRoutes(unittest.TestCase):
         self.assertIn("model", response_data)
         self.assertIn("loss", response_data)
         self.assertIn("params", response_data)
-        
+
     @patch("api.services.getModel")
     def test_predict(self, mock_get_model):
         """Test the /predict endpoint with mock model"""

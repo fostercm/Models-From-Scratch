@@ -1,7 +1,9 @@
-import numpy as np
-np.seterr(all='ignore')
 from .linear_regression_base import LinearRegressionBase
 from ....utils.python_utils.loss_functions import meanSquaredError
+import numpy as np
+
+np.seterr(all="ignore")
+
 
 class LinearRegressionPython(LinearRegressionBase):
     """
@@ -11,7 +13,7 @@ class LinearRegressionPython(LinearRegressionBase):
     It inherits from the LinearRegressionBase class and provides the basic functionality for
     fitting the model, making predictions, and calculating the cost (Mean Squared Error).
     """
-    
+
     def __init__(self) -> None:
         """
         Initialize the LinearRegressionPython model.
@@ -37,13 +39,13 @@ class LinearRegressionPython(LinearRegressionBase):
         """
         # Validate the input arrays and pad X with ones
         X, Y = super().fit(X, Y)
-        
+
         # Evaluate the model parameters using OLS
         gram_matrix = X.T @ X
         if np.isclose(np.linalg.det(gram_matrix), 0.0):
-            self.params['beta'] = np.linalg.pinv(gram_matrix) @ X.T @ Y
+            self.params["beta"] = np.linalg.pinv(gram_matrix) @ X.T @ Y
         else:
-            self.params['beta'] = np.linalg.inv(X.T @ X) @ X.T @ Y
+            self.params["beta"] = np.linalg.inv(X.T @ X) @ X.T @ Y
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -63,15 +65,15 @@ class LinearRegressionPython(LinearRegressionBase):
         """
         # Validate the input array and pad X with ones
         X = super().predict(X)
-        
+
         # Return the predicted values
-        return X @ self.params['beta']
+        return X @ self.params["beta"]
 
     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
         """
         Compute the Mean Squared Error (MSE) cost between the predicted and true target values.
 
-        This method calculates the MSE using the formula: 
+        This method calculates the MSE using the formula:
         MSE = 0.5 * (1/n_samples) * ||Y_pred - Y||^2.
 
         Args:

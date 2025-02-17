@@ -3,6 +3,7 @@ import ctypes
 import numpy as np
 import os
 
+
 class LinearRegressionCUDA(LinearRegressionBase):
     """
     Linear Regression model using a CUDA implementation for performance optimization.
@@ -14,7 +15,7 @@ class LinearRegressionCUDA(LinearRegressionBase):
     Attributes:
         lib (ctypes.CDLL): The CUDA shared library for linear regression operations.
     """
-    
+
     def __init__(self):
         """
         Initialize the LinearRegressionCUDA model.
@@ -23,37 +24,39 @@ class LinearRegressionCUDA(LinearRegressionBase):
         for the CUDA functions used for fitting, predicting, and calculating cost.
         """
         super().__init__()
-        
+
         # Load the CUDA library
         package_dir = os.path.dirname(os.path.abspath(__file__))
-        lib_path = os.path.join(package_dir, "../../../lib/liblinear_regression_cuda.so")
+        lib_path = os.path.join(
+            package_dir, "../../../lib/liblinear_regression_cuda.so"
+        )
         lib_path = os.path.normpath(lib_path)
         self.lib = ctypes.CDLL(lib_path)
-        
+
         # Define the types of the arguments
         self.lib.fit.argtypes = [
             np.ctypeslib.ndpointer(dtype=np.float32),
             np.ctypeslib.ndpointer(dtype=np.float32),
             np.ctypeslib.ndpointer(dtype=np.float32),
-            ctypes.c_int, 
             ctypes.c_int,
-            ctypes.c_int
+            ctypes.c_int,
+            ctypes.c_int,
         ]
-        
+
         self.lib.predict.argtypes = [
             np.ctypeslib.ndpointer(dtype=np.float32),
             np.ctypeslib.ndpointer(dtype=np.float32),
             np.ctypeslib.ndpointer(dtype=np.float32),
-            ctypes.c_int, 
             ctypes.c_int,
-            ctypes.c_int
+            ctypes.c_int,
+            ctypes.c_int,
         ]
-        
+
         self.lib.cost.argtypes = [
             np.ctypeslib.ndpointer(dtype=np.float32),
             np.ctypeslib.ndpointer(dtype=np.float32),
             ctypes.c_int,
-            ctypes.c_int
+            ctypes.c_int,
         ]
         self.lib.cost.restype = ctypes.c_float
 
@@ -73,21 +76,23 @@ class LinearRegressionCUDA(LinearRegressionBase):
             ValueError: If the dimensions of X and Y do not match.
         """
         X, Y = super().fit(X, Y)
-        
+
         # Get the dimensions of the input and output
         num_samples, num_input_features = X.shape
         num_output_features = Y.shape[1]
-        
+
         # Flatten arrays
         X = X.flatten()
         Y = Y.flatten()
-        Beta = np.zeros((num_input_features * num_output_features), dtype=np.float32).flatten()
-        
+        Beta = np.zeros(
+            (num_input_features * num_output_features), dtype=np.float32
+        ).flatten()
+
         # Fit the model
         self.lib.fit(X, Y, Beta, num_samples, num_input_features, num_output_features)
-        
+
         # Reshape the Beta array and store it
-        self.params['beta'] = Beta.reshape((num_input_features, num_output_features))
+        self.params["beta"] = Beta.reshape((num_input_features, num_output_features))
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -107,22 +112,26 @@ class LinearRegressionCUDA(LinearRegressionBase):
             ValueError: If the model is not fitted or the dimensions of X do not match.
         """
         X = super().predict(X)
-        
+
         # Get the dimensions of the input and output
         num_samples, num_input_features = X.shape
-        num_output_features = self.params['beta'].shape[1]
-        
+        num_output_features = self.params["beta"].shape[1]
+
         # Allocate memory for the prediction and flatten
-        prediction = np.zeros((num_samples, num_output_features), dtype=np.float32).flatten()
+        prediction = np.zeros(
+            (num_samples, num_output_features), dtype=np.float32
+        ).flatten()
         X = X.flatten()
-        Beta = self.params['beta'].flatten()
-        
+        Beta = self.params["beta"].flatten()
+
         # Predict
-        self.lib.predict(X, Beta, prediction, num_samples, num_input_features, num_output_features)
-        
+        self.lib.predict(
+            X, Beta, prediction, num_samples, num_input_features, num_output_features
+        )
+
         # Reshape the prediction array and return it
         return prediction.reshape((num_samples, num_output_features))
-    
+
     def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
         """
         Compute the Mean Squared Error (MSE) cost using the CUDA implementation.
@@ -141,13 +150,13 @@ class LinearRegressionCUDA(LinearRegressionBase):
             ValueError: If the dimensions of Y_pred and Y do not match.
         """
         Y_pred, Y = super().cost(Y_pred, Y)
-        
+
         # Get array dimensions
         num_samples, num_output_features = Y_pred.shape
-        
+
         # Flatten arrays
         Y_pred = Y_pred.flatten()
         Y = Y.flatten()
-        
+
         # Return the cost
         return self.lib.cost(Y_pred, Y, num_samples, num_output_features)
