@@ -15,7 +15,6 @@ include_directories(${CMAKE_SOURCE_DIR}/src/MLFromScratch/utils/cuda_utils)
 
 # Source files
 set(SOURCES 
-    linear_regression.cpp
     linear_regression.cu
     )
 

@@ -10,6 +10,7 @@
 #include "linear_regression.h"
 #include "cuda_mathematical_functions/inverse.h"
 #include "cuda_memory_functions/memory_functions.h"
+#include "cuda_loss_functions/loss_functions.h"
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 
@@ -27,7 +28,7 @@
  * @param[in] num_input_features The number of features in the input data (X).
  * @param[in] num_output_features The number of output features (Y).
  */
-void fitCUDA(const float *X, const float *Y, float *Beta, const int num_samples, const int num_input_features, const int num_output_features) {
+void fit(const float *X, const float *Y, float *Beta, const int num_samples, const int num_input_features, const int num_output_features) {
     // Initialize Cublas
     cublasHandle_t handle;
     cublasCreate(&handle);
@@ -136,7 +137,7 @@ void fitCUDA(const float *X, const float *Y, float *Beta, const int num_samples,
  * @param[in] num_input_features The number of input features in the dataset.
  * @param[in] num_output_features The number of output features.
  */
-void predictCUDA(const float *X, const float *Beta, float *Prediction, const int num_samples, const int num_input_features, const int num_output_features) {
+void predict(const float *X, const float *Beta, float *Prediction, const int num_samples, const int num_input_features, const int num_output_features) {
     // Initialize cublas
     cublasHandle_t handle;
     cublasCreate(&handle);
@@ -196,60 +197,33 @@ void predictCUDA(const float *X, const float *Beta, float *Prediction, const int
     cublasDestroy(handle);
 }
 
-/**
- * @brief Calculate the cost (mean squared error) between predictions and actual values using CUDA.
- *
- * This function computes the mean squared error (MSE) between the predicted values and the actual target values,
- * using CUDA-accelerated operations for efficient computation.
- *
- * @param[in] Y_pred The predicted output matrix, (num_samples x num_output_features).
- * @param[in] Y The actual target/output matrix, (num_samples x num_output_features).
- * @param[out] cost The computed cost (MSE).
- * @param[in] num_samples The number of samples in the dataset.
- * @param[in] num_output_features The number of output features.
- */
-void costCUDA(const float *Y_pred, const float *Y, float *cost, const int num_samples, const int num_output_features) {
-    // Initialize cublas
+float cost(const float *Y_pred, const float *Y, const int num_samples, const int num_output_features) {
+    // Initialize cublas handle
     cublasHandle_t handle;
     cublasCreate(&handle);
-
-    // Initialize alpha and beta
-    float alpha = -1.0f;
-    float beta = 1.0f;
-
-    // Get the total number of elements
-    const int n = num_samples * num_output_features;
 
     // Initialize error pointer for safe memory allocation
     int err = 0;
 
-    // Allocate memory on GPU
-    float *d_Y_pred, *d_Y, *d_difference;
-    d_Y_pred = (float*) safeCudaMalloc(n * sizeof(float), &err);
-    d_Y = (float*) safeCudaMalloc(n * sizeof(float), &err);
-    d_difference = (float*) safeCudaMalloc(n * sizeof(float), &err);
+    // Allocate memory for cost and on device
+    float *d_Y_pred, *d_Y;
+    float cost;
+    d_Y_pred = (float*) safeCudaMalloc(num_samples * num_output_features * sizeof(float), &err);
+    d_Y = (float*) safeCudaMalloc(num_samples * num_output_features * sizeof(float), &err);
 
-    // Copy data to GPU
-    safeCudaMemcpy(d_Y_pred, Y_pred, n * sizeof(float), cudaMemcpyHostToDevice);
-    safeCudaMemcpy(d_Y, Y, n * sizeof(float), cudaMemcpyHostToDevice);
+    // Copy data to device
+    safeCudaMemcpy(d_Y_pred, Y_pred, num_samples * num_output_features * sizeof(float), cudaMemcpyHostToDevice);
+    safeCudaMemcpy(d_Y, Y, num_samples * num_output_features * sizeof(float), cudaMemcpyHostToDevice);
 
-    // Calculate the difference and free memory
-    cublasSgeam(
-        handle, CUBLAS_OP_N, CUBLAS_OP_N, 
-        num_samples, num_output_features, 
-        &alpha, 
-        d_Y_pred, num_samples, 
-        &beta, 
-        d_Y, num_samples, 
-        d_difference, num_samples
-        );
+    // Call loss function
+    meanSquaredError(d_Y_pred, d_Y, &cost, num_samples, num_output_features, handle);
+
+    // Free memory
     safeCudaFree(d_Y_pred);
     safeCudaFree(d_Y);
-    
-    // Calculate the norm, send to host, and free memory
-    cublasSnrm2(handle, n, d_difference, 1, cost);
-    safeCudaFree(d_difference);
 
     // Destroy cublas
     cublasDestroy(handle);
+
+    return cost;
 }

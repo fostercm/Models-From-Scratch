@@ -77,6 +77,37 @@ void meanSquaredErrorCUDA(const float *Y_pred, const float *Y, float *cost, cons
     cublasDestroy(handle);
 }
 
+void meanSquaredError(const float *d_Y_pred, const float *d_Y, float *cost, const int n_samples, const int n_output_features, cublasHandle_t handle) {
+    // Initialize alpha and beta
+    float alpha = -1.0f;
+    float beta = 1.0f;
+
+    // Initialize error pointer for safe memory allocation
+    int err = 0;
+
+    // Allocate memory on GPU
+    float *d_difference;
+    d_difference = (float*) safeCudaMalloc(n_samples * n_output_features * sizeof(float), &err);
+
+    // Calculate the difference and free memory
+    cublasSgeam(
+        handle, CUBLAS_OP_N, CUBLAS_OP_N, 
+        n_samples, n_output_features, 
+        &alpha, 
+        d_Y_pred, n_samples, 
+        &beta, 
+        d_Y, n_samples, 
+        d_difference, n_samples
+        );
+
+    // Calculate the norm and free memory
+    cublasSnrm2(handle, n_samples * n_output_features, d_difference, 1, cost);
+    safeCudaFree(d_difference);
+
+    // Square the cost and scale
+    *cost = (*cost * *cost) / (2 * n_samples);
+}
+
 void crossEntropy(const float *d_Y_pred, const float *d_Y, float *d_cost, const int n_samples, const int n_classes) {
     // Define the number of threads and blocks 
     int threads_per_block = 256;
