@@ -74,24 +74,67 @@ Where:
 For logistic regression, the gradient of the loss function can be derived as such:
 
 $$
-\Huge \mathcal{L}(\beta) = -\frac{1}{n} \sum_{i=1}^n \sum_{j=1}^c Y_{ij}*\log(\hat Y_{ij})
+\Huge \mathcal{L}(\beta) = -\frac{1}{n} \sum_{i=1}^n Y_i*\log(\hat Y_i) + (1 - Y_i)*\log(1 - \hat Y_i)
 $$
 
-### Pseudoinverse
-
-For matrices that aren't invertible (correlated columns being the most likely reason here), the Moore-Penrose pseudoinverse is applicable, defined as:
-
 $$
-\Huge A^+ = V\Sigma^+U^T
+\Huge \mathcal{L}(\beta) = -\frac{1}{n} \sum_{i=1}^n Y_i*\log(\sigma (X\beta)) + (1 - Y_i)*\log(\sigma (X\beta))
 $$
 
-Where $\Huge V$, $\Huge \Sigma$, and $\Huge U^T$ are computed by taking the singular value decomposition (SVD) of A:
+Then we differentiate with respect to $\Huge \beta$ with the knowledge that $\Huge \sigma'(x) = \sigma(x)(1-\sigma(x))$
 
 $$
-\Huge A = U \Sigma V^T
+\Huge \nabla \mathcal{L}(\beta) = 
+-\frac{1}{n} \sum_{i=1}^n 
+Y_i \cdot \frac{\sigma(X_i\beta) \cdot (1-\sigma(X_i\beta)) \cdot X_i}{\sigma(X_i\beta)} + 
+(Y_i - 1) \cdot \frac{\sigma(X_i\beta) \cdot (1-\sigma(X_i\beta)) \cdot X_i}{1-\sigma(X_i\beta)}
 $$
 
-To get $\Huge \Sigma^+$ simply tranpose $\Huge \Sigma$ and invert the singular values.
+$$
+\Huge \nabla \mathcal{L}(\beta) = 
+-\frac{1}{n} \sum_{i=1}^n 
+Y_i \cdot (1-\sigma(X_i\beta)) \cdot X_i + 
+(Y_i - 1) \cdot \sigma(X_i\beta) \cdot X_i
+$$
+
+$$
+\Huge \nabla \mathcal{L}(\beta) = 
+-\frac{1}{n} \sum_{i=1}^n X_i \cdot (
+Y_i \cdot (1-\sigma(X_i\beta)) + 
+(Y_i - 1) \cdot \sigma(X_i\beta)
+)
+$$
+
+$$
+\Huge \nabla \mathcal{L}(\beta) = 
+-\frac{1}{n} \sum_{i=1}^n X_i \cdot (
+Y_i - Y_i \cdot \sigma(X_i\beta) + 
+Y_i \cdot \sigma(X_i\beta) - \sigma(X_i\beta)
+)
+$$
+
+$$
+\Huge \nabla \mathcal{L}(\beta) = 
+-\frac{1}{n} \sum_{i=1}^n X_i \cdot (
+Y_i - \sigma(X_i\beta)
+)
+$$
+
+$$
+\Huge \nabla \mathcal{L}(\beta) = 
+-\frac{1}{n} \sum_{i=1}^n X_i \cdot (
+Y_i - \hat Y_i
+)
+$$
+
+Or in matrix form,
+
+$$
+\Huge \nabla \mathcal{L}(\beta) = X^T \cdot (Y - \hat Y)
+$$
+
+This derivation will allow us to make optimal steps towards the optimal weights.
+
 
 ### Predictions
 
