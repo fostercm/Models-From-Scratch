@@ -134,58 +134,69 @@ $$
 $$
 
 This derivation will allow us to make optimal steps towards the optimal weights.
-
+For the multiclass case, the result is the same.
 
 ### Predictions
 
 Once we have $\Huge \hat{\beta}$, predictions for new data $\Huge X_{\text{new}}$ can be made as:
 
 $$
-\Huge \hat{Y} = X_{\text{new}} \hat{\beta}
+\Huge \hat Y = \sigma(X_{\text{new}} \hat{\beta})
 $$
+
+or
+
+$$
+\Huge \hat Y = S(X_{\text{new}} \hat{\beta})
+$$
+
+in the multiclass case.
 
 ## Assumptions  
 
-Linear regression has a few notable assumptions that should be checked before use:
+Logistic regression has a few notable assumptions that should be checked before use:
 
-- **Linearity of relationships:** A linear relationship should exist (Lack-of-Fit Test)
-- **Normally Distributed Variables:** Inputs should be multivariate normal (Q-Q plot)
-- **Independence of errors:** Model errors should not correlate (Durbin-Watson statistic)
-- **Homoscedasticity:** Model errors should be constant (Levene’s test)
+- **Binary/Ordinal Output Variable:** The output classes should be binary/ordinal
+- **Independence of Observations:** Observations should be independent of each other
 - **No multicollinearity:** Input variables should not correlate (r statistic)
+- **Linearity of Inputs and Log-Odds:** A linear relationship should exist between the inputs and the Log-Odds
+
 
 ## Strengths and Weaknesses  
 
 ### Strengths  
 
 - Simple and interpretable  
-- Computationally efficient  
-- Works well with small datasets
+- Computationally efficient
+- Probabilistic output
+- Feature importance
+- Robust to noise
 
 ### Weaknesses  
 
 - Sensitive to outliers  
 - Assumes a linear relationship  
-- Can suffer from overfitting with high-dimensional data  
+- Assumes independent features
+- Requires a large sample size
 
 ## Implementation Details  
 
 Some specifics to keep in mind for this implementation:
 
 - Floats were used as the data type for a balance between speed and precision (float in C/C++/CUDA, np.float32 in Python)
-- I only stepped one layer of abstraction below linear regression, I used C libraries like CBLAS and LAPACKE and CUDA libraries like cuBLAS and cuSOLVER
-- For modularity, host-side data is handled in C++ and device-side data is handled in CUDA alongisde kernels I write
-- I used ctypes to create wrapper classes around the C/C++/CUDA functions
+- I only stepped one layer of abstraction below logistic regression, using optimized subroutines such as cuBLAS with some of my own kernels
+- I used ctypes to create wrapper classes around the C/CUDA functions
 - Type and value checking is handled in the base classes
+- Implemented as a child class of linear regression
 
 ## Benchmarking & Performance  
 
-<img src="../../../../benchmarks/linear_regression/execution_time.png" width="600">
-<img src="../../../../benchmarks/linear_regression/memory_usage.png" width="600">
+<img src="../../../../benchmarks/logistic_regression/execution_time.png" width="600">
+<img src="../../../../benchmarks/logistic_regression/memory_usage.png" width="600">
 
 ## Thoughts & Ideas  
 
-- I found it fascinating that linear regression has a closed-form solution and I'm happy I was able to derive it.
-- It is worth noting that the C class is clearly slower than the others at scale, I found this to be because of SVD computation and lack of multiprocessing.
-- Coding this up has been a good exercise in created shared C/C++/CUDA libraries, which is likely what I spent the most time on.
-- I will code up logistic regression next, it should work well as a child class of this.
+- The C/CUDA programming was much quicker this time than for linear regression
+- I have improved my ability to work with the column-major constraint of cuBLAS
+- This time, my classes are clearly slower than SKLearn, likely due to SKLearn using a numerical solver rather than gradient descent
+- At scale, I expect my CUDA logistic regression to be faster
