@@ -25,6 +25,10 @@ class TestLinearRegression(unittest.TestCase):
         - Ensures that the model parameters (beta) are computed and not None after fitting.
         - Verifies that the computed parameters (beta) match expected values for a simple dataset.
         """
+        X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
+        Y = np.array([[6], [8], [9], [11]], dtype=np.float32)
+        correct_beta = np.array([[3], [1], [2]], dtype=np.float32)
+        
         for model in [
             LinearRegressionPython(),
             LinearRegressionC(),
@@ -52,12 +56,10 @@ class TestLinearRegression(unittest.TestCase):
 
             # Test that the model is fitted correctly
             # Test that the computation is correct
-            X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
-            Y = np.array([[6], [8], [9], [11]], dtype=np.float32)
+            
 
             # Check beta
             model.fit(X, Y)
-            correct_beta = np.array([[3], [1], [2]], dtype=np.float32)
             self.assertTupleEqual(model.params["beta"].shape, (3, 1))
             for i in range(3):
                 self.assertAlmostEqual(
@@ -74,6 +76,9 @@ class TestLinearRegression(unittest.TestCase):
         - Checks that the predictions are made correctly based on a fitted model.
         - Ensures that the predictions match expected values for a given input.
         """
+        X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
+        Y = np.array([[6], [8], [9], [11]], dtype=np.float32)
+        
         for model in [
             LinearRegressionPython(),
             LinearRegressionC(),
@@ -89,8 +94,6 @@ class TestLinearRegression(unittest.TestCase):
                 model.predict(np.random.randn(10, 3))
 
             # Test that the computation is correct
-            X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
-            Y = np.array([[6], [8], [9], [11]], dtype=np.float32)
             model.params["beta"] = np.array([[3], [1], [2]], dtype=np.float32)
             Y_pred = model.predict(X)
 
@@ -111,6 +114,9 @@ class TestLinearRegression(unittest.TestCase):
         - Validates that the cost computation correctly reflects the difference between predicted and actual values.
         - Compares the computed cost to a manually computed value for accuracy.
         """
+        Y_pred = np.random.randn(10, 1)
+        Y = np.random.randn(10, 1)
+        cost = np.sum((Y_pred - Y) ** 2) / 20
         for model in [
             LinearRegressionPython(),
             LinearRegressionC(),
@@ -133,10 +139,8 @@ class TestLinearRegression(unittest.TestCase):
                 model.cost(np.zeros((2, 3)), np.zeros((3, 3)))
 
             # Test that the cost is evaluated correctly
-            Y_pred = np.random.randn(10, 1)
-            Y = np.random.randn(10, 1)
             self.assertAlmostEqual(
-                model.cost(Y_pred, Y), np.sum((Y_pred - Y) ** 2) / 20, places=3
+                model.cost(Y_pred, Y), cost, places=3
             )
 
     def test_end_to_end(self):
@@ -151,20 +155,20 @@ class TestLinearRegression(unittest.TestCase):
 
         This test uses a small synthetic dataset to validate the entire process of training and evaluating the model.
         """
+        # Define the input and output arrays
+        X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
+        Y = np.array([[6, 6], [8, 9], [9, 11], [11, 14]], dtype=np.float32)
+        correct_beta = np.array([[3, 1], [1, 2], [2, 3]], dtype=np.float32)
+        
         for model in [
             LinearRegressionPython(),
             LinearRegressionC(),
             LinearRegressionCUDA(),
         ]:
-            # Define the input and output arrays
-            X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
-            Y = np.array([[6, 6], [8, 9], [9, 11], [11, 14]], dtype=np.float32)
-
             # Fit the model
             model.fit(X, Y)
 
             # Check beta
-            correct_beta = np.array([[3, 1], [1, 2], [2, 3]], dtype=np.float32)
             self.assertTupleEqual(model.params["beta"].shape, (3, 2))
             for i in range(3):
                 for j in range(2):

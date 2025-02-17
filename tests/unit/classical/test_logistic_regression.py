@@ -27,6 +27,16 @@ class TestLogisticRegression(unittest.TestCase):
         - Ensures that the model parameters (beta) are computed and not None after fitting.
         - Verifies that the computed parameters (beta) match expected values for a simple dataset.
         """
+        # Binary classification dataset
+        self.X_bin = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
+        self.Y_bin = np.array([[0], [0], [1], [1]], dtype=np.int64)
+        
+        # Multiclass dataset
+        self.X_multi = np.array(
+            [[1, 1], [1, 2], [2, 2], [2, 3], [3, 3]], dtype=np.float32
+        )
+        self.Y_multi = np.array([[0], [1], [1], [2], [2]], dtype=np.int64)
+        
         for model in [
             LogisticRegressionPython(),
             LogisticRegressionC(),
@@ -48,16 +58,6 @@ class TestLogisticRegression(unittest.TestCase):
             with self.assertRaises(ValueError):
                 model.fit(np.zeros((2, 3)), np.zeros((3, 3)))
 
-            # Binary classification dataset
-            self.X_bin = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
-            self.Y_bin = np.array([[0], [0], [1], [1]], dtype=np.int64)
-
-            # Multiclass dataset
-            self.X_multi = np.array(
-                [[1, 1], [1, 2], [2, 2], [2, 3], [3, 3]], dtype=np.float32
-            )
-            self.Y_multi = np.array([[0], [1], [1], [2], [2]], dtype=np.int64)
-
             # Binary classification
             model.fit(self.X_bin, self.Y_bin)
             self.assertIsNotNone(model.params["beta"])
@@ -78,6 +78,14 @@ class TestLogisticRegression(unittest.TestCase):
         - Checks that the predictions are made correctly based on a fitted model.
         - Ensures that the predictions match expected values for a given input.
         """
+        X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
+        Y_bin = 1 / (
+                1 + np.exp(-np.hstack((np.ones((4, 1)), X)) @ np.array([[3], [1], [2]], dtype=np.float32))
+            )
+        
+        Y_multi = np.hstack((np.ones((4, 1)), X)) @ np.array([[3, 1, 2], [1, 2, 3], [2, 3, 1]], dtype=np.float32)
+        Y_multi = np.exp(Y_multi) / np.exp(Y_multi).sum(axis=1, keepdims=True)
+        
         for model in [
             LogisticRegressionPython(),
             LogisticRegressionC(),
@@ -92,29 +100,23 @@ class TestLogisticRegression(unittest.TestCase):
                 model.params["beta"] = np.random.randn(5, 1).astype(np.float32)
                 model.predict(np.random.randn(10, 3))
 
-            X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
-
             # Test binary classification
             model.params["beta"] = np.array([[3], [1], [2]], dtype=np.float32)
             Y_pred = model.predict(X)
-            Y = 1 / (
-                1 + np.exp(-np.hstack((np.ones((4, 1)), X)) @ model.params["beta"])
-            )
+            
             self.assertTupleEqual(Y_pred.shape, (4, 1))
             for i in range(4):
-                self.assertAlmostEqual(Y_pred[i][0], Y[i][0], places=2)
+                self.assertAlmostEqual(Y_pred[i][0], Y_bin[i][0], places=2)
 
             # Test multi-class classification
             model.params["beta"] = np.array(
                 [[3, 1, 2], [1, 2, 3], [2, 3, 1]], dtype=np.float32
             )
             Y_pred = model.predict(X)
-            Y = np.hstack((np.ones((4, 1)), X)) @ model.params["beta"]
-            Y = np.exp(Y) / np.exp(Y).sum(axis=1, keepdims=True)
             self.assertTupleEqual(Y_pred.shape, (4, 3))
             for i in range(4):
                 for j in range(3):
-                    self.assertAlmostEqual(Y_pred[i][j], Y[i][j], places=2)
+                    self.assertAlmostEqual(Y_pred[i][j], Y_multi[i][j], places=2)
 
     def test_cost(self):
         """
@@ -128,6 +130,26 @@ class TestLogisticRegression(unittest.TestCase):
         - Validates that the cost computation correctly reflects the difference between predicted and actual values.
         - Compares the computed cost to a manually computed value for accuracy.
         """
+        # Test binary cost
+        Y_pred_binary = np.random.uniform(0.01, 0.99, (10, 1))
+        Y_binary = np.random.randint(0, 2, (10, 1))
+        expected_cost_binary = (
+            -np.sum(
+                Y_binary * np.log(Y_pred_binary)
+                + (1 - Y_binary) * np.log(1 - Y_pred_binary)
+            )
+            / 10
+        )
+        
+        # Test multiclass cost
+        m, K = 10, 4
+        raw = np.random.uniform(0.01, 1.0, (m, K))
+        Y_pred_multi = raw / raw.sum(axis=1, keepdims=True)
+        Y_multi = np.zeros((m, K))
+        indices = np.random.randint(0, K, size=m)
+        Y_multi[np.arange(m), indices] = 1
+        expected_cost_multi = -np.sum(Y_multi * np.log(Y_pred_multi)) / m
+            
         for model in [
             LogisticRegressionPython(),
             LogisticRegressionC(),
@@ -149,28 +171,10 @@ class TestLogisticRegression(unittest.TestCase):
             with self.assertRaises(ValueError):
                 model.cost(np.zeros((2, 3)), np.zeros((3, 3)))
 
-            # Test binary cost
-            Y_pred_binary = np.random.uniform(0.01, 0.99, (10, 1))
-            Y_binary = np.random.randint(0, 2, (10, 1))
-            expected_cost_binary = (
-                -np.sum(
-                    Y_binary * np.log(Y_pred_binary)
-                    + (1 - Y_binary) * np.log(1 - Y_pred_binary)
-                )
-                / 10
-            )
             self.assertAlmostEqual(
                 model.cost(Y_pred_binary, Y_binary), expected_cost_binary, places=3
             )
 
-            # Test multiclass cost
-            m, K = 10, 4
-            raw = np.random.uniform(0.01, 1.0, (m, K))
-            Y_pred_multi = raw / raw.sum(axis=1, keepdims=True)
-            Y_multi = np.zeros((m, K))
-            indices = np.random.randint(0, K, size=m)
-            Y_multi[np.arange(m), indices] = 1
-            expected_cost_multi = -np.sum(Y_multi * np.log(Y_pred_multi)) / m
             self.assertAlmostEqual(
                 model.cost(Y_pred_multi, Y_multi), expected_cost_multi, places=3
             )
@@ -187,16 +191,17 @@ class TestLogisticRegression(unittest.TestCase):
 
         This test uses a small synthetic dataset to validate the entire process of training and evaluating the model.
         """
-        for model in [LogisticRegressionPython(), LogisticRegressionC()]:
-            # Binary classification dataset
-            self.X_bin = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
-            self.Y_bin = np.array([[0], [0], [1], [1]], dtype=np.int32)
+        # Binary classification dataset
+        self.X_bin = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
+        self.Y_bin = np.array([[0], [0], [1], [1]], dtype=np.int32)
 
-            # Multiclass dataset
-            self.X_multi = np.array(
-                [[1, 1], [1, 2], [2, 2], [2, 3], [3, 3]], dtype=np.float32
-            )
-            self.Y_multi = np.array([[0], [1], [1], [2], [2]], dtype=np.int32)
+        # Multiclass dataset
+        self.X_multi = np.array(
+            [[1, 1], [1, 2], [2, 2], [2, 3], [3, 3]], dtype=np.float32
+        )
+        self.Y_multi = np.array([[0], [1], [1], [2], [2]], dtype=np.int32)
+        
+        for model in [LogisticRegressionPython(), LogisticRegressionC(), LogisticRegressionCUDA()]:
 
             # Binary classification
             model.fit(self.X_bin, self.Y_bin)
