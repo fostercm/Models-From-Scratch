@@ -30,18 +30,18 @@ class LogisticRegressionCUDA(LogisticRegressionBase):
         lib_path = os.path.normpath(lib_path)
         self.lib = ctypes.CDLL(lib_path)
         
-        # # Define the types of the arguments
-        # self.lib.fit.argtypes = [
-        #     np.ctypeslib.ndpointer(dtype=np.float32),
-        #     np.ctypeslib.ndpointer(dtype=np.float32),
-        #     np.ctypeslib.ndpointer(dtype=np.float32),
-        #     ctypes.c_int, 
-        #     ctypes.c_int,
-        #     ctypes.c_int,
-        #     ctypes.c_int,
-        #     ctypes.c_float,
-        #     ctypes.c_float
-        # ]
+        # Define the types of the arguments
+        self.lib.fit.argtypes = [
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            np.ctypeslib.ndpointer(dtype=np.float32),
+            ctypes.c_int, 
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_float,
+            ctypes.c_float
+        ]
         
         self.lib.predict.argtypes = [
             np.ctypeslib.ndpointer(dtype=np.float32),
@@ -60,39 +60,39 @@ class LogisticRegressionCUDA(LogisticRegressionBase):
         ]
         self.lib.cost.restype = ctypes.c_float
 
-    # def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
-    #     """
-    #     Fit the Logistic Regression model to the training data using the C implementation.
+    def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
+        """
+        Fit the Logistic Regression model to the training data using the C implementation.
 
-    #     This method validates the input data, flattens the arrays, and calls the
-    #     C function to fit the model. The learned parameters (beta) are then
-    #     reshaped and stored in the model's parameters.
+        This method validates the input data, flattens the arrays, and calls the
+        C function to fit the model. The learned parameters (beta) are then
+        reshaped and stored in the model's parameters.
 
-    #     Args:
-    #         X (np.ndarray): Feature matrix of shape (n_samples, n_features).
-    #         Y (np.ndarray): Target matrix of shape (n_samples, n_targets).
+        Args:
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            Y (np.ndarray): Target matrix of shape (n_samples, n_targets).
 
-    #     Raises:
-    #         ValueError: If the dimensions of X and Y do not match.
-    #     """
-    #     X, Y = super().fit(X, Y)
-    #     num_classes = self.params['num_classes'] if self.params['num_classes'] > 2 else 1
+        Raises:
+            ValueError: If the dimensions of X and Y do not match.
+        """
+        X, Y = super().fit(X, Y)
+        num_classes = self.params['num_classes'] if self.params['num_classes'] > 2 else 1
         
-    #     # Get the dimensions of the input and output
-    #     num_samples, num_input_features = X.shape
+        # Get the dimensions of the input and output
+        num_samples, num_input_features = X.shape
         
-    #     # Flatten arrays
-    #     X = X.flatten()
-    #     Y = Y.flatten()
+        # Flatten arrays
+        X = X.flatten()
+        Y = Y.flatten()
         
-    #     # Allocate memory for the model parameters
-    #     Beta = np.zeros((num_input_features * num_classes), dtype=np.float32).flatten()
+        # Allocate memory for the model parameters
+        Beta = np.zeros((num_input_features * num_classes), dtype=np.float32).flatten()
         
-    #     # Fit the model
-    #     self.lib.fit(X, Y, Beta, num_samples, num_input_features, num_classes, self.iterations, self.learning_rate, self.tolerance)
+        # Fit the model
+        self.lib.fit(X, Y, Beta, num_samples, num_input_features, num_classes, self.iterations, self.learning_rate, self.tolerance)
         
-    #     # Reshape the Beta array and store it
-    #     self.params['beta'] = Beta.reshape((num_input_features, num_classes))
+        # Reshape the Beta array and store it
+        self.params['beta'] = Beta.reshape((num_input_features, num_classes))
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
