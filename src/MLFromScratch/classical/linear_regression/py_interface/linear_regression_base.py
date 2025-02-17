@@ -1,8 +1,8 @@
 import numpy as np
-from ...classical_model import ClassicalModel
+from ...supervised_model import SupervisedModel
 
 
-class LinearRegressionBase(ClassicalModel):
+class LinearRegressionBase(SupervisedModel):
     """
     A base class for Linear Regression model.
 

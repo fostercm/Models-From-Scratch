@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class ClassicalModel:
+class UnsupervisedModel:
     """
     A base class for classical machine learning models.
 
@@ -69,24 +69,6 @@ class ClassicalModel:
 
         return array1, array2
 
-    def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
-        """Fit the model to the training data (to be implemented in subclass)."""
-        pass
-
     def predict(self, X: np.ndarray) -> np.ndarray:
         """Predict the target variable for the given data (to be implemented in subclass)."""
         pass
-
-    def cost(self, Y_pred: np.ndarray, Y: np.ndarray) -> float:
-        """Calculate the cost of the model (to be implemented in subclass)."""
-        pass
-
-    def get_params(self) -> dict:
-        """Get the parameters of the model"""
-        return self.params
-
-    def load_params(self, params: dict) -> None:
-        """Load the parameters of the model"""
-        self.params = params
-        for key, value in self.params.items():
-            self.params[key] = np.array(value, dtype=np.float32)
