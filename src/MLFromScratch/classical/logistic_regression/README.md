@@ -17,7 +17,7 @@ Logistic regression is a statistical model used to predict the probability of a 
 It models the relationship between the probability of a binary outcome $`\Huge Y \in \{0, 1\}`$ and the independent variables $\Huge X$.
 
 $$
-\Huge Y = \sigma(X\beta)
+\Huge \hat Y = \sigma(X\beta)
 $$
 
 where:
@@ -41,60 +41,41 @@ $$
 
 ### Loss function
 
-To estimate $\Huge \beta$, we minimize the cross entropy loss:
+To estimate $\Huge \beta$, we minimize the error between the predicted and true probability distribution:
 
 - **Binary:**
 
 $$
-\Huge \mathcal{L}(\beta) = -\frac{1}{n} \sum_{i=1}^{n} (\log_{ }Y_i - (X\beta)_{i})^2
+\Huge \mathcal{L}(\beta) = -\frac{1}{n} \sum_{i=1}^n Y_i*\log(\hat Y_i) + (1 - Y_i)*\log(1 - \hat Y_i)
 $$
 
 - **Multiclass:**
-or, in matrix form where $\\Vert \cdot \\Vert_F$ denotes the frobenius norm:
 
 $$
-\Huge \mathcal{L}(\beta) = \frac{1}{n}\\Vert Y - X \beta \\Vert_F^2
+\Huge \mathcal{L}(\beta) = -\frac{1}{n} \sum_{i=1}^n \sum_{j=1}^c Y_{ij}*\log(\hat Y_{ij})
 $$
 
-This is referred to as mean squared error, or MSE.
+This is referred to as cross entropy, or CE.
 
-### Closed-Form Solution
+### Gradient
 
-Miraculously, since linear regression is an entirely linear model, there exists a closed-form solution for $$\Huge \beta$$ which I will derive below:  
-
-$$
-\Huge \mathcal{L}(\beta) = \frac{1}{n}\\Vert Y - X \beta \\Vert_F^2  
-$$
-
-Without getting too deep into the linear algebra:
+While logistic regression is linear with regards to the parameters, the sigmoid/softmax activation functions add nonlinearity, resulting in no closed-form solution.
+Therefore, an iterative method such as gradient descent is required to compute the optimal weights. Gradient descent is defined below as such:
 
 $$
-\Huge \nabla_\beta\mathcal{L}(\beta) = \frac{2}{n}X^T(Y - X\beta)
+\Huge \Theta = \Theta - \alpha * \nabla L(\Theta)
 $$
 
-Now we set equal to 0 to minimize the loss:
+Where:
+- $\Huge \Theta$ is the model paramters
+- $\Huge \alpha$ is the learning rate
+- $\Huge \nabla L(\Theta)$ is the gradient of the loss function with respect to the model parameters
+
+For logistic regression, the gradient of the loss function can be derived as such:
 
 $$
-\Huge 0 = \frac{2}{n}X^T(Y - X\beta)
+\Huge \mathcal{L}(\beta) = -\frac{1}{n} \sum_{i=1}^n \sum_{j=1}^c Y_{ij}*\log(\hat Y_{ij})
 $$
-
-$$
-\Huge 0 = X^T(Y - X\beta)
-$$
-
-$$
-\Huge 0 = X^TY - X^TX\beta
-$$
-
-$$
-\Huge X^TX\beta = X^TY
-$$
-
-$$
-\Huge \beta = (X^TX)^{-1}X^TY
-$$
-
-It is worth noting that if $\Huge X^TX$ is not invertible, then the Moore-Penrose pseudoinverse should be used.
 
 ### Pseudoinverse
 
