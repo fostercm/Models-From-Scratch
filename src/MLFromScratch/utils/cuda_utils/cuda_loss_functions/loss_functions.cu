@@ -75,3 +75,84 @@ void meanSquaredErrorCUDA(const float *Y_pred, const float *Y, float *cost, cons
     // Destroy cublas
     cublasDestroy(handle);
 }
+
+void crossEntropy(const float *d_Y_pred, const float *d_Y, float *d_cost, const int n_samples, const int n_classes) {
+    // Define the number of threads and blocks 
+    int threads_per_block = 256;
+    int num_blocks = (n_samples * n_classes + threads_per_block - 1) / threads_per_block;
+
+    // Call the appropriate kernel based on the number of classes
+    if (n_classes == 1) {
+        binaryCrossEntropyKernel<<<num_blocks, threads_per_block>>>(d_Y_pred, d_Y, d_cost, n_samples);
+    } else {
+        crossEntropyKernel<<<num_blocks, threads_per_block>>>(d_Y_pred, d_Y, d_cost, n_samples, n_classes);
+    }
+}
+
+__global__ void crossEntropyKernel(const float *d_Y_pred, const float *d_Y, float *d_cost, const int n_samples, const int n_classes) {
+    // Allocate block of shared memory
+    __shared__ float shared_memory[256];
+
+    // Get the global and local index
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int tid = threadIdx.x;
+
+    // Initialize local cost
+    float local_cost = 0.0f;
+
+    // Calculate the cross entropy loss
+    if (idx < n_samples * n_classes) {
+        local_cost = d_Y[idx] * logf(d_Y_pred[idx] + 1e-10);
+    }
+
+    // Store the local cost in shared memory
+    shared_memory[tid] = local_cost;
+    __syncthreads();
+
+    // Perform reduction in shared memory
+    for (int stride = blockDim.x / 2; stride > 0; stride >>= 1) {
+        if (tid < stride) {
+            shared_memory[tid] += shared_memory[tid + stride];
+        }
+        __syncthreads();
+    }
+
+    // Write the result to global memory
+    if (tid == 0) {
+        atomicAdd(d_cost, shared_memory[0]);
+    }
+}
+
+__global__ void binaryCrossEntropyKernel(const float *d_Y_pred, const float *d_Y, float *d_cost, const int n_samples) {
+    // Allocate block of shared memory
+    __shared__ float shared_memory[256];
+
+    // Get the global and local index
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    int tid = threadIdx.x;
+
+    // Initialize local cost
+    float local_cost = 0.0f;
+
+    // Calculate the binary cross entropy loss
+    if (idx < n_samples) {
+        local_cost = d_Y[idx] * logf(d_Y_pred[idx] + 1e-10) + (1 - d_Y[idx]) * logf(1 - d_Y_pred[idx] + 1e-10);
+    }
+
+    // Store the local cost in shared memory
+    shared_memory[tid] = local_cost;
+    __syncthreads();
+
+    // Perform reduction in shared memory
+    for (int stride = blockDim.x / 2; stride > 0; stride >>= 1) {
+        if (tid < stride) {
+            shared_memory[tid] += shared_memory[tid + stride];
+        }
+        __syncthreads();
+    }
+
+    // Write the result to global memory
+    if (tid == 0) {
+        atomicAdd(d_cost, shared_memory[0]);
+    }
+}
