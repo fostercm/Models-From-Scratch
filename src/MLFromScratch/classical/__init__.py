@@ -3,4 +3,5 @@ from .linear_regression.py_interface.linear_regression_c import LinearRegression
 from .linear_regression.py_interface.linear_regression_cuda import LinearRegressionCUDA
 from .logistic_regression.py_interface.logistic_regression_python import LogisticRegressionPython
 from .logistic_regression.py_interface.logistic_regression_c import LogisticRegressionC
+from .logistic_regression.py_interface.logistic_regression_cuda import LogisticRegressionCUDA
 from .classical_model import ClassicalModel
