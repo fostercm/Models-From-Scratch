@@ -5,8 +5,6 @@
 #include <cublas_v2.h>
 
 extern "C" {
-    // float meanSquaredError(const float *Y_pred, const float *Y, const int num_samples, const int num_output_features);
-    void meanSquaredErrorCUDA(const float *Y_pred, const float *Y, float *cost, const int num_samples, const int num_output_features);
     void crossEntropy(const float *d_Y_pred, const float *d_Y, float *d_cost, const int n_samples, const int n_classes);
     void meanSquaredError(const float *d_Y_pred, const float *d_Y, float *d_cost, const int n_samples, const int n_output_features, cublasHandle_t handle);
 } 
