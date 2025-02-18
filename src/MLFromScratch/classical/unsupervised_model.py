@@ -72,6 +72,6 @@ class UnsupervisedModel:
 
         return array1, array2
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
+    def transform(self, X: np.ndarray) -> np.ndarray:
         """Predict the target variable for the given data (to be implemented in subclass)."""
         pass
