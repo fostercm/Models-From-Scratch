@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Define the project name
-project(LinearRegressionCUDABackend LANGUAGES CXX CUDA)
+project(LinearRegressionCUDABackend LANGUAGES CUDA)
 
 # Find packages
 find_package(CUDAToolkit REQUIRED)

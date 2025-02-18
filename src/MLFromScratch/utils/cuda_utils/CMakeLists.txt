@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Define the project name
-project(cuda_utils LANGUAGES CXX CUDA)
+project(cuda_utils LANGUAGES CUDA)
 
 # Set architecture for the GPU
 set(CMAKE_CUDA_ARCHITECTURES 86)
