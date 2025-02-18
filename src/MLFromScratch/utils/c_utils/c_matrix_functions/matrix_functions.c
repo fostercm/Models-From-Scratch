@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include "matrix_functions.h"
+#include <math.h>
 
 /**
  * @brief Prints a matrix to the standard output.
@@ -33,4 +34,31 @@ void printMatrix(const float *A, const int m, const int n) {
         printf("\n");
     }
     printf("\n");
+}
+
+void standardize(float *X, const int m, const int n) {
+    // Define variables for mean and standard deviation
+    float mean, std_dev;
+
+    for (int j=0; j<n; j++) {
+        mean = 0.0;
+        std_dev = 0.0;
+
+        // Calculate mean
+        for (int i=0; i<m; i++) {
+            mean += X[i * n + j];
+        }
+        mean /= m;
+
+        // Calculate standard deviation
+        for (int i=0; i<m; i++) {
+            std_dev += (X[i * n + j] - mean) * (X[i * n + j] - mean);
+        }
+        std_dev = sqrt(std_dev / (m-1));
+
+        // Standardize the column
+        for (int i=0; i<m; i++) {
+            X[i * n + j] = (X[i * n + j] - mean) / std_dev;
+        }
+    }
 }
