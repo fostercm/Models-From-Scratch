@@ -12,9 +12,9 @@ int transform(float *X, float *X_transformed, const int n_samples, const int n_f
 
     // Allocate memory for the SVD results
     float *U, *S, *V_T;
-    U = (float*) safeMalloc(n_samples * n_comp * sizeof(float));
-    S = (float*) safeMalloc(n_comp * sizeof(float));
-    V_T = (float*) safeMalloc(n_comp * n_features * sizeof(float));
+    U = (float*) safeMalloc(n_samples * n_samples * sizeof(float));
+    S = (float*) safeMalloc(MIN(n_samples,n_features) * sizeof(float));
+    V_T = (float*) safeMalloc(n_features * n_features * sizeof(float));
 
     // Standardize the data
     standardize(X, n_samples, n_features);
@@ -23,7 +23,7 @@ int transform(float *X, float *X_transformed, const int n_samples, const int n_f
     safeMemcpy(X_transformed, X, n_samples * n_features * sizeof(float));
 
     // Perform SVD
-    LAPACKE_sgesdd(LAPACK_ROW_MAJOR, 'S', n_samples, n_features, X_transformed, n_features, S, U, n_samples, V_T, n_features);
+    LAPACKE_sgesdd(LAPACK_ROW_MAJOR, 'A', n_samples, n_features, X_transformed, n_features, S, U, n_samples, V_T, n_features);
 
     // If explained_variance is specified, use the components that explain the variance
     if (explained_variance_ratio != 0) {
@@ -50,10 +50,10 @@ int transform(float *X, float *X_transformed, const int n_samples, const int n_f
         CblasRowMajor, CblasNoTrans, CblasTrans, 
         n_samples, n_comp, n_features, 
         1.0, 
-        X, n_features, 
+        X, n_samples, 
         V_T, n_features, 
         0.0, 
-        X_transformed, n_comp);
+        X_transformed, n_samples);
     
     // Free memory
     safeFree(U);
