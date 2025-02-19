@@ -1,7 +1,8 @@
 import unittest
 from MLFromScratch.classical import (
     PCAPython,
-    PCAC
+    PCAC,
+    PCACUDA
 )
 from MLFromScratch.utils.python_utils.matrix_functions import standardize
 from sklearn.decomposition import PCA
@@ -31,7 +32,7 @@ class TestPCA(unittest.TestCase):
         sklearn_model = PCA()
         X_pred = sklearn_model.fit_transform(standard_X)
         
-        for model in [PCAPython(), PCAC()]:
+        for model in [PCAPython(),PCAC(),PCACUDA()]:
             
             # Test that the input is a numpy array
             with self.assertRaises(TypeError):
@@ -51,9 +52,8 @@ class TestPCA(unittest.TestCase):
             
             # Check that the transformations are made correctly based on a fitted model
             for i in range(1, 3):
-                transformations = model.transform(X, n_components=i)
                 np.testing.assert_array_almost_equal(
-                    model.transform(X,i), transformations[:,:i], decimal=4
+                    model.transform(X,n_components=i), transformations[:,:i], decimal=4
                 )
             
             np.testing.assert_array_almost_equal(

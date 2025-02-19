@@ -45,16 +45,21 @@ int transform(float *X, float *X_transformed, const int n_samples, const int n_f
         }
     }
 
+    // Reduce the number of components
+    float *V_T_reduced = (float*) safeMalloc(n_comp * n_features * sizeof(float));
+    safeMemcpy(V_T_reduced, V_T, n_comp * n_features * sizeof(float));
+
     // Multiply the input matrix by V matrix
     cblas_sgemm(
         CblasRowMajor, CblasNoTrans, CblasTrans, 
         n_samples, n_comp, n_features, 
         1.0, 
-        X, n_samples, 
+        X, n_features,
         V_T, n_features, 
         0.0, 
-        X_transformed, n_samples);
-    
+        X_transformed, n_comp
+    );
+
     // Free memory
     safeFree(U);
     safeFree(S);
