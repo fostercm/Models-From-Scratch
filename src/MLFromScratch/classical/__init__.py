@@ -11,6 +11,7 @@ from .logistic_regression.py_interface.logistic_regression_cuda import LogisticR
 
 from .principal_component_analysis.py_interface.principal_component_analysis_python import PCAPython
 from .principal_component_analysis.py_interface.principal_component_analysis_c import PCAC
+from .principal_component_analysis.py_interface.principal_component_analysis_cuda import PCACUDA
 
 __all__ = [
     SupervisedModel,
@@ -23,4 +24,5 @@ __all__ = [
     LogisticRegressionCUDA,
     PCAPython,
     PCAC,
+    PCACUDA
 ]

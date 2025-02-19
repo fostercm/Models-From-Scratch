@@ -9,6 +9,8 @@
 
 #include <cuda_runtime.h>
 #include <cuda_matrix_functions/matrix_functions.h>
+#include <cuda_memory_functions/memory_functions.h>
+#include <cublas_v2.h>
 #include <iostream>
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
@@ -25,7 +27,7 @@
  *
  * @note This function allocates temporary memory on the host to copy the matrix and print it. The allocated memory is freed after printing.
  */
-void printMatrixCUDA(const float *matrix, const int rows, const int cols) {
+void printMatrix(const float *matrix, const int rows, const int cols) {
 
     // Copy matrix from device to host
     float *h_matrix = (float *) malloc(rows * cols * sizeof(float));
@@ -34,7 +36,7 @@ void printMatrixCUDA(const float *matrix, const int rows, const int cols) {
     // Print matrix
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            printf("%f ", h_matrix[i * cols + j]);
+            printf("%f ", h_matrix[j * rows + i]);
         }
         printf("\n");
     }
@@ -121,4 +123,94 @@ void launchIdentityMatrixKernel(float *matrix, const int m, const int n) {
 
 __global__ void scaleValue(float *value, const float scalar) {
     *value *= scalar;
+}
+
+void transposeMatrix(float *d_X, const int m, const int n, cublasHandle_t handle) {
+    // Initialize error variable
+    int err = 0;
+
+    // Allocate memory for transposed matrix
+    float *d_X_transposed;
+    d_X_transposed = (float*) safeCudaMalloc(m * n * sizeof(float), &err);
+
+    // Define constants
+    float alpha = 1.0f;
+    float beta = 0.0f;
+
+    // Transpose matrix
+    cublasSgeam(
+        handle, CUBLAS_OP_T, CUBLAS_OP_N, 
+        m, n, 
+        &alpha, d_X, n, 
+        &beta, d_X_transposed, m,
+        d_X_transposed, m
+    );
+
+    // Save transposed matrix
+    safeCudaMemcpy(d_X, d_X_transposed, m * n * sizeof(float), cudaMemcpyDeviceToDevice);
+
+    // Free memory
+    safeCudaFree(d_X_transposed);
+}
+
+void standardize(float *d_X, const int m, const int n, cublasHandle_t handle) {    
+    // Allocate memory for mean and standard deviation
+    int err = 0;
+    float *d_mean, *d_std;
+    d_mean = (float*) safeCudaMalloc(n * sizeof(float), &err);
+    d_std = (float*) safeCudaMalloc(n * sizeof(float), &err);
+
+    // Set up grid and block sizes
+    int blockSize = 256;
+    int gridSize = (n + blockSize - 1) / blockSize;
+
+    // Calculate mean and standard deviation
+    meanKernel<<<gridSize, blockSize>>>(d_X, d_mean, m, n);
+    stdKernel<<<gridSize, blockSize>>>(d_X, d_mean, d_std, m, n);
+
+    // Standardize matrix
+    standardizeKernel<<<gridSize, blockSize>>>(d_X, d_mean, d_std, m, n);
+
+    // Free memory
+    safeCudaFree(d_mean);
+    safeCudaFree(d_std);
+}
+
+__global__ void meanKernel(const float *d_X, float *d_mean, const int m, const int n) {
+    // Get thread ID
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+
+    // Calculate mean
+    if (idx < n) {
+        float sum = 0.0f;
+        for (int i = 0; i < m; i++) {
+            sum += d_X[i + idx*m];
+        }
+        d_mean[idx] = sum / m;
+    }
+}
+
+__global__ void stdKernel(const float *d_X, const float *d_mean, float *d_std, const int m, const int n) {
+    // Get thread ID
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+
+    // Calculate standard deviation
+    if (idx < n) {
+        float sum = 0.0f;
+        for (int i = 0; i < m; i++) {
+            sum += powf(d_X[idx*m + i] - d_mean[idx], 2);
+        }
+        d_std[idx] = sqrtf(sum / (m-1));
+    }
+}
+
+__global__ void standardizeKernel(float *d_X, const float *d_mean, const float *d_std, const int m, const int n) {
+    // Get thread ID
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+
+    // Standardize matrix
+    if (idx < m * n) {
+        int row = idx / m;
+        d_X[idx] = (d_X[idx] - d_mean[row]) / d_std[row];
+    }
 }
