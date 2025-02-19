@@ -38,7 +38,7 @@ int transform(float *X, float *X_transformed, const int n_samples, const int n_f
     // Allocate memory for the SVD results
     float *d_U, *d_S, *d_V_T;
     d_U = (float*) safeCudaMalloc(n_samples * n_samples * sizeof(float), &err);
-    d_S = (float*) safeCudaMalloc(n_features * sizeof(float), &err);
+    d_S = (float*) safeCudaMalloc(MIN(n_samples,n_features) * sizeof(float), &err);
     d_V_T = (float*) safeCudaMalloc(n_features * n_features * sizeof(float), &err);
 
     // Allocate memory for SVD info
