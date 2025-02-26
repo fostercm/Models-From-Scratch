@@ -3,11 +3,13 @@ from .logistic_regression.py_interface.logistic_regression import LogisticRegres
 from .principal_component_analysis.py_interface.principal_component_analysis import PCA
 from .naive_bayes.py_interface.naive_bayes import NaiveBayes
 from .kmeans.py_interface.kmeans import KMeans
+from .k_nearest_neighbors.py_interface.k_nearest_neighbors import KNN
 
 __all__ = [
     LinearRegression,
     LogisticRegression,
     PCA,
     NaiveBayes,
-    KMeans
+    KMeans,
+    KNN
 ]
