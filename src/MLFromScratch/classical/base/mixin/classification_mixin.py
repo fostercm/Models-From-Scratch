@@ -91,7 +91,7 @@ class ClassificationMixin:
 
         """
         # Initialize the one-hot encoded target matrix
-        Y_new = np.zeros((y.shape[0], n_classes), dtype=np.float32)
+        Y_new = np.zeros((y.shape[0], n_classes), dtype=np.int32)
         
         # Transform the target values to one-hot encoding
         y = y.astype(np.int32)
