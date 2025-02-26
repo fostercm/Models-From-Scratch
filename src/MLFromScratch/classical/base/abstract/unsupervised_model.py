@@ -24,6 +24,8 @@ class UnsupervisedModel(BaseModel):
     NotImplementedError
         If a subclass does not implement the `transform` method
     """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     @abstractmethod
     def transform(self, X: np.ndarray) -> np.ndarray:
