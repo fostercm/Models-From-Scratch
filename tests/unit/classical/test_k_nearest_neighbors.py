@@ -2,10 +2,8 @@ import unittest
 from MLFromScratch.classical import KNN
 import numpy as np
 from sklearn.datasets import make_classification, make_regression
-import matplotlib.pyplot as plt
 
 np.random.seed(42)
-
 
 class TestKNN(unittest.TestCase):
 
@@ -51,11 +49,3 @@ class TestKNN(unittest.TestCase):
             
             Y_pred = model.predict(X_reg, k=5, distance_type='cosine')
             self.assertGreater(model.RSquared(Y_pred,Y_reg), 0.8)
-            
-            
-        # Plotting the generated dataset
-        plt.scatter(X_reg[:, 0], X_reg[:, 1], c=Y_reg[:,0], cmap='viridis')
-        plt.title("Synthetic Classification Dataset")
-        plt.xlabel("Feature 1")
-        plt.ylabel("Feature 2")
-        plt.savefig('test.png')
