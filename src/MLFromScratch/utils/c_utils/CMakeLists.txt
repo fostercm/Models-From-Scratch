@@ -23,8 +23,17 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fopenmp -O3 -Wall")
 # Create the static library
 add_library(c_utils STATIC ${SOURCES})
 
+# Create the shared library for ctypes
+add_library(c_utils_shared SHARED ${SOURCES})
+
 # Link libraries
 target_link_libraries(
     c_utils 
     ${LAPACK_LIBRARIES}
+)
+
+target_link_libraries(
+    c_utils_shared 
+    ${LAPACK_LIBRARIES}
+    -llapacke
 )

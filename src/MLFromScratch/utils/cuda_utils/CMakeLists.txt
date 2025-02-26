@@ -27,8 +27,18 @@ set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler -fPIC -O3 -Wall")
 # Create the static library
 add_library(cuda_utils STATIC ${SOURCES})
 
+# Create the shared library
+add_library(cuda_utils_shared SHARED ${SOURCES})
+
 # Link libraries
 target_link_libraries(cuda_utils PRIVATE
+    CUDA::cudart
+    CUDA::cublas
+    CUDA::cusolver
+)
+
+# Link libraries
+target_link_libraries(cuda_utils_shared PRIVATE
     CUDA::cudart
     CUDA::cublas
     CUDA::cusolver
