@@ -7,7 +7,7 @@ from sklearn.metrics.cluster import silhouette_score
 np.random.seed(42)
 
 
-class TestNaiveBayes(unittest.TestCase):
+class TestKMeans(unittest.TestCase):
 
     def test_transform(self):
 
