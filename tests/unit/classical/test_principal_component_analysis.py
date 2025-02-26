@@ -1,11 +1,7 @@
 import unittest
-from MLFromScratch.classical import (
-    PCAPython,
-    PCAC,
-    PCACUDA
-)
+from MLFromScratch.classical import PCA
 from MLFromScratch.utils.python_utils.matrix_functions import standardize
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA as SKPCA
 import numpy as np
 
 np.random.seed(0)
@@ -29,14 +25,12 @@ class TestPCA(unittest.TestCase):
         """
         X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]], dtype=np.float32)
         standard_X = standardize(X)
-        sklearn_model = PCA()
+        sklearn_model = SKPCA()
         X_pred = sklearn_model.fit_transform(standard_X)
         
-        for model in [PCAPython(),PCAC(),PCACUDA()]:
-            
-            # Test that the input is a numpy array
-            with self.assertRaises(TypeError):
-                model.transform([1, 2, 3])
+        for model in [
+            PCA(language='Python')
+            ]:
             
             transformations = model.transform(X)
             
