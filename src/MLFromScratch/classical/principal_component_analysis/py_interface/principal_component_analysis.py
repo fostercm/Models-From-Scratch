@@ -6,6 +6,10 @@ from typing import Literal
 class PCA(UnsupervisedModel):
     
     def __init__(self, language: Literal['Python', 'C', 'CUDA'] = 'Python'):
+        # Validate the language parameter
+        self._validate_language(language)
+        
+        # Initialize the model parameters
         super().__init__(language=language)
     
     
