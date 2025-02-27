@@ -3,7 +3,7 @@ import numpy as np
 from typing import Literal
 
 
-class KNNModelBase(SupervisedModel):
+class KNNBase(SupervisedModel):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)

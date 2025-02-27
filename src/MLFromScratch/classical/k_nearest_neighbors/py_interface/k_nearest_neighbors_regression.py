@@ -1,17 +1,17 @@
-from ...base.model.k_nearest_neighbors_model_base import KNNModelBase
+from ...base.model.k_nearest_neighbors_model_base import KNNBase
 from ...base.mixin.regression_mixin import RegressionMixin
 from typing import Literal
 import numpy as np
 
 
-class KNNRegression(KNNModelBase, RegressionMixin):
+class KNNRegression(KNNBase, RegressionMixin):
     
     def __init__(self,**kwargs) -> None:
         super().__init__(**kwargs)
         
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
         # Validate the target vector
-        Y = super()._validateTarget(Y)
+        Y = self._validateTarget(Y)
         
         # Call the base fit method
         super().fit(X, Y)

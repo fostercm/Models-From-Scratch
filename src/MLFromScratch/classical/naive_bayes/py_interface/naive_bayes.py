@@ -8,9 +8,8 @@ from typing import Literal
 class NaiveBayes(SupervisedModel, ClassificationMixin):
 
     def __init__(self, language: Literal['Python', 'C', 'CUDA'] = 'Python', smoothing: float=1e-9, alpha: float=1.0, variant: Literal["bernoulli", "multinomial", "gaussian"] = "gaussian") -> None:
-        # Check language is valid
-        if language not in ['Python', 'C', 'CUDA']:
-            raise ValueError("Invalid language, must be 'Python', 'C' or 'CUDA'")
+        # Validate the language parameter
+        self._validate_language(language)
         
         # Check smoothing is positive
         if not isinstance(smoothing, float) or smoothing <= 0:
@@ -24,13 +23,14 @@ class NaiveBayes(SupervisedModel, ClassificationMixin):
         if variant not in ["bernoulli", "multinomial", "gaussian"]:
             raise ValueError("Invalid variant, must be 'bernoulli', 'multinomial' or 'gaussian'")
         
+        # Initialize the model parameters
         super().__init__(language=language, smoothing=smoothing, alpha=alpha, variant=variant)
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         # Validate the input arrays
         X = self._validateInput(X)
-        y = super()._validateTarget(y)
-        super()._validateInputPair(X, y)
+        y = self._validateTarget(y)
+        self._validateInputPair(X, y)
         
         # Get the number of features
         n_features = X.shape[1]
@@ -149,9 +149,12 @@ class NaiveBayes(SupervisedModel, ClassificationMixin):
         else:
             raise ValueError("Invalid output type, must be 'class' or 'probability'")
 
-    def _validateInput(self, X: np.ndarray) -> np.ndarray:
+    def _validateInput(self, X: np.ndarray, output: Literal["class", "probability"] = "class") -> np.ndarray:
         # Validate the input array
         super()._validateInput(X)
+        
+        if not isinstance(output, str) or output not in ["class", "probability"]:
+            raise ValueError("Invalid output type, must be 'class' or 'probability'")
         
         # Perform additional checks based on the type of the model
         if self.params['variant'] == 'bernoulli':
@@ -175,5 +178,5 @@ class NaiveBayes(SupervisedModel, ClassificationMixin):
         
         else:
             raise ValueError("Invalid type, must be 'bernoulli', 'multinomial' or 'gaussian")
-        
+
         return X

@@ -6,8 +6,7 @@ class KMeans(UnsupervisedModel):
     
     def __init__(self, language: Literal['Python', 'C', 'CUDA'] = 'Python', iterations: int=300, tol: float=1e-4) -> None:
         # Check language is valid
-        if language not in ['Python', 'C', 'CUDA']:
-            raise ValueError("Invalid language, must be 'Python', 'C' or 'CUDA'")
+        self._validate_language(language)
         
         # Check max_iter is positive
         if not isinstance(iterations, int) or iterations <= 0:
@@ -17,6 +16,7 @@ class KMeans(UnsupervisedModel):
         if not isinstance(tol, float) or tol <= 0:
             raise ValueError("tol must be a positive float")
         
+        # Initialize the model parameters
         super().__init__(language=language, iterations=iterations, tol=tol)
     
     def transform(self, X: np.ndarray, n_clusters: int) -> Tuple[np.ndarray, np.ndarray]:

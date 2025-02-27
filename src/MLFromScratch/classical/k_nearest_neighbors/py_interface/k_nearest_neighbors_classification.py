@@ -1,17 +1,19 @@
-from ...base.model.k_nearest_neighbors_model_base import KNNModelBase
+from ...base.model.k_nearest_neighbors_model_base import KNNBase
 from ...base.mixin.classification_mixin import ClassificationMixin
 from typing import Literal
 import numpy as np
 
 
-class KNNClassification(KNNModelBase, ClassificationMixin):
+class KNNClassification(KNNBase, ClassificationMixin):
     
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
-        # Validate the target vector
-        y = super()._validateTarget(y)
+        # Validate the input arrays
+        X = self._validateInput(X)
+        y = self._validateTarget(y)
+        self._validateInputPair(X, y)
         
         # Reshape the target vector
         Y = y.reshape(-1, 1)
