@@ -17,7 +17,7 @@ class RandomForestClassification(SupervisedModel, ClassificationMixin):
     
     def predict(self, X):
         # Get the predictions from each tree
-        predictions = np.array([tree.predict(X) for tree in self._trees], dtype=int)
+        predictions = np.array([tree.predict(X) for tree in self._trees])
         
         # Return the most common prediction for each sample
         predictions = np.array([np.argmax(np.bincount(prediction)) for prediction in predictions.T])

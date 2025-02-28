@@ -63,7 +63,7 @@ class DecisionTreeClassification(DecisionTreeModelBase, ClassificationMixin):
                 # Calculate the Gini impurity
                 left_gini = 1 - np.sum((left_counts / i) ** 2)
                 right_gini = 1 - np.sum((right_counts / (len(y) - i)) ** 2)
-                gini = left_gini + right_gini
+                gini = (i / len(y)) * left_gini + ((len(y) - i) / len(y)) * right_gini
                 
                 # Update the best split if the Gini impurity is lower and the threshold exists
                 if gini < best_gini and sorted_X[i - 1] != sorted_X[i]:

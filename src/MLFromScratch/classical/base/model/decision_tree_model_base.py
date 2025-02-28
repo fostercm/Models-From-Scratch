@@ -45,7 +45,7 @@ class DecisionTreeModelBase(SupervisedModel):
         predictions[left_mask] = self._predict(X[left_mask], node.left)
         predictions[right_mask] = self._predict(X[right_mask], node.right)
         
-        return predictions
+        return predictions.astype(int)
     
     def _initialize_node(self) -> TreeNode:
         return self.TreeNode()

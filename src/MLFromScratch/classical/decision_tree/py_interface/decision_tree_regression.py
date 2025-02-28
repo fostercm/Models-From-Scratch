@@ -83,7 +83,7 @@ class DecisionTreeRegression(DecisionTreeModelBase, RegressionMixin):
                 mse = (i / len(Y)) * left_mse + ((len(Y) - i) / len(Y)) * right_mse
                             
                 # Update the best split
-                if mse < best_mse:
+                if mse < best_mse and sorted_X[i - 1] != sorted_X[i]:
                     best_mse = mse
                     best_feature_index = feature_index
                     best_threshold = (sorted_X[i - 1] + sorted_X[i]) / 2
@@ -97,5 +97,5 @@ class DecisionTreeRegression(DecisionTreeModelBase, RegressionMixin):
         node.threshold = best_threshold
         
         # If the best split does not reduce the Gini impurity, set the node as a leaf node
-        if self.MSE(Y, np.mean(Y, axis=0)[None, :]) - best_mse < self.params["tolerance"]:
+        if node.threshold == None or self.MSE(Y, np.mean(Y, axis=0)[None, :]) - best_mse < self.params["tolerance"]:
             node.value = np.mean(Y, axis=0)
