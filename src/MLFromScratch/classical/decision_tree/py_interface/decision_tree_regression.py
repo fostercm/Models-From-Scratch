@@ -50,9 +50,18 @@ class DecisionTreeRegression(DecisionTreeModelBase, RegressionMixin):
         best_feature_index = None
         best_threshold = None
         
+        # Get the feautres to consider
+        if self.params["feature_subset"] == "sqrt":
+            features = np.random.choice(X.shape[1], int(np.sqrt(X.shape[1])), replace=False)
+        elif self.params["feature_subset"] == "log2":
+            features = np.random.choice(X.shape[1], int(np.log2(X.shape[1])), replace=False)
+        else:
+            features = np.arange(X.shape[1])
+            
+        # Get the sorted indices of the feature matrix
         sorted_indices = np.argsort(X, axis=0)
         
-        for feature_index in range(X.shape[1]):
+        for feature_index in features:
             # Get the sorted values of the feature
             sorted_idx = sorted_indices[:, feature_index]
             sorted_Y = Y[sorted_idx]
@@ -88,5 +97,5 @@ class DecisionTreeRegression(DecisionTreeModelBase, RegressionMixin):
         node.threshold = best_threshold
         
         # If the best split does not reduce the Gini impurity, set the node as a leaf node
-        if self.MSE(Y, np.mean(Y, axis=0)[:, None]) - best_mse < self.params["tolerance"]:
+        if self.MSE(Y, np.mean(Y, axis=0)[None, :]) - best_mse < self.params["tolerance"]:
             node.value = np.mean(Y, axis=0)

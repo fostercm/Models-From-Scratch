@@ -37,9 +37,18 @@ class DecisionTreeClassification(DecisionTreeModelBase, ClassificationMixin):
         best_feature_index = None
         best_threshold = None
         
+        # Get the feautres to consider
+        if self.params["feature_subset"] == "sqrt":
+            features = np.random.choice(X.shape[1], int(np.sqrt(X.shape[1])), replace=False)
+        elif self.params["feature_subset"] == "log2":
+            features = np.random.choice(X.shape[1], int(np.log2(X.shape[1])), replace=False)
+        else:
+            features = np.arange(X.shape[1])
+        
+        # Get the sorted indices of the feature matrix
         sorted_indices = np.argsort(X, axis=0)
         
-        for feature_index in range(X.shape[1]):
+        for feature_index in features:
             # Get the sorted values of the feature
             sorted_idx = sorted_indices[:, feature_index]
             sorted_y = y[sorted_idx]
@@ -56,8 +65,8 @@ class DecisionTreeClassification(DecisionTreeModelBase, ClassificationMixin):
                 right_gini = 1 - np.sum((right_counts / (len(y) - i)) ** 2)
                 gini = left_gini + right_gini
                 
-                # Update the best split
-                if gini < best_gini:
+                # Update the best split if the Gini impurity is lower and the threshold exists
+                if gini < best_gini and sorted_X[i - 1] != sorted_X[i]:
                     best_gini = gini
                     best_feature_index = feature_index
                     best_threshold = (sorted_X[i - 1] + sorted_X[i]) / 2
