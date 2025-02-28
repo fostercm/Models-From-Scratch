@@ -5,6 +5,7 @@ from .naive_bayes.py_interface.naive_bayes import NaiveBayes
 from .kmeans.py_interface.kmeans import KMeans
 from .k_nearest_neighbors.py_interface.k_nearest_neighbors import KNN
 from .decision_tree.py_interface.decision_tree import DecisionTree
+from .random_forest.py_interface.random_forest import RandomForest
 
 __all__ = [
     LinearRegression,
@@ -13,5 +14,6 @@ __all__ = [
     NaiveBayes,
     KMeans,
     KNN,
-    DecisionTree
+    DecisionTree,
+    RandomForest
 ]
