@@ -3,3 +3,4 @@
 .v*
 build
 *:Zone.Identifier
+.coverage
