@@ -15,9 +15,8 @@ class TestDecisionTrees(unittest.TestCase):
                             n_clusters_per_class=1, n_redundant=0, 
                             n_informative=2, class_sep=6, random_state=42)
         
-        X_reg, Y_reg = make_regression(n_samples=500, n_features=2, n_targets=1, 
+        X_reg, Y_reg = make_regression(n_samples=500, n_features=2, n_targets=2, 
                        noise=0.1, random_state=42)
-        Y_reg = Y_reg.reshape(-1, 1)
         
         for model in [
             DecisionTree(language='Python', task='classification'),
