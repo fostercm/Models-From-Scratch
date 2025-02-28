@@ -4,6 +4,7 @@ from .principal_component_analysis.py_interface.principal_component_analysis imp
 from .naive_bayes.py_interface.naive_bayes import NaiveBayes
 from .kmeans.py_interface.kmeans import KMeans
 from .k_nearest_neighbors.py_interface.k_nearest_neighbors import KNN
+from .decision_tree.py_interface.decision_tree import DecisionTree
 
 __all__ = [
     LinearRegression,
@@ -11,5 +12,6 @@ __all__ = [
     PCA,
     NaiveBayes,
     KMeans,
-    KNN
+    KNN,
+    DecisionTree
 ]
