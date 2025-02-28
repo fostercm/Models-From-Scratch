@@ -11,7 +11,6 @@ class DecisionTreeModelBase(SupervisedModel):
             self.left = None
             self.right = None
             self.value = None
-            self.impurity = None
 
     def __init__(self, **kwargs) -> None:
         # Initialize the base class
