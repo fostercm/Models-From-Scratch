@@ -4,8 +4,24 @@ import numpy as np
 from typing import Literal
 
 class PCA(UnsupervisedModel):
+    """
+    Principal Component Analysis (PCA) implementation.
+    
+    This class performs PCA using Singular Value Decomposition (SVD) to reduce 
+    the dimensionality of input data while preserving as much variance as possible.
+    
+    Attributes:
+        language (Literal['Python', 'C', 'CUDA']): Specifies the implementation backend.
+    """
     
     def __init__(self, language: Literal['Python', 'C', 'CUDA'] = 'Python'):
+        """
+        Initializes the PCA model with the specified implementation backend.
+        
+        Args:
+            language (Literal['Python', 'C', 'CUDA'], optional): Specifies the backend 
+                implementation to use. Defaults to 'Python'.
+        """
         # Validate the language parameter
         self._validate_language(language)
         
@@ -14,6 +30,25 @@ class PCA(UnsupervisedModel):
     
     
     def transform(self, X: np.ndarray, n_components: int=None, explained_variance_ratio: float=None) -> np.ndarray:
+        """
+        Transforms the input data using PCA, reducing its dimensionality.
+        
+        Args:
+            X (np.ndarray): The input data matrix of shape (n_samples, n_features).
+            n_components (int, optional): The number of principal components to retain. 
+                Must be between 1 and the number of features. Defaults to None.
+            explained_variance_ratio (float, optional): The minimum cumulative explained 
+                variance ratio to retain. Must be between 0 and 1. Defaults to None.
+                If provided, it determines n_components dynamically.
+        
+        Returns:
+            np.ndarray: The transformed data matrix with reduced dimensions.
+        
+        Raises:
+            TypeError: If n_components is not an integer or explained_variance_ratio is not a float.
+            ValueError: If n_components or explained_variance_ratio is out of valid range,
+                or if both parameters are provided simultaneously.
+        """
         # Validate the input
         X = self._validateInput(X, n_components, explained_variance_ratio)
         
@@ -44,6 +79,22 @@ class PCA(UnsupervisedModel):
         return X @ V[:n_components].T
     
     def _validateInput(self, X: np.ndarray, n_components: int, explained_variance_ratio: float) -> np.ndarray:
+        """
+        Validates the input parameters and ensures they meet expected constraints.
+        
+        Args:
+            X (np.ndarray): The input data matrix.
+            n_components (int, optional): The number of principal components.
+            explained_variance_ratio (float, optional): The explained variance threshold.
+        
+        Returns:
+            np.ndarray: The validated input data.
+        
+        Raises:
+            TypeError: If n_components is not an integer or explained_variance_ratio is not a float.
+            ValueError: If n_components or explained_variance_ratio is out of valid range,
+                or if both parameters are provided simultaneously.
+        """
         # Validate input array
         X = super()._validateInput(X)
         

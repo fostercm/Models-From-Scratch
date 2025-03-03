@@ -5,7 +5,7 @@ class ClassificationMixin:
     """
     Mixin class providing common methods for classification models
 
-    This class includes loss (MSE), target validation, and various evaluation metrics such as accuracy, 
+    This class includes loss (Cross Entropy), target validation, and various evaluation metrics such as accuracy, 
     precision, recall, F1 score, and confusion matrix computation
     """
     
@@ -106,11 +106,15 @@ class ClassificationMixin:
         return crossEntropy(y_true, y_pred, language) 
     
     def accuracy(self, y_true, y_pred):
-        """Calculate the accuracy of the model."""
+        """
+        Calculate the accuracy of the model.
+        """
         return np.mean(y_true == y_pred)
     
     def confusionMatrix(self, y_true, y_pred):
-        """Calculate the confusion matrix."""
+        """
+        Calculate the confusion matrix.
+        """
         n_classes = len(np.unique(y_true))
         cm = np.zeros((n_classes, n_classes))
         for i in range(n_classes):
@@ -119,27 +123,35 @@ class ClassificationMixin:
         return cm
     
     def precision(self, y_true, y_pred):
-        """Calculate the precision of the model."""
+        """
+        Calculate the precision of the model.
+        """
         cm = self.confusionMatrix(y_true, y_pred)
         return np.diag(cm) / np.sum(cm, axis=0)
     
     def recall(self, y_true, y_pred):
-        """Calculate the recall of the model."""
+        """
+        Calculate the recall of the model.
+        """
         cm = self.confusionMatrix(y_true, y_pred)
         return np.diag(cm) / np.sum(cm, axis=1)
     
     def f1(self, y_true, y_pred):
-        """Calculate the F1 score of the model."""
+        """
+        Calculate the F1 score of the model.
+        """
         precision = self.precision(y_true, y_pred)
         recall = self.recall(y_true, y_pred)
         return 2 * (precision * recall) / (precision + recall)
     
     def getStats(self, y_true, y_pred):
-        """Calculate the accuracy, precision, recall and F1 score of the model."""
-        stats_dict = {}
-        stats_dict['accuracy'] = self.accuracy(y_true, y_pred)
-        stats_dict['precision'] = self.precision(y_true, y_pred)
-        stats_dict['recall'] = self.recall(y_true, y_pred)
-        stats_dict['f1'] = self.f1(y_true, y_pred)
-        stats_dict['confusion'] = self.confusionMatrix(y_true, y_pred)
-        return stats_dict
+        """
+        Calculate the accuracy, precision, recall, f1, and confusion matrix of the model.
+        """
+        return {
+            'accuracy': self.accuracy(y_true, y_pred),
+            'precision': self.precision(y_true, y_pred),
+            'recall': self.recall(y_true, y_pred),
+            'f1': self.f1(y_true, y_pred),
+            'confusion': self.confusionMatrix(y_true, y_pred)
+        }

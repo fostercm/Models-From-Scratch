@@ -7,7 +7,28 @@ np.seterr(all="ignore")
 
 
 class LinearRegression(LinearModelBase, RegressionMixin):
+    """
+    Linear Regression model using Ordinary Least Squares (OLS).
+
+    This class implements a linear regression model with support for multiple backends
+    ('Python', 'C', or 'CUDA'). It provides methods for training (fitting) the model
+    and making predictions.
+
+    Attributes:
+        params (dict): A dictionary storing model parameters, including the fitted coefficients (`beta`)
+                       and a flag (`fitted`) indicating if the model has been trained.
+    """
+    
     def __init__(self, language: Literal["Python", "C", "CUDA"] = "Python") -> None:
+        """
+        Initializes the Linear Regression model.
+
+        Args:
+            language (Literal["Python", "C", "CUDA"], optional): The implementation language. Default is 'Python'.
+
+        Raises:
+            ValueError: If the specified language is not valid.
+        """
         # Validate the language parameter
         self._validate_language(language)
 
@@ -15,6 +36,20 @@ class LinearRegression(LinearModelBase, RegressionMixin):
         super().__init__(language=language)
 
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
+        """
+        Fits the linear regression model using Ordinary Least Squares (OLS).
+
+        Args:
+            X (np.ndarray): The input feature matrix of shape (n_samples, n_features).
+            Y (np.ndarray): The target values of shape (n_samples,).
+
+        Raises:
+            ValueError: If the dimensions of `X` and `Y` are incompatible.
+
+        Notes:
+            - If the Gram matrix (X^T X) is singular, the pseudoinverse is used to compute `beta`.
+            - Otherwise, the standard matrix inversion method is used.
+        """
         # Validate the input arrays
         X = self._validateInput(X)
         Y = self._validateTarget(Y)
@@ -34,6 +69,18 @@ class LinearRegression(LinearModelBase, RegressionMixin):
         self.params["fitted"] = True
 
     def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Makes predictions using the trained linear regression model.
+
+        Args:
+            X (np.ndarray): The input feature matrix of shape (n_samples, n_features).
+
+        Returns:
+            np.ndarray: The predicted values of shape (n_samples,).
+
+        Raises:
+            ValueError: If the model has not been fitted before calling `predict`.
+        """
         # Check if the model is fitted
         if self.params["fitted"] is False:
             raise ValueError("Model is not fitted")

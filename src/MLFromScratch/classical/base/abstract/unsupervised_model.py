@@ -25,6 +25,9 @@ class UnsupervisedModel(BaseModel):
         If a subclass does not implement the `transform` method
     """
     def __init__(self, **kwargs):
+        """
+        Initializes the model parameter dictionary
+        """
         super().__init__(**kwargs)
 
     @abstractmethod

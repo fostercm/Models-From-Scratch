@@ -5,11 +5,40 @@ import numpy as np
 
 
 class DecisionTreeClassification(DecisionTreeModelBase, ClassificationMixin):
+    """
+    A decision tree classifier that extends both the DecisionTreeModelBase and ClassificationMixin classes.
+    This model performs classification tasks by learning decision rules from input data. It is based on 
+    the decision tree algorithm, which splits the data at each node according to a feature threshold 
+    to minimize impurity, and it supports configurable parameters such as maximum depth and minimum samples per split.
+
+    Attributes:
+        params (dict): A dictionary to store model parameters such as max depth, min samples split, and number of features.
+    """
     
     def __init__(self, **kwargs) -> None:
+        """
+        Initializes the DecisionTreeClassification model by calling the constructor of the parent classes.
+
+        Args:
+            **kwargs: Arbitrary keyword arguments passed to the parent classes, typically includes hyperparameters 
+                      like max depth, min samples split, etc.
+        """
         super().__init__(**kwargs)
         
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        """
+        Trains the decision tree classifier on the input feature matrix X and target labels y.
+
+        This method validates the input, splits the data, and recursively grows the decision tree based on the input data. 
+        It stores the model parameters and sets the model as fitted.
+
+        Args:
+            X (np.ndarray): The input feature matrix, where each row represents a sample and each column represents a feature.
+            y (np.ndarray): The target vector, containing the class labels for each sample.
+
+        Raises:
+            ValueError: If the input data or target vector is invalid.
+        """
         # Validate the target vector
         X = self._validateInput(X)
         y = self._validateTarget(y)
@@ -27,6 +56,21 @@ class DecisionTreeClassification(DecisionTreeModelBase, ClassificationMixin):
         self.params["fitted"] = True
     
     def _split_node(self, X: np.ndarray, y: np.ndarray, node: DecisionTreeModelBase.TreeNode, depth: int) -> None:
+        """
+        Splits a node of the decision tree based on the best feature and threshold to minimize Gini impurity.
+
+        This method determines the best feature and threshold to split the data at a given node in the decision tree. 
+        It recursively grows the tree until the stopping criteria are met.
+
+        Args:
+            X (np.ndarray): The input feature matrix, where each row represents a sample and each column represents a feature.
+            y (np.ndarray): The target vector, containing the class labels for each sample.
+            node (TreeNode): The current node in the decision tree being split.
+            depth (int): The current depth of the node in the tree.
+
+        Raises:
+            ValueError: If the node is invalid or there is an issue during the split process.
+        """
         # Check if the node is a leaf node
         if depth >= self.params["max_depth"] or len(y) < self.params["min_samples_split"] or len(np.unique(y)) == 1:
             node.value = np.argmax(np.bincount(y))
@@ -99,6 +143,20 @@ class DecisionTreeClassification(DecisionTreeModelBase, ClassificationMixin):
         return self._predict(X).flatten()
     
     def _gini_impurity(self, y: np.ndarray) -> float:
+        """
+        Predicts the class labels for the input feature matrix X using the fitted decision tree model.
+
+        This method traverses the tree to predict the class label for each sample in the input matrix X.
+
+        Args:
+            X (np.ndarray): The input feature matrix, where each row represents a sample and each column represents a feature.
+
+        Returns:
+            np.ndarray: The predicted class labels for each sample in X.
+
+        Raises:
+            ValueError: If the model is not fitted or if the input data is invalid.
+        """
         # Calculate the class probabilities
         class_probabilities = np.bincount(y) / len(y)
         

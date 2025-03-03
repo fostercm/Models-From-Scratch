@@ -5,11 +5,37 @@ import numpy as np
 
 
 class DecisionTreeRegression(DecisionTreeModelBase, RegressionMixin):
+    """
+    A decision tree regressor that fits a model to the provided data and predicts continuous values.
+    Inherits from DecisionTreeModelBase and RegressionMixin to implement regression functionality.
+    The model splits nodes based on minimizing the mean squared error (MSE) criterion.
+
+    Attributes:
+        params (dict): A dictionary to store model parameters including feature counts, max depth, etc.
+        root (DecisionTreeModelBase.TreeNode): The root node of the decision tree.
+    """
     
     def __init__(self,**kwargs) -> None:
+        """
+        Initializes the DecisionTreeRegression model with specified parameters.
+
+        Args:
+            **kwargs: Additional parameters passed to the base model classes.
+        """
         super().__init__(**kwargs)
         
     def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
+        """
+        Fits the decision tree model to the provided data by recursively splitting nodes
+        based on the feature values and minimizing mean squared error.
+
+        Args:
+            X (np.ndarray): The input feature matrix (n_samples x n_features).
+            Y (np.ndarray): The target value matrix (n_samples x n_outputs).
+        
+        Raises:
+            ValueError: If the dimensions of X and Y are incompatible.
+        """
         # Validate the target vector
         X = self._validateInput(X)
         Y = self._validateTarget(Y)
@@ -26,6 +52,18 @@ class DecisionTreeRegression(DecisionTreeModelBase, RegressionMixin):
         self.params["fitted"] = True
     
     def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Predicts the target values for the input features based on the fitted decision tree model.
+
+        Args:
+            X (np.ndarray): The input feature matrix (n_samples x n_features).
+
+        Returns:
+            np.ndarray: The predicted target values (n_samples x n_outputs).
+
+        Raises:
+            ValueError: If the model is not fitted or if the number of features in X doesn't match the model.
+        """
         # Check if the model is fitted
         if self.params["fitted"] is False:
             raise ValueError("Model is not fitted")
@@ -40,6 +78,22 @@ class DecisionTreeRegression(DecisionTreeModelBase, RegressionMixin):
         return self._predict(X)
     
     def _split_node(self, X: np.ndarray, Y: np.ndarray, node: DecisionTreeModelBase.TreeNode, depth: int) -> None:
+        """
+        Recursively splits a node in the decision tree based on the feature values and minimizes
+        the mean squared error. If the stopping criteria are met, the node becomes a leaf node.
+
+        Args:
+            X (np.ndarray): The input feature matrix (n_samples x n_features).
+            Y (np.ndarray): The target value matrix (n_samples x n_outputs).
+            node (DecisionTreeModelBase.TreeNode): The current node to be split.
+            depth (int): The current depth of the tree during recursion.
+        
+        Notes:
+            - The function attempts to find the best feature and threshold to split on, 
+              based on minimizing the mean squared error (MSE).
+            - The function terminates if the max depth or minimum sample conditions are met, 
+              or if further splitting does not reduce the MSE.
+        """
         # Check if the node is a leaf node
         if depth >= self.params["max_depth"] or len(Y) < self.params["min_samples_split"]:
             node.value = np.mean(Y, axis=0)

@@ -8,6 +8,23 @@ from ...base.model.linear_model_base import LinearModelBase
 
 
 class LogisticRegression(LinearModelBase, ClassificationMixin):
+    """
+    Logistic Regression model using Gradient Descent.
+
+    This class implements logistic regression for binary and multi-class classification.
+    It supports multiple computation backends ('Python', 'C', or 'CUDA') and uses
+    gradient descent for optimization.
+
+    Attributes:
+        params (dict): A dictionary storing model parameters, including:
+            - "beta": The learned regression coefficients.
+            - "num_classes": Number of unique classes in the target variable.
+            - "fitted": Boolean flag indicating whether the model has been trained.
+            - "lr": Learning rate for gradient descent.
+            - "iterations": Number of iterations for training.
+            - "tolerance": Convergence threshold for gradient descent.
+    """
+    
     def __init__(
         self,
         language: Literal["Python", "C", "CUDA"] = "Python",
@@ -15,6 +32,20 @@ class LogisticRegression(LinearModelBase, ClassificationMixin):
         iterations: int = 10000,
         tolerance: float = 0.1,
     ) -> None:
+        """
+        Initializes the Logistic Regression model.
+
+        Args:
+            language (Literal["Python", "C", "CUDA"], optional): The computation backend. Default is 'Python'.
+            lr (float, optional): The learning rate for gradient descent. Default is 0.01.
+            iterations (int, optional): The number of iterations for training. Default is 10,000.
+            tolerance (float, optional): The stopping criterion for gradient descent. Default is 0.1.
+
+        Raises:
+            ValueError: If `lr` is not a positive number.
+            ValueError: If `iterations` is not a positive integer.
+            ValueError: If `tolerance` is not a positive number.
+        """
         # Validate the language parameter
         self._validate_language(language)
         
@@ -36,6 +67,21 @@ class LogisticRegression(LinearModelBase, ClassificationMixin):
         )
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        """
+        Trains the logistic regression model using gradient descent.
+
+        Args:
+            X (np.ndarray): The input feature matrix of shape (n_samples, n_features).
+            y (np.ndarray): The target values of shape (n_samples,).
+
+        Raises:
+            ValueError: If `X` and `y` have incompatible dimensions.
+
+        Notes:
+            - For binary classification, a single weight vector (`beta`) is used.
+            - For multi-class classification, one-hot encoding is applied to `y`, and a weight matrix is used.
+            - Training stops early if the gradient norm falls below `tolerance`.
+        """
         # Validate the input arrays
         X = super()._validateInput(X)
         y = super()._validateTarget(y)
@@ -83,6 +129,20 @@ class LogisticRegression(LinearModelBase, ClassificationMixin):
         self.params["fitted"] = True
 
     def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Makes predictions using the trained logistic regression model.
+
+        Args:
+            X (np.ndarray): The input feature matrix of shape (n_samples, n_features).
+
+        Returns:
+            np.ndarray: The predicted probabilities for each class. If binary classification,
+                        returns probabilities for the positive class. If multi-class,
+                        returns a probability distribution over classes.
+
+        Raises:
+            ValueError: If the model has not been fitted before calling `predict`.
+        """
         # Validate the input array
         X = super()._validateInput(X)
 
@@ -97,6 +157,17 @@ class LogisticRegression(LinearModelBase, ClassificationMixin):
         return self._predict(X)
 
     def _predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Computes the probability estimates for logistic regression.
+
+        Args:
+            X (np.ndarray): The input feature matrix of shape (n_samples, n_features).
+
+        Returns:
+            np.ndarray: The predicted probabilities for each class.
+                        - Uses the sigmoid function for binary classification.
+                        - Uses the softmax function for multi-class classification.
+        """
         # Compute the logits
         logits = self._compute_logits(X)
 

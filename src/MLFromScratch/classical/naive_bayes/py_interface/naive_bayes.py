@@ -6,8 +6,27 @@ from typing import Literal
 
 
 class NaiveBayes(SupervisedModel, ClassificationMixin):
+    """
+    A Naive Bayes classifier supporting Bernoulli, Multinomial, and Gaussian variants.
+
+    Attributes:
+        params (dict): Stores model parameters such as priors, likelihoods, means, and variances.
+    """
 
     def __init__(self, language: Literal['Python', 'C', 'CUDA'] = 'Python', smoothing: float=1e-9, alpha: float=1.0, variant: Literal["bernoulli", "multinomial", "gaussian"] = "gaussian") -> None:
+        """
+        Initializes the Naive Bayes model.
+
+        Args:
+            language (Literal['Python', 'C', 'CUDA']): The implementation language.
+            smoothing (float): A small positive value added to variances to prevent division by zero (used in Gaussian NB).
+            alpha (float): The additive smoothing parameter (Laplace smoothing).
+            variant (Literal["bernoulli", "multinomial", "gaussian"]): The type of Naive Bayes model.
+
+        Raises:
+            ValueError: If `smoothing` or `alpha` are not positive floats.
+            ValueError: If `variant` is not one of 'bernoulli', 'multinomial', or 'gaussian'.
+        """
         # Validate the language parameter
         self._validate_language(language)
         
@@ -27,6 +46,16 @@ class NaiveBayes(SupervisedModel, ClassificationMixin):
         super().__init__(language=language, smoothing=smoothing, alpha=alpha, variant=variant)
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        """
+        Fits the Naive Bayes model to the training data.
+
+        Args:
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            y (np.ndarray): Target labels of shape (n_samples,).
+
+        Raises:
+            ValueError: If input validation fails.
+        """
         # Validate the input arrays
         X = self._validateInput(X)
         y = self._validateTarget(y)
@@ -92,7 +121,20 @@ class NaiveBayes(SupervisedModel, ClassificationMixin):
         self.params["fitted"] = True
 
     def predict(self, X: np.ndarray, output: Literal["class", "probability"] = "class") -> np.ndarray:
-        
+        """
+        Predicts class labels or probabilities for the input data.
+
+        Args:
+            X (np.ndarray): Feature matrix of shape (n_samples, n_features).
+            output (Literal["class", "probability"]): Determines whether to return class labels or probabilities.
+
+        Returns:
+            np.ndarray: Predicted class labels or probabilities.
+
+        Raises:
+            ValueError: If the model has not been fitted.
+            ValueError: If input validation fails.
+        """
         # Check if the model is fitted
         if not self.params["fitted"]:
             raise ValueError("Model must be fitted before making predictions")
@@ -150,6 +192,19 @@ class NaiveBayes(SupervisedModel, ClassificationMixin):
             raise ValueError("Invalid output type, must be 'class' or 'probability'")
 
     def _validateInput(self, X: np.ndarray, output: Literal["class", "probability"] = "class") -> np.ndarray:
+        """
+        Validates the input data.
+
+        Args:
+            X (np.ndarray): Feature matrix.
+            output (Literal["class", "probability"]): Expected output type.
+
+        Returns:
+            np.ndarray: Validated input matrix.
+
+        Raises:
+            ValueError: If input is not in the expected format for the chosen model variant.
+        """
         # Validate the input array
         super()._validateInput(X)
         
