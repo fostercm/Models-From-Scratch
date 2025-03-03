@@ -1,4 +1,4 @@
-from ...base.abstract.unsupervised_model import UnsupervisedModel
+from ..base.abstract.unsupervised_model import UnsupervisedModel
 from typing import Literal, Tuple
 import numpy as np
 

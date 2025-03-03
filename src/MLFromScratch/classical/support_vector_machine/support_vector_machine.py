@@ -1,5 +1,5 @@
-from...base.abstract.supervised_model import SupervisedModel
-from ...base.mixin.classification_mixin import ClassificationMixin
+from ..base.abstract.supervised_model import SupervisedModel
+from ..base.mixin.classification_mixin import ClassificationMixin
 import numpy as np
 from typing import Literal
 

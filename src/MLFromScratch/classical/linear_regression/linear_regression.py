@@ -1,5 +1,5 @@
-from ...base.model.linear_model_base import LinearModelBase
-from ...base.mixin.regression_mixin import RegressionMixin
+from ..base.model.linear_model_base import LinearModelBase
+from ..base.mixin.regression_mixin import RegressionMixin
 import numpy as np
 from typing import Literal
 

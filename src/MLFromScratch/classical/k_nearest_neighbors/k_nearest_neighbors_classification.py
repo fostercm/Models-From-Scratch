@@ -1,64 +1,69 @@
-from ...base.model.k_nearest_neighbors_model_base import KNNBase
-from ...base.mixin.regression_mixin import RegressionMixin
+from ..base.model.k_nearest_neighbors_model_base import KNNBase
+from ..base.mixin.classification_mixin import ClassificationMixin
 from typing import Literal
 import numpy as np
 
 
-class KNNRegression(KNNBase, RegressionMixin):
+class KNNClassification(KNNBase, ClassificationMixin):
     """
-    K-Nearest Neighbors (KNN) regressor.
+    K-Nearest Neighbors (KNN) classifier.
 
-    This class implements the K-Nearest Neighbors regression algorithm. 
+    This class implements the K-Nearest Neighbors classification algorithm. 
     It supports different distance metrics, including Euclidean, Manhattan, and Cosine similarity. 
     The model fits to the data by storing the training samples and makes predictions by finding the 
-    k-nearest neighbors of a given test sample and averaging their target values for regression.
+    k-nearest neighbors of a given test sample.
 
     Inherits from:
         - KNNBase: Base class providing foundational KNN functionality.
-        - RegressionMixin: Mixin providing regression-specific utilities.
+        - ClassificationMixin: Mixin providing classification-specific utilities.
 
     Attributes:
         params (dict): Dictionary storing model parameters such as training data, number of samples, etc.
     """
     
-    def __init__(self,**kwargs) -> None:
+    def __init__(self, **kwargs) -> None:
         """
-        Initialize the KNNRegression model with the provided parameters.
+        Initialize the KNNClassification model with the provided parameters.
 
         Args:
             **kwargs: Parameters for configuring the KNN model, passed to the parent classes.
         """
         super().__init__(**kwargs)
         
-    def fit(self, X: np.ndarray, Y: np.ndarray) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
-        Fit the KNN model to the given training data for regression.
+        Fit the KNN model to the given training data.
 
         Args:
             X (np.ndarray): The feature matrix (samples x features).
-            Y (np.ndarray): The target values (samples, target_dim).
+            y (np.ndarray): The target labels (samples,).
 
         Raises:
             ValueError: If the input data is invalid or the dimensions do not match.
         """
-        # Validate the target vector
-        Y = self._validateTarget(Y)
+        # Validate the input arrays
+        X = self._validateInput(X)
+        y = self._validateTarget(y)
+        self._validateInputPair(X, y)
+        
+        # Reshape the target vector
+        Y = y.reshape(-1, 1)
         
         # Call the base fit method
         super().fit(X, Y)
     
     def predict(self, X: np.ndarray, k: int = 5, distance_type: Literal["euclidean", "manhattan", "cosine"] = "euclidean") -> np.ndarray:
         """
-        Predict the target values for the given test samples using K-Nearest Neighbors for regression.
+        Predict the class labels for the given test samples using K-Nearest Neighbors.
 
         Args:
             X (np.ndarray): The test feature matrix (samples x features).
-            k (int, optional): The number of nearest neighbors to consider for regression. Default is 5.
+            k (int, optional): The number of nearest neighbors to consider for classification. Default is 5.
             distance_type (Literal["euclidean", "manhattan", "cosine"], optional): The distance metric to use for 
                 finding nearest neighbors. Default is "euclidean".
 
         Returns:
-            np.ndarray: The predicted target values for each test sample.
+            np.ndarray: The predicted class labels for each test sample.
 
         Raises:
             ValueError: If the model has not been fitted yet.
@@ -72,12 +77,12 @@ class KNNRegression(KNNBase, RegressionMixin):
         # Get the corresponding target values
         targets = self.params["Y"][indices]
         
-        # Initialize the predicted values
-        Y_pred = np.zeros((n_samples, self.params["Y"].shape[1]))
+        # Initialize the predicted classes
+        y_pred = np.zeros(n_samples)
         
-        # Average the target values for regression
+        # Get the predicted classes
         for i in range(n_samples):
-            Y_pred[i] = np.mean(targets[i], axis=0)
+            y_pred[i] = np.argmax(np.bincount(targets[i].flatten()))
         
-        # Return the predicted values
-        return Y_pred
+        # Return the predicted classes
+        return y_pred

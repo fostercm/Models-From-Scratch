@@ -1,5 +1,5 @@
-from ...base.abstract.unsupervised_model import UnsupervisedModel
-from ....utils.python_utils.matrix_functions import standardize
+from ..base.abstract.unsupervised_model import UnsupervisedModel
+from ...utils.python_utils.matrix_functions import standardize
 import numpy as np
 from typing import Literal
 

@@ -1,7 +1,7 @@
 import numpy as np
-from ...base.abstract.supervised_model import SupervisedModel
-from ...base.mixin.classification_mixin import ClassificationMixin
-from ....utils.python_utils.activation_functions import softmax
+from ..base.abstract.supervised_model import SupervisedModel
+from ..base.mixin.classification_mixin import ClassificationMixin
+from ...utils.python_utils.activation_functions import softmax
 from typing import Literal
 
 

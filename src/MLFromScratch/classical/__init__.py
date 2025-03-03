@@ -1,12 +1,12 @@
-from .linear_regression.py_interface.linear_regression import LinearRegression
-from .logistic_regression.py_interface.logistic_regression import LogisticRegression
-from .principal_component_analysis.py_interface.principal_component_analysis import PCA
-from .naive_bayes.py_interface.naive_bayes import NaiveBayes
-from .kmeans.py_interface.kmeans import KMeans
-from .k_nearest_neighbors.py_interface.k_nearest_neighbors import KNN
-from .decision_tree.py_interface.decision_tree import DecisionTree
-from .random_forest.py_interface.random_forest import RandomForest
-from .support_vector_machine.py_interface.support_vector_machine import SVM
+from .linear_regression.linear_regression import LinearRegression
+from .logistic_regression.logistic_regression import LogisticRegression
+from .principal_component_analysis.principal_component_analysis import PCA
+from .naive_bayes.naive_bayes import NaiveBayes
+from .kmeans.kmeans import KMeans
+from .k_nearest_neighbors.k_nearest_neighbors import KNN
+from .decision_tree.decision_tree import DecisionTree
+from .random_forest.random_forest import RandomForest
+from .support_vector_machine.support_vector_machine import SVM
 
 __all__ = [
     LinearRegression,

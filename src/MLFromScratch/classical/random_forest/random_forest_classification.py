@@ -1,6 +1,6 @@
-from ...decision_tree.py_interface.decision_tree import DecisionTree
-from...base.abstract.supervised_model import SupervisedModel
-from ...base.mixin.classification_mixin import ClassificationMixin
+from ..decision_tree.decision_tree import DecisionTree
+from..base.abstract.supervised_model import SupervisedModel
+from ..base.mixin.classification_mixin import ClassificationMixin
 import numpy as np
 
 class RandomForestClassification(SupervisedModel, ClassificationMixin):

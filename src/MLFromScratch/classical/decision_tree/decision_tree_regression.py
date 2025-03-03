@@ -1,6 +1,5 @@
-from ...base.model.decision_tree_model_base import DecisionTreeModelBase
-from ...base.mixin.regression_mixin import RegressionMixin
-from typing import Literal
+from ..base.model.decision_tree_model_base import DecisionTreeModelBase
+from ..base.mixin.regression_mixin import RegressionMixin
 import numpy as np
 
 

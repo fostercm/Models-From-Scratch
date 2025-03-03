@@ -2,9 +2,9 @@ from typing import Literal
 
 import numpy as np
 
-from ....utils.python_utils.activation_functions import sigmoid, softmax
-from ...base.mixin.classification_mixin import ClassificationMixin
-from ...base.model.linear_model_base import LinearModelBase
+from ...utils.python_utils.activation_functions import sigmoid, softmax
+from ..base.mixin.classification_mixin import ClassificationMixin
+from ..base.model.linear_model_base import LinearModelBase
 
 
 class LogisticRegression(LinearModelBase, ClassificationMixin):
